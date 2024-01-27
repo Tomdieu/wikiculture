@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-v4ni%n9@7n_*386sk3c)0h6v))qdhg-8+z28v4ywadw%w@rk3m
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -37,6 +37,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # local apps
+    'api',
+    
+    # third aparty apps
+    # 'drf_yasg',
+    # 'oauth2_provider',
+    # 'social_django',
+    # 'drf_social_oauth2',
+    "drf_yasg",
+    "rest_framework",
+    "rest_framework.authtoken",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
@@ -62,6 +74,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -80,6 +95,7 @@ DATABASES = {
     }
 }
 
+AUTH_USER_MODEL='api.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -118,6 +134,49 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
+# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-fieldAbstractUser
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+#     ),
+
+#     'DEFAULT_PERMISSION_CLASSES': (
+#         'rest_framework.permissions.IsAuthenticated',
+#     ),
+# }
+
+# AUTHENTICATION_BACKENDS = (
+    
+#     # Google  OAuth2
+#     'social_core.backends.google.GoogleOAuth2',
+#     # drf-social-oauth2
+#     'drf_social_oauth2.backends.DjangoOAuth2',
+#     # Django
+#     'django.contrib.auth.backends.ModelBackend',
+# )
+
+# OAUTH2_PROVIDER = {
+#     'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups'}
+# }
+
+# # Google configuration
+# SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "583298646821-3g7sjbb2ok0qkh9a3vba8qoatiitlf49.apps.googleusercontent.com"
+# SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "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"
+
+# # Define SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE to get extra permissions from Google.
+# SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
+#     'https://www.googleapis.com/auth/userinfo.email',
+#     'https://www.googleapis.com/auth/userinfo.profile',
+# ]
+
+
+# Rabbitmq configuration
+
+RABBITMQ_HOST = 'localhost'
+RABBITMQ_PORT = 5672
+RABBITMQ_USERNAME = 'guest'
+RABBITMQ_PASSWORD = 'guest'
