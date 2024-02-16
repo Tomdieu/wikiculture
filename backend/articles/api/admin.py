@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.utils.text import slugify
 
-from .models import User, Article, Category
+from import_export.admin import ImportExportModelAdmin
+from .models import User, Article, Category, Event
 
 
 # Register your models here.
@@ -18,6 +19,15 @@ class ReadOnlyAdmin(admin.ModelAdmin):
         return False
 
 
+@admin.register(Event)
+class EventAdmin(admin.ModelAdmin):
+    list_display = ['id', 'event_type', 'data']
+    search_fields = ['event_type']
+
+    def has_add_permission(self, request):
+        return False
+
+
 @admin.register(User)
 class UserAdmin(ReadOnlyAdmin):
     list_display = ('username', 'first_name', 'last_name', 'email', 'user_type', 'date_joined')
@@ -27,15 +37,13 @@ class UserAdmin(ReadOnlyAdmin):
 
 
 @admin.register(Article)
-class ArticleAdmin(admin.ModelAdmin):
-    list_display = ('title', 'slug', 'category', 'status', 'user', 'created_at', 'updated_at')
-    list_filter = ('status', 'category', 'user', 'created_at', 'updated_at')
+class ArticleAdmin(ImportExportModelAdmin):
+    readonly_fields = ['slug']
+
+    list_display = ('title', 'slug', 'status', 'author', 'created_at', 'updated_at')
+    list_filter = ('status', 'categories', 'author', 'created_at', 'updated_at')
     search_fields = ('title', 'content')
 
-    def save_model(self, request, obj, form, change):
-        if not obj.slug:
-            obj.slug = slugify(obj.title)
-        super().save_model(request, obj, form, change)
 
 
 @admin.register(Category)

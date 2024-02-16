@@ -6,7 +6,7 @@ from .models import Article, Category
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = '__all__'
+        exclude = ('parent',)
 
 
 class ArticleSerializer(serializers.ModelSerializer):
