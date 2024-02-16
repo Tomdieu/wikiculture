@@ -37,6 +37,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    # local apps
+    
+    "api",
+    
+    # Third party apps
+    'taggit',
+    "rest_framework",
+    "django_elasticsearch_dsl",
+    'django_elasticsearch_dsl_drf',
 ]
 
 MIDDLEWARE = [
@@ -121,3 +131,11 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Elastic Search Config
+
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'localhost:9200'  # Replace with your Elasticsearch host and port
+    },
+}

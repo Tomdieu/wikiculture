@@ -1,0 +1,17 @@
+version: '3.8'  # Specify the Docker Compose file version
+
+services:
+  elasticsearch:
+    image: elasticsearch:5.6.16-alpine
+    container_name: elasticsearch
+    restart: always  # Ensure automatic restarts
+    ports:
+      - "9200:9200"  # Expose port 9200 for external access
+    environment:
+      - discovery.type=single-node  # Configure for single-node setup
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"  # Optional: Set JVM memory limits
+    volumes:
+      - esdata:/usr/share/elasticsearch/data  # Create a volume for persistent data
+
+volumes:
+  esdata:  # Define the named volume for data persistence
