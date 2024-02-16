@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-def publish(event_type:str,body:Any,exchange_name:str="accounts",exchange_type:str="topic",routing_key:str="accounts.*"):
+def publish(event_type:str,body:Any,exchange_name:str="account",exchange_type:str="topic",routing_key:str="account.*"):
     
     try:
         
