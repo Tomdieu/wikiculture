@@ -50,7 +50,7 @@ def callback(ch, method, properties, body):
         ch.basic_ack(delivery_tag=method.delivery_tag)
         return
 
-    if event_type == events.USER_UPDATED:
+    elif event_type == events.USER_UPDATED:
 
         print(" [x] User updated event received")
         print(" [x] Done")
@@ -58,7 +58,7 @@ def callback(ch, method, properties, body):
         ch.basic_ack(delivery_tag=method.delivery_tag)
         return
 
-    if event_type == events.USER_DELETED:
+    elif event_type == events.USER_DELETED:
 
         print(" [x] User deleted event received")
         print(" [x] Done")
