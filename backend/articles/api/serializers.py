@@ -27,6 +27,6 @@ class ArticleListSerializer(serializers.ModelSerializer):
         _categories = []
         
         for category in categories:
-            _categories.append(category)
+            _categories.append(category.name)
             
         return _categories

@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model, authenticate, login
 from rest_framework.generics import CreateAPIView
@@ -9,7 +8,7 @@ from rest_framework.mixins import (
     RetrieveModelMixin,
     ListModelMixin,
 )
-
+from rest_framework.decorators import action
 from .serializers import UserSerializer, LoginSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authtoken.models import Token
@@ -68,10 +67,7 @@ class UserViewSet(
         return [permission() for permission in permission_classes]
 
     def get_queryset(self):
-        if self.action == "list":
-            return User.objects.filter(id=self.request.user.id)
-        else:
-            return User.objects.all()
+        return User.objects.all()
 
     def get_object(self):
         if self.action == "retrieve":
@@ -87,3 +83,10 @@ class UserViewSet(
     def perform_update(self, serializer):
         serializer.save()
         return serializer.instance
+
+
+    @action(methods=['get'],detail=False)
+    def current_user(self,request):
+        user = self.get_queryset().filter(id=self.request.user.id).first()
+        serializer = self.get_serializer_class()(user)
+        return Response(serializer.data)

@@ -2,7 +2,6 @@ import json
 from typing import List
 from dataclasses import dataclass
 
-
 @dataclass
 class UserInfo:
     id: int
