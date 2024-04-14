@@ -14,7 +14,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          cd user_service && docker build . --tag user_service:latest
+          cd backend/users && docker build . --tag user_service:latest
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
