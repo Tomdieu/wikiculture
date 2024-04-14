@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.utils.text import slugify
 
 from import_export.admin import ImportExportModelAdmin
+from simple_history.admin import SimpleHistoryAdmin
 from .models import User, Article, Category, Event
 
 
@@ -37,7 +38,7 @@ class UserAdmin(ReadOnlyAdmin):
 
 
 @admin.register(Article)
-class ArticleAdmin(ImportExportModelAdmin):
+class ArticleAdmin(ImportExportModelAdmin,SimpleHistoryAdmin):
     readonly_fields = ['slug']
 
     list_display = ('title', 'slug', 'status', 'author', 'created_at', 'updated_at')

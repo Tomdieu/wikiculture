@@ -8,6 +8,7 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     USER_TYPE = (
         ('User','User'),
+        ('Moderator','Moderator'),
         ('Admin','Admin')
     )
     

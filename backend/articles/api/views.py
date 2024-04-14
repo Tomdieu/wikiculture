@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, ListModelMixin, DestroyModelMixin, \
     UpdateModelMixin
@@ -19,7 +19,11 @@ class ArticleViewSet(GenericViewSet, CreateModelMixin, RetrieveModelMixin, ListM
     serializer_class = ArticleSerializer
 
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+
+    def get_permissions(self):
+        if self.action in ['list','retrieve']:  # AllowAny for 'list' action
+            return [AllowAny()]
+        return [IsAuthenticated()]  # For other actions, use IsAuthenticated permission
 
     def get_serializer_class(self):
         if self.action in ['list', 'retrieve']:
@@ -28,21 +32,21 @@ class ArticleViewSet(GenericViewSet, CreateModelMixin, RetrieveModelMixin, ListM
 
     @swagger_auto_schema(operation_description="List of articles with optional query params",
                          manual_parameters=[
-                             openapi.Parameter('tag', openapi.IN_QUERY, description="Tag name", type=openapi.TYPE_STRING),
+                             openapi.Parameter('tag', openapi.IN_QUERY, description="Tag name",
+                                               type=openapi.TYPE_STRING),
                              openapi.Parameter('category', openapi.IN_QUERY, description="Category name",
                                                type=openapi.TYPE_STRING)
                          ])
     def list(self, request, *args, **kwargs):
         # Get the tag and category from the query params
-        tag = request.query_params.get('tag',None)
-        category = request.query_params.get('category',None)
+        tag = request.query_params.get('tag', None)
+        category = request.query_params.get('category', None)
         queryset = self.get_queryset()
 
         if tag:
             queryset = queryset.filter(tags__name__in=[tag])
 
         if category:
-
             queryset = queryset.filter(categories__name=category)
 
         serializer = self.get_serializer(queryset, many=True)

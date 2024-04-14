@@ -4,12 +4,15 @@ from django.utils.text import slugify
 import uuid
 from ckeditor.fields import RichTextField
 
+from simple_history.models import HistoricalRecords
+
 
 # Create your models here.
 
 class User(models.Model):
     USER_TYPE = (
         ('User', 'User'),
+        ('Moderator','Moderator'),
         ('Admin', 'Admin')
     )
     id = models.IntegerField(primary_key=True)
@@ -33,7 +36,7 @@ class Category(models.Model):
         verbose_name_plural = 'Categories'
 
     def __str__(self) -> str:
-        return self.name
+        return f"{self.name}"
 
 
 class Article(models.Model):
@@ -46,11 +49,14 @@ class Article(models.Model):
     title = models.CharField(max_length=255)
     content = RichTextField()
     tags = TaggableManager()
+    approved = models.BooleanField(default=False)
     categories = models.ManyToManyField(Category, blank=True, related_name='categories')
     status = models.CharField(max_length=20, choices=STATUS, default='draft')
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    updated = models.BooleanField(default=False)
+    history = HistoricalRecords()
 
     class Meta:
         ordering = ('-created_at',)

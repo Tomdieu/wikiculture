@@ -1,11 +1,17 @@
 from django.dispatch import receiver
 
-from django.db.models.signals import post_save, pre_delete
+from django.db.models.signals import post_save, pre_delete, pre_save
 
 from .models import Article
 from .serializers import ArticleListSerializer
 from .producer import publish
 from . import events
+
+
+@receiver(pre_save, sender=Article)
+def update_article_update_field(sender, instance: Article, **kwargs):
+    if instance.pk:
+        instance.updated = True
 
 
 @receiver(post_save, sender=Article)

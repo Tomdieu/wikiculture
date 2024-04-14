@@ -8,6 +8,7 @@ from taggit.managers import TaggableManager
 class User(models.Model):
     USER_TYPE = (
         ('User', 'User'),
+        ('Moderator','Moderator'),
         ('Admin', 'Admin')
     )
     id = models.IntegerField(primary_key=True)

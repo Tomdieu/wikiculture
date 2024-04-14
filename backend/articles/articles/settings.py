@@ -54,7 +54,7 @@ INSTALLED_APPS = [
     "corsheaders",
     'ckeditor',
     'import_export',
-
+    'simple_history',
     # 'categories',
     # 'categories.editor',
 ]
@@ -67,6 +67,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'simple_history.middleware.HistoryRequestMiddleware',
 ]
 
 ROOT_URLCONF = 'articles.urls'

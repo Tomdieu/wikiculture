@@ -1,5 +1,5 @@
 from django.db import models
-
+import os
 
 class User(models.Model):
 
@@ -19,8 +19,8 @@ class FileCategory(models.TextChoices):
 
 class File(models.Model):
     name = models.CharField(max_length=255,blank=True,null=True)
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
-    category = models.CharField(max_length=50, choices=FileCategory.choices)
+    user = models.ForeignKey(User,on_delete=models.CASCADE,blank=True,null=True)
+    category = models.CharField(max_length=50, choices=FileCategory.choices,null=True,blank=True)
     file = models.FileField(upload_to='media/')
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
@@ -28,6 +28,8 @@ class File(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
+        if not self.name:
+            self.name = os.path.basename(self.file.name)  # Set file name if not provided
         ext = os.path.splitext(self.file.name)[1].lower()  # Get file extension
         if ext in ['.mp4', '.avi', '.mov', '.mkv']:
             self.category = FileCategory.VIDEO
