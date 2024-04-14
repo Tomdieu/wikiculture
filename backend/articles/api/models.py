@@ -72,6 +72,8 @@ class ArticleLike(models.Model):
 
     def __str__(self) -> str:
         return f"{self.user} Liked {self.article}"
+    
+# class ArticleView(models.)
 
 
 class Event(models.Model):
