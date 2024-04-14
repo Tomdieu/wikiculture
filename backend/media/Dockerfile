@@ -1,4 +1,4 @@
-FROM python:3.10.13-slim8-bullseye
+FROM python:3.10.13-slim-bullseye
 LABEL authors="ivantom"
 
 EXPOSE 8002
