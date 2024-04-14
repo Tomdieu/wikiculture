@@ -19,10 +19,7 @@ class ReadOnlyAdmin(admin.ModelAdmin):
 
 @admin.register(User)
 class UserAdmin(ReadOnlyAdmin):
-    list_display = ('username', 'first_name', 'last_name', 'email', 'user_type', 'date_joined')
-    list_filter = ('user_type', 'date_joined')
-    search_fields = ('username', 'first_name', 'last_name', 'email')
-    ordering = ('username',)
+    list_display = ['id']
 
 
 @admin.register(File)
