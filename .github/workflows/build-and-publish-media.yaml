@@ -1,0 +1,29 @@
+name: Build and Push Media Docker Image
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: |
+          cd backend/media && docker build . --tag media_service:latest
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push Docker image to GitHub Container Registry
+        run: |
+          docker tag media_service:latest ghcr.io/tomdieu/wikiculture/media_service:latest
+          docker push ghcr.io/tomdieu/wikiculture/media_service:latest
