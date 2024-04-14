@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  media:
+    image: media
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8002:8002"
+    command: ["python", "manage.py", "runserver", "8002"]
+    container_name: media_service
+    networks:
+      - bridge
+
+networks:
+  bridge:
+    driver: bridge
+    name: bridge
