@@ -27,6 +27,6 @@ class TokenAuthentication(BaseAuthentication):
             raise AuthenticationFailed('Failed to authenticate. Error: {}'.format(str(e)))
 
         # Get the user base on the user id
-        user = User.objects.get(id=user_data['id'])
+        user = User.objects.get(user_id=user_data['id'])
 
         return user, None

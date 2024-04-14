@@ -43,7 +43,7 @@ def callback(ch, method, properties, body):
     if event_type == events.USER_CREATED:
         print(" [x] User created event received")
         print(" [x] Done")
-        User.objects.create(id=body['id'])
+        User.objects.create(user_id=body['id'])
         ch.basic_ack(delivery_tag=method.delivery_tag)
 
     print(" [x] Received %r" % data)
