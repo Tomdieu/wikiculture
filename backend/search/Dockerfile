@@ -31,4 +31,4 @@ RUN apt-get clean && \
 COPY . .
 
 # Migrate the database
-# RUN python manage.py migrate
+RUN python manage.py migrate
