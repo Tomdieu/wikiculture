@@ -8,7 +8,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-
+    volumes:
+      - .:/users
     ports:
       - "8000:8000"
     command: ["python", "manage.py", "runserver", "8000"]

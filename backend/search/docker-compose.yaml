@@ -26,6 +26,8 @@ services:
     restart: unless-stopped
     networks:
       - bridge
+    volumes:
+      - .:/search
 
   consumer:
     image: search

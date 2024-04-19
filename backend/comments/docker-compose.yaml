@@ -13,6 +13,8 @@ services:
     restart: unless-stopped
     networks:
       - bridge
+    volumes:
+      - .:/comments
 
   consumer:
     image: comment

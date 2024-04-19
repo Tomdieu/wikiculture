@@ -13,6 +13,9 @@ services:
     restart: unless-stopped
     networks:
       - bridge
+    volumes:
+      - .:/moderator
+
   consumer:
     image: article
     build:

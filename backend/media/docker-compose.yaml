@@ -6,14 +6,17 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    restart: always
     ports:
       - "8003:8003"
+    volumes:
+      - .:/media_files
     command: ["python", "manage.py", "runserver", "8003"]
     container_name: media_service
     restart: unless-stopped
     networks:
       - bridge
+    volumes:
+      - .:/media_files
 
   consumer:
     image: media
