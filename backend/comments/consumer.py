@@ -2,7 +2,7 @@ import pika, os, json
 import django
 from api import events
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "alert_service.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "comments.settings")
 django.setup()
 
 from django.conf import settings
