@@ -13,7 +13,7 @@ from api import events
 timeout_seconds = 3 * 60 * 60
 
 credentials = pika.PlainCredentials(settings.RABBITMQ_USERNAME, settings.RABBITMQ_PASSWORD)
-parameters = pika.ConnectionParameters(settings.RABBITMQ_HOST, settings.RABBITMQ_PORT, settings.RABBITMQ_VHOST,
+parameters = pika.ConnectionParameters(settings.RABBITMQ_HOST, settings.RABBITMQ_PORT, '/',
                                        credentials, socket_timeout=timeout_seconds)
 # credentials = pika.PlainCredentials("guest", "guest")
 # parameters = pika.ConnectionParameters("localhost", 5672, "/", credentials)
