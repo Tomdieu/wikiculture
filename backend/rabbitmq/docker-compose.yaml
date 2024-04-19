@@ -15,7 +15,7 @@ services:
       # Http Managent UI
       - "15672:15672"
     volumes:
-      - rabbitmq_data:/var/lib/rabbitmq/mnesia
+      - rabbitmq_data:/var/lib/rabbitmq
 
     networks:
       - common_network
