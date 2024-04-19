@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+
+  rabbitmq:
+    image: rabbitmq:3.10-management-alpine
+    container_name: RabbitMq
+    restart: unless-stopped
+    environment:
+      - RABBITMQ_DEFAULT_USER=myuser
+      - RABBITMQ_DEFAULT_PASS=mypass
+    ports:
+      # AMQ protocol port
+      - "5672:5672"
+      # Http Managent UI
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq/mnesia
+
+    networks:
+      - bridge
+    extra_hosts:
+      - host.docker.internal:host-gateway
+
+networks:
+  bridge:
+    driver: bridge
+    name: network
