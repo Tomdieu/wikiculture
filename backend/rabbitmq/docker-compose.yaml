@@ -18,11 +18,10 @@ services:
       - rabbitmq_data:/var/lib/rabbitmq/mnesia
 
     networks:
-      - bridge
+      - common_network
     extra_hosts:
       - host.docker.internal:host-gateway
 
-networks:
-  bridge:
+networks: 
+  common_network:
     driver: bridge
-    name: network

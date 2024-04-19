@@ -39,12 +39,11 @@ services:
     depends_on:
       - search_service
     networks:
-      - bridge
+      - common_network
 
-networks:
-  bridge:
+networks: 
+  common_network:
     driver: bridge
-    name: bridge
 
 volumes:
   esdata:  # Define the named volume for data persistence

@@ -18,6 +18,5 @@ services:
       - bridge
 
 networks: 
-  bridge:
+  common_network:
     driver: bridge
-    name: bridge

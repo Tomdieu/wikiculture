@@ -26,8 +26,8 @@ services:
     depends_on:
       - articles_service
     networks:
-      - bridge
-networks:
-  bridge:
+      - common_network
+
+networks: 
+  common_network:
     driver: bridge
-    name: bridge

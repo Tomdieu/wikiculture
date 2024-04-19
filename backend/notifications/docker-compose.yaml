@@ -26,9 +26,8 @@ services:
     depends_on:
       - notification_service
     networks:
-      - bridge
+      - common_network
 
-networks:
-  bridge:
+networks: 
+  common_network:
     driver: bridge
-    name: bridge
