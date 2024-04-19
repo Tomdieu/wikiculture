@@ -4,6 +4,7 @@ services:
 
   user_service:
     image: user
+    restart: unless-stopped
     build:
       context: .
       dockerfile: Dockerfile

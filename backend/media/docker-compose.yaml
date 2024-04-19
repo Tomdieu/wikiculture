@@ -11,6 +11,7 @@ services:
       - "8003:8003"
     command: ["python", "manage.py", "runserver", "8003"]
     container_name: media_service
+    restart: unless-stopped
     networks:
       - bridge
 
@@ -20,6 +21,7 @@ services:
       context: .
       dockerfile: Dockerfile
     command: ["python","consumer.py"]
+    restart: unless-stopped
     depends_on:
       - media_service
     networks:

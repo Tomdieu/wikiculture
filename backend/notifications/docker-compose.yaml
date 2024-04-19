@@ -3,6 +3,7 @@ version: '3.8'
 services:
   notification_service:
     image: notification
+    restart: unless-stopped
     build:
       context: .
       dockerfile: Dockerfile
@@ -10,15 +11,18 @@ services:
       - "8006:8006"
     command: ["python", "manage.py", "runserver", "8006"]
     container_name: notification_service
+    restart: unless-stopped
     networks:
       - bridge
 
   consumer:
     image: notification
+    restart: unless-stopped
     build:
       context: .
       dockerfile: Dockerfile
     command: ["python","consumer.py"]
+    restart: unless-stopped
     depends_on:
       - notification_service
     networks:

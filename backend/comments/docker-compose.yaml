@@ -10,6 +10,7 @@ services:
       - "8002:8002"
     command: ["python", "manage.py", "runserver", "8002"]
     container_name: comment_service
+    restart: unless-stopped
     networks:
       - bridge
 
@@ -19,6 +20,7 @@ services:
       context: .
       dockerfile: Dockerfile
     command: ["python","consumer.py"]
+    restart: unless-stopped
     depends_on:
       - comment_service
     networks:
