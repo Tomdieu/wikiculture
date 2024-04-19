@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  comment_service:
+    image: comment
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8002:8002"
+    command: ["python", "manage.py", "runserver", "8002"]
+    container_name: comment_service
+    networks:
+      - bridge
+
+  consumer:
+    image: comment
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python","consumer.py"]
+    depends_on:
+      - comment_service
+    networks:
+      - bridge
+
+networks:
+  bridge:
+    driver: bridge
+    name: bridge
