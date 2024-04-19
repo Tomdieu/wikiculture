@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  notification_service:
+    image: notification
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8006:8006"
+    command: ["python", "manage.py", "runserver", "8006"]
+    container_name: notification_service
+    networks:
+      - bridge
+
+  consumer:
+    image: notification
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python","consumer.py"]
+    depends_on:
+      - notification_service
+    networks:
+      - bridge
+
+networks:
+  bridge:
+    driver: bridge
+    name: bridge
