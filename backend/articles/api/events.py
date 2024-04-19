@@ -11,3 +11,7 @@ ARTICLE_CREATED = "ArticleCreated"
 ARTICLE_UPDATED = "ArticleUpdated"
 ARTICLE_DELETED = "ArticleDeleted"
 
+# Article Moderator events
+
+ARTICLE_APPROVED = 'ArticleApproved'
+ARTICLE_REJECTED = 'ArticleRejected'

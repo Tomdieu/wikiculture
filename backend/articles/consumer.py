@@ -1,7 +1,7 @@
 import pika, os, json
 import django
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "alert_service.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "articles.settings")
 django.setup()
 
 from django.conf import settings
@@ -36,6 +36,11 @@ channel.exchange_declare(exchange=topic_exchange_name, exchange_type='topic', du
 channel.queue_bind(exchange=topic_exchange_name, queue=queue_name, routing_key="account.*")
 
 
+moderation_topic_exchange_name = "moderation"
+channel.exchange_declare(exchange=moderation_topic_exchange_name, exchange_type='topic', durable=True)
+channel.queue_bind(exchange=moderation_topic_exchange_name, queue=queue_name, routing_key="moderation.*")
+
+
 def callback(ch, method, properties, body):
     print(" [x] Received %r" % body)
     data = json.loads(body)
@@ -65,6 +70,12 @@ def callback(ch, method, properties, body):
         User.objects.filter(id=body['id']).delete()
         ch.basic_ack(delivery_tag=method.delivery_tag)
         return
+
+    # handles events from the moderator service
+
+    if event_type == events.ARTICLE_APPROVED:
+
+        article = body['article']
 
     print(" [x] Received %r" % data)
     print(" [x] Done")
