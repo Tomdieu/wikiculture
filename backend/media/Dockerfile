@@ -2,7 +2,7 @@ FROM python:3.10.13-slim-bullseye
 LABEL authors="ivantom"
 
 
-EXPOSE 8002
+EXPOSE 8003
 
 # Set Environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
