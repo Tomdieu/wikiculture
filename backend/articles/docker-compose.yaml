@@ -12,6 +12,18 @@ services:
     container_name: articles_service
     networks:
       - bridge
+
+  consumer:
+    image: article
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python","consumer.py"]
+    depends_on:
+      - articles_service
+    networks:
+      - bridge
+
 networks:
   bridge:
     driver: bridge
