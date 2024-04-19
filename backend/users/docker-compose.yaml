@@ -15,7 +15,7 @@ services:
     command: ["python", "manage.py", "runserver", "8000"]
     container_name: user_service
     networks:
-      - bridge
+      - common_network
 
 networks: 
   common_network:

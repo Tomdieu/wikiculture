@@ -14,7 +14,7 @@ services:
     container_name: media_service
     restart: unless-stopped
     networks:
-      - bridge
+      - common_network
     volumes:
       - .:/media_files
 

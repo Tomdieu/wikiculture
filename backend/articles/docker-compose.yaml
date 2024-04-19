@@ -12,7 +12,7 @@ services:
     container_name: articles_service
     restart: unless-stopped
     networks:
-      - bridge
+      - common_network
     volumes:
       - .:/articles
 

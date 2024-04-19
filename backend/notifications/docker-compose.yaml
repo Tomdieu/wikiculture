@@ -12,7 +12,7 @@ services:
     command: ["python", "manage.py", "runserver", "8006"]
     container_name: notification_service
     networks:
-      - bridge
+      - common_network
     volumes:
       - .:/notifications
 

@@ -12,7 +12,8 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"  # Optional: Set JVM memory limits
     volumes:
       - esdata:/usr/share/elasticsearch/data  # Create a volume for persistent data
-
+    networks:
+      - common_network
 
   search_service:
     image: search
@@ -25,7 +26,7 @@ services:
     container_name: search_service
     restart: unless-stopped
     networks:
-      - bridge
+      - common_network
     volumes:
       - .:/search
 
