@@ -3,8 +3,6 @@ from django.conf import settings
 import json
 from typing import Any
 
-from .models import Event
-
 import logging
 
 logger = logging.getLogger(__name__)

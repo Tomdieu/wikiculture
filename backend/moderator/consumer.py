@@ -27,13 +27,20 @@ channel.queue_declare(queue=queue_name, durable=True)
 
 # Declare a topic exchange for the media service
 
-topic_exchange_name = "account"
+topics_exchange = ['account', 'article']
+routing_keys = ['account.*', 'article.*']
 
-channel.exchange_declare(exchange=topic_exchange_name, exchange_type='topic', durable=True)
+topic_routing = list(zip(topics_exchange, routing_keys))
+
+# Declare a topic exchange for the article service
+
+for topic in topics_exchange:
+    channel.exchange_declare(exchange=topic, exchange_type="topic", durable=True)
 
 # Bind queue to the topic exchange
 
-channel.queue_bind(exchange=topic_exchange_name, queue=queue_name, routing_key="account.*")
+for topic, routing in topic_routing:
+    channel.queue_bind(exchange=topic, queue=queue_name, routing_key=routing)
 
 
 def callback(ch, method, properties, body):
@@ -42,6 +49,17 @@ def callback(ch, method, properties, body):
     data = json.loads(body)
     event_type = data['event_type']
     body = data['body']
+    
+    if events.USER_CREATED == event_type and body['user_type'] != "User":
+        print("User Deleted")
+        ch.basic_ack(delivery_tag=method.delivery_tag)
+        
+    if events.USER_DELETED == event_type and body['user_type'] == "User":
+        print("User Deleted")
+        users = User.objects.filter(user_id=body['id'])
+        if users.exists():
+            users.delete()
+        ch.basic_ack(delivery_tag=method.delivery_tag)
 
     if event_type == events.USER_CREATED:
         print(" [x] User created event received")
@@ -57,7 +75,7 @@ def callback(ch, method, properties, body):
         Article.objects.create(article_id=body['id'])
         ch.basic_ack(delivery_tag=method.delivery_tag)
 
-    print(" [x] Received %r" % data)
+    # print(" [x] Received %r" % data)
     print(" [x] Done")
 
 
