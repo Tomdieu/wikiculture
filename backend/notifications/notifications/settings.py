@@ -80,6 +80,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'notifications.wsgi.application'
+ASGI_APPLICATION = 'notifications.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases

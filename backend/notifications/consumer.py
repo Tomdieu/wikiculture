@@ -5,7 +5,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "notifications.settings")
 django.setup()
 
 from django.conf import settings
-from api.models import Event,User
+from api.models import User
 
 from api import events
 
@@ -46,7 +46,6 @@ def callback(ch, method, properties, body):
     data = json.loads(body)
     event_type = data['event_type']
     body = data['body']
-    Event.objects.create(event_type=event_type, data=body)
 
     if event_type == events.USER_CREATED:
         print(" [x] User created event received")
