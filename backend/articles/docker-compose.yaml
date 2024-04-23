@@ -27,6 +27,8 @@ services:
       - articles_service
     networks:
       - common_network
+    volumes:
+      - .:/articles
 
 networks: 
   common_network:

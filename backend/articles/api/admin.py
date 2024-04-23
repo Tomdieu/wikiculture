@@ -38,7 +38,7 @@ class UserAdmin(ReadOnlyAdmin):
 
 @admin.register(Article)
 class ArticleAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
-    readonly_fields = ['slug']
+    readonly_fields = ['slug','updated','approved']
 
     list_display = ('title', 'slug', 'status', 'author', 'created_at', 'updated_at')
     list_filter = ('status', 'categories', 'author', 'created_at', 'updated_at')

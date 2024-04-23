@@ -1,6 +1,14 @@
 from rest_framework import serializers
 from simple_history.models import HistoricalRecords
-from .models import Article, Category
+from taggit.serializers import (TagListSerializerField,
+                                TaggitSerializer)
+from .models import Article, Category,User
+
+class UserSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = User
+        fields = '__all__'
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,7 +17,8 @@ class CategorySerializer(serializers.ModelSerializer):
         # exclude = ('parent',)
 
 
-class ArticleSerializer(serializers.ModelSerializer):
+class ArticleSerializer(TaggitSerializer,serializers.ModelSerializer):
+    tags = TagListSerializerField()
     class Meta:
         model = Article
         fields = '__all__'
@@ -20,11 +29,12 @@ class ArticleHistorySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ArticleListSerializer(serializers.ModelSerializer):
+class ArticleListSerializer(TaggitSerializer,serializers.ModelSerializer):
     categories = serializers.SerializerMethodField()
 
-    # history = serializers.SerializerMethodField()
+    tags = TagListSerializerField()
     history = ArticleHistorySerializer(many=True)
+    author = UserSerializer()
 
 
 
@@ -40,11 +50,3 @@ class ArticleListSerializer(serializers.ModelSerializer):
             _categories.append(category.name)
 
         return _categories
-
-    # def get_history(self, obj: Article):
-    #     model = obj.history.__dict__['model']
-    #     obj.history.all().order_by('history_date')
-    #     fields = ['history_id', 'history_date','history_type','history_object','history_user','instance']
-    #     # serializer = HistoricalRecordField(model, obj.history.all().order_by('history_date'), fields=fields, many=True)
-    #     # serializer.is_valid()
-    #     # print(serializer.data)
