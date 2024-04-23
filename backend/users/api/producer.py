@@ -33,7 +33,7 @@ def publish(event_type:str,body:Any,exchange_name:str="account",exchange_type:st
         
         body = json.dumps(data,indent=4).encode('utf-8')
         
-        Event.objects.create(event_type=event_type,data=body)
+        # Event.objects.create(event_type=event_type,data=body)
         
         channel.basic_publish(exchange=exchange_name,routing_key=routing_key,body=body,properties=properties)
         logger.info("Event published successfully")

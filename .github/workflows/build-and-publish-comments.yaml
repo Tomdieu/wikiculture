@@ -1,0 +1,29 @@
+name: Build and Push User Comment Image
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: |
+          cd backend/comments && docker build . --tag comment_service:latest
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push Docker image to GitHub Container Registry
+        run: |
+          docker tag comment_service:latest ghcr.io/tomdieu/wikiculture/comment_service:latest
+          docker push ghcr.io/tomdieu/wikiculture/comment_service:latest

@@ -1,5 +1,4 @@
 from django.db import models
-from taggit.managers import TaggableManager
 from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
@@ -16,16 +15,6 @@ class User(models.Model):
     def __str__(self):
         return f"{self.username} - {self.user_type}"
     
-class Category(models.Model):
-    id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=255)
-
-    class Meta:
-        verbose_name_plural = _('categories')
-
-    def __str__(self) -> str:
-        return self.name
-    
 class Article(models.Model):
     STATUS = (
         ('draft', 'Draft'),
@@ -36,12 +25,16 @@ class Article(models.Model):
     slug = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
     content = models.TextField()
-    tags = TaggableManager()
-    categories = models.CharField(max_length=255,help_text="Category of the article (e.g. Technology, Politics, etc.) `,` seperated by comma")
+    tags = models.CharField(max_length=255)
+    approved = models.BooleanField(default=False)
+    categories = models.CharField(max_length=255)
     status = models.CharField(max_length=20, choices=STATUS, default='draft')
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
+    
+    class Meta:
+        ordering = ('-created_at',)
     
     
     def __str__(self) -> str:

@@ -47,6 +47,10 @@ class LoginViewSet(GenericViewSet, CreateAPIView):
             }
         )
 
+class RegisterViewSet(CreateModelMixin,GenericViewSet):
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]
+    
 
 class UserViewSet(
     CreateModelMixin,
@@ -74,11 +78,6 @@ class UserViewSet(
             return self.request.user
         else:
             return super().get_object()
-
-    def perform_create(self, serializer):
-        user = serializer.save()
-        token = Token.objects.create(user=user)
-        return user
 
     def perform_update(self, serializer):
         serializer.save()
