@@ -5,7 +5,7 @@ from api import events
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "comments.settings")
 django.setup()
 
-from django.conf import settings
+from django.conf import settings    
 from api.models import User,Article
 
 # Set the timeout to 3 hours (in seconds)
@@ -74,9 +74,9 @@ def callback(ch, method, properties, body):
         print(" [x] Article created event received")
         print(" [x] Done")
 
-        Article
+        # Article
 
-    print(" [x] Received %r" % data)
+    # print(" [x] Received %r" % data)
     print(" [x] Done")
 
 
