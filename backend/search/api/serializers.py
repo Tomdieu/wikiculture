@@ -1,28 +1,22 @@
 from rest_framework import serializers
 
-from .models import Article,Category,User
-from django_elasticsearch_dsl_drf.serializers import DocumentSerializer
-from .documents import UserDocument,CategoryDocument,ArticleDocument
+from .models import Article,User
+# from django_elasticsearch_dsl_drf.serializers import DocumentSerializer
+# from .documents import UserDocument,ArticleDocument
 
-class UserDocumentSerializer(DocumentSerializer):
+# class UserDocumentSerializer(DocumentSerializer):
     
-    class Meta:
-        document = UserDocument
-        fields = ('id', 'username', 'first_name', 'last_name', 'email', )
+#     class Meta:
+#         document = UserDocument
+#         fields = ('id', 'username', 'first_name', 'last_name', 'email', )
         
-
-class CategoryDocumentSerializer(DocumentSerializer):
+        
+# class ArticleDocumentSerializer(DocumentSerializer):
     
-    class Meta:
-        document = CategoryDocument
-        fields = '__all__'
+#     class Meta:
         
-class ArticleDocumentSerializer(DocumentSerializer):
-    
-    class Meta:
-        
-        document = ArticleDocument
-        fields = '__all__'
+#         document = ArticleDocument
+#         fields = '__all__'
         
 
 class UserSerializer(serializers.ModelSerializer):
@@ -32,17 +26,25 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = '__all__'
         
-class CategorySerializer(serializers.ModelSerializer):
+# class CategorySerializer(serializers.ModelSerializer):
     
-    class Meta:
+#     class Meta:
         
-        model = Category
-        fields = '__all__'
+#         model = Category
+#         fields = '__all__'
         
 class ArticleSerializer(serializers.ModelSerializer):
     author = UserSerializer()
-    categories = CategorySerializer(many=True)
+    
     class Meta:
         
         model = Article
-        fields = '__all__'
+        fields = [
+            "id",
+            "title",
+            "content",
+            "tags",
+            "categories",
+            "author",
+            "slug"
+        ]

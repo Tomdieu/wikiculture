@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-*qj$h2(wgns^o*dsnj#@d^^x+a2p=1b0!&c&n3dcv5c7kfdpu)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     "api",
     
     # Third party apps
-    'taggit',
+    'drf_yasg',
     "rest_framework",
     "django_elasticsearch_dsl",
     'django_elasticsearch_dsl_drf',
@@ -136,6 +136,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ELASTICSEARCH_DSL = {
     'default': {
-        'hosts': 'localhost:9200'  # Replace with your Elasticsearch host and port
+        'hosts': 'http://localhost:9200',  # Adjust the host and port as needed
     },
 }

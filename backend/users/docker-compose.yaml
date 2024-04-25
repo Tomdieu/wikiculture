@@ -15,8 +15,8 @@ services:
     command: ["python", "manage.py", "runserver", "8000"]
     container_name: user_service
     networks:
-      - common_network
+      - wikiculture_network
 
 networks: 
-  common_network:
+  wikiculture_network:
     driver: bridge

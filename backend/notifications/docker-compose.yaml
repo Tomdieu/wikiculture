@@ -12,7 +12,7 @@ services:
     command: ["python", "manage.py", "runserver", "8006"]
     container_name: notification_service
     networks:
-      - common_network
+      - wikiculture_network
     volumes:
       - .:/notifications
 
@@ -26,8 +26,8 @@ services:
     depends_on:
       - notification_service
     networks:
-      - common_network
+      - wikiculture_network
 
 networks: 
-  common_network:
+  wikiculture_network:
     driver: bridge

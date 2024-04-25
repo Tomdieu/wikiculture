@@ -1,0 +1,1 @@
+docker run -d --name elasticsearch --restart always -p 9200:9200 -e "discovery.type=single-node" -e "ES_JAVA_OPTS=-Xms512m -Xmx512m" -v esdata:/usr/share/elasticsearch/data --network bridge elasticsearch:5.6.16-alpine

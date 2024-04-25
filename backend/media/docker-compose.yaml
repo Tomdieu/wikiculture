@@ -14,7 +14,7 @@ services:
     container_name: media_service
     restart: unless-stopped
     networks:
-      - common_network
+      - wikiculture_network
     volumes:
       - .:/media_files
 
@@ -28,8 +28,8 @@ services:
     depends_on:
       - media_service
     networks:
-      - common_network
+      - wikiculture_network
 
 networks: 
-  common_network:
+  wikiculture_network:
     driver: bridge

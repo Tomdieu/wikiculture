@@ -18,10 +18,10 @@ services:
       - ./rabbitmq_data:/var/lib/rabbitmq
 
     networks:
-      - common_network
+      - wikiculture_network
     extra_hosts:
       - host.docker.internal:host-gateway
 
 networks: 
-  common_network:
+  wikiculture_network:
     driver: bridge

@@ -12,7 +12,7 @@ services:
     container_name: articles_service
     restart: unless-stopped
     networks:
-      - common_network
+      - wikiculture_network
     volumes:
       - .:/articles
 
@@ -26,10 +26,10 @@ services:
     depends_on:
       - articles_service
     networks:
-      - common_network
+      - wikiculture_network
     volumes:
       - .:/articles
 
 networks: 
-  common_network:
+  wikiculture_network:
     driver: bridge
