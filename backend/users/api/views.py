@@ -13,6 +13,8 @@ from .serializers import UserSerializer, LoginSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authtoken.models import Token
 
+from rest_framework import status
+
 # Create your views here.
 
 User = get_user_model()
@@ -33,7 +35,7 @@ class LoginViewSet(GenericViewSet, CreateAPIView):
 
         if user is None:
             return Response(
-                {"message": "Invalid Credentials", "success": False}, status=400
+                {"message": "Invalid Credentials", "success": False}, status=status.HTTP_400_BAD_REQUEST
             )
 
         token, created = Token.objects.get_or_create(user=user)
@@ -44,6 +46,7 @@ class LoginViewSet(GenericViewSet, CreateAPIView):
                 "user": UserSerializer(
                     user, context=self.get_serializer_context()
                 ).data,
+                "success":True
             }
         )
 
