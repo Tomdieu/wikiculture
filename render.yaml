@@ -11,7 +11,4 @@ services:
       - key: RABBITMQ_DEFAULT_USER
         value: guest
     region: oregon
-    disk:
-      name: rabbitmq_data
-      mountPath: /opt/rabbitmq
 version: "1"
