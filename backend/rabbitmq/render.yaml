@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: wikiculture-rabbitmq
+    runtime: image
+    image:
+      url: docker.io/library/rabbitmq:3.10-management-alpine
+    plan: free
+    envVars:
+      - key: RABBITMQ_DEFAULT_PASS
+        value: guest
+      - key: RABBITMQ_DEFAULT_USER
+        value: guest
+    region: oregon
+    disk:
+      name: rabbitmq_data
+      mountPath: /opt/rabbitmq
+version: "1"
