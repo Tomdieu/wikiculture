@@ -1,5 +1,6 @@
 venv
 .idea
+.env
 env/
 __pycache__/
 .next
@@ -7,3 +8,4 @@ __pycache__/
 node_modules
 mediafiles
 rabbitmq_data
+.vscode
