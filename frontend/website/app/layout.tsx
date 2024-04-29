@@ -24,12 +24,20 @@ const poppins = localFont({
       path: "../public/fonts/poppins/Poppins-Black.ttf",
       weight: "800",
     },
+    {
+      path:"../public/fonts/poppins/Poppins-ExtraBold.ttf",
+      weight:"900"
+    },
   ],
   variable: "--font-poppins",
+  display:"swap"
 });
 
 export const metadata: Metadata = {
-  title: "WikiCulture - The Free Culture Encyclopedia",
+  title: {
+    default:"WikiCulture - The Free Culture Encyclopedia",
+    template:`%s | WikiCulture`
+  },
   description:
     "WikiCulture is a free culture encyclopedia that anyone can edit. It is a collaborative creation by people all over the world. It is a free content project with the goal of creating a free culture encyclopedia to the highest possible quality. We welcome everyone to contribute to it and help it grow.",
   creator: "Tomdieu Ivan",
@@ -55,16 +63,16 @@ export const metadata: Metadata = {
       "WikiCulture is a free culture encyclopedia that anyone can edit. It is a collaborative creation by people all over the world. It is a free content project with the goal of creating a free culture encyclopedia to the highest possible quality. We welcome everyone to contribute to it and help it grow.",
 
     creator: "@tomdieu ivan",
-    images: ["https://trixify.vercel.app/logo.svg"],
+    images: ["https://wikiculture.vercel.app/white.svg"],
   },
   openGraph: {
     title: "WikiCulture - The Free Culture Encyclopedia",
     description:
       "WikiCulture is a free culture encyclopedia that anyone can edit. It is a collaborative creation by people all over the world. It is a free content project with the goal of creating a free culture encyclopedia to the highest possible quality. We welcome everyone to contribute to it and help it grow.",
 
-    images: ["https://trixify.vercel.app/logo.svg"],
+    images: ["https://wikiculture.vercel.app/white.svg"],
     creators: ["@tomdieu ivan"],
-    url: "https://trixify.vercel.app",
+    url: "https://wikiculture.vercel.app",
   },
   icons:{
     icon:[
@@ -89,7 +97,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${poppins.variable} w-full h-full`}>
+      <body className={`${poppins.variable} w-full h-full font-poppins`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

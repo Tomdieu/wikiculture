@@ -5,6 +5,7 @@ import {Button} from "@/components/ui/button";
 import {Separator} from "@/components/ui/separator";
 import Link from "next/link";
 import React from "react";
+import Image from "next/image";
 import Img from "@/components/Img";
 
 type Props = {};
@@ -17,12 +18,12 @@ const LoginPage = (props: Props) => {
                     <Img/>
                 </div>
                 <div className="space-y-2 text-center lg:text-left">
-                    <h1 className="text-3xl font-bold text-center">Login</h1>
-                    <p className="text-gray-500 dark:text-gray-400 text-center">
-                        Enter your email below to login to your account
+                    <h1 className="text-3xl font-bold">Forgot Password</h1>
+                    <p className="text-gray-500 dark:text-gray-400">
+                        Enter your email below
                     </p>
                 </div>
-                <div className="space-y-4">
+                <div className="space-y-4 w-full">
                     <div className="space-y-2">
                         <Label htmlFor="email">Email</Label>
                         <Input
@@ -30,19 +31,13 @@ const LoginPage = (props: Props) => {
                             placeholder="m@example.com"
                             required
                             type="email"
+
                         />
+                        <p className={"text-xs text-muted-foreground"}>An reset link will be send to this email</p>
                     </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="password">Password</Label>
-                        <Input id="password" required type="password"/>
-                    </div>
-                    <Button className="w-full">Login</Button>
-                    <Link
-                        className="inline-block w-full text-center text-sm underline"
-                        href={"/reset-password"}
-                    >
-                        Forgot your password?
-                    </Link>
+
+                    <Button className="w-full">Send</Button>
+
                     <Separator/>
                     <div className="space-y-4">
 
