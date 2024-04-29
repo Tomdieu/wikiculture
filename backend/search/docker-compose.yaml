@@ -2,7 +2,7 @@ version: '3.8'  # Specify the Docker Compose file version
 
 services:
   elasticsearch:
-    image: elasticsearch:5.6.16-alpine
+    image: elasticsearch:7.17.16
     container_name: elasticsearch
     restart: always  # Ensure automatic restarts
     ports:
@@ -22,9 +22,11 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8004:8004"
-    command: ["python", "manage.py", "runserver", "8004"]
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8004"]
     container_name: search_service
     restart: unless-stopped
+    depends_on:
+      - elasticsearch
     networks:
       - bridge
     volumes:

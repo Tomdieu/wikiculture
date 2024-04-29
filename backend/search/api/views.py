@@ -1,5 +1,4 @@
 from django.http import HttpResponse
-from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
@@ -9,6 +8,7 @@ from .serializers import ArticleSerializer
 from .documents import ArticleDocument
 
 from elasticsearch_dsl.query import Q
+from elasticsearch_dsl import Search
 
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -34,32 +34,39 @@ class SearchArticleView(APIView, LimitOffsetPagination):
 
         try:
             
-            query = query or request.query_params.get('query', '')
+            # query = query  or request.query_params.get('query', '')
 
             q = Q(
                 "multi_match",
                 query=query,
                 fields=[
-                    "id",
+                    # "id",
                     "title",
                     "content",
                     "tags",
                     "categories",
-                    "author",
+                    "author.username",
+                    "author.first_name",
+                    "author.last_name",
                     "slug",
                 ],
-            )
+                fuzziness='auto'
+                
+            ) 
+            # & Q(
+            #     'bool',
+            #     should=[
+            #         Q('match',approved=True)
+            #     ]
+            # )
             
-            search = self.search_document.search().query(q)
+            print(q)
+            
+            search = self.search_document.search()
+            search.query = q
             response = search.execute()
             
-            # print("Executed")
-            
-            # return Response({"ok":200})
-            
             results = self.paginate_queryset(response,request,view=self)
-            
-            print("Results : ",results)
             
             serializer = self.search_serializer(results,many=True)
 

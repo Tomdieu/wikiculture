@@ -132,10 +132,44 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+REST_FRAMEWORK = {
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 25
+}
+
 # Elastic Search Config
 
 ELASTICSEARCH_DSL = {
     'default': {
-        'hosts': 'http://localhost:9200',  # Adjust the host and port as needed
+        'hosts': 'http://localhost:9200/',  # Adjust the host and port as needed
+        # 'http_auth': ('elastic', 'qnfQ8c04Rrei-tNP97f7'),
+        # 'ca_certs':BASE_DIR/'http_ca.crt'
     },
 }
+
+
+# ELASTICSEARCH_DSL = {
+#     'default': {
+#         'hosts': 'https://localhost:9200/',  # Adjust the host and port as needed
+#         'http_auth': ('elastic', 'qnfQ8c04Rrei-tNP97f7'),
+#         # 'sniff_on_start': True,
+#         'ca_certs':BASE_DIR/'http_ca.crt'
+#         # 'http_certificate':'64313f12210dbe13a167ca4749d9334f5fc4d11d661619fb04c14d3e37660910',
+#         # 'username':'elastic',
+#         # 'password':'qnfQ8c04Rrei-tNP97f7'
+#     },
+# }
+
+ELASTICSEARCH_DSL_SIGNAL_PROCESSOR = 'django_elasticsearch_dsl.signals.RealTimeSignalProcessor'
+
+ELASTICSEARCH_INDEX_NAMES = {
+    'api.article': 'articles',
+    'api.users': 'users',
+}
+
+# Rabbitmq configuration
+
+RABBITMQ_HOST = 'localhost'
+RABBITMQ_PORT = 5672
+RABBITMQ_USERNAME = 'guest'
+RABBITMQ_PASSWORD = 'guest'
