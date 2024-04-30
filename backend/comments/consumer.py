@@ -74,9 +74,19 @@ def callback(ch, method, properties, body):
         print(" [x] Article created event received")
         print(" [x] Done")
 
-        # Article
-
-    # print(" [x] Received %r" % data)
+        Article.objects.create(id=body['id'])
+        ch.basic_ack(delivery_tag=method.delivery_tag)
+        
+        
+    elif event_type == events.ARTICLE_DELETED:
+        print(" [x] Article deleted event received")
+        print(" [x] Done")
+        
+        Article.objects.filter(id=body['id']).delete()
+        ch.basic_ack(delivery_tag=method.delivery_tag)
+        
+        
+        
     print(" [x] Done")
 
 
