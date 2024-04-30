@@ -9,7 +9,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8006:8006"
-    command: ["python", "manage.py", "runserver", "8006"]
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8006"]
     container_name: notification_service
     networks:
       - wikiculture_network

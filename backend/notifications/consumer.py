@@ -70,6 +70,14 @@ def callback(ch, method, properties, body):
         ch.basic_ack(delivery_tag=method.delivery_tag)
         return
 
+    elif event_type == events.ARTICLE_APPROVED:
+
+        pass
+
+    elif event_type == events.ARTICLE_REJECTED:
+
+        pass
+
     print(" [x] Received %r" % data)
     print(" [x] Done")
     # ch.basic_ack(delivery_tag=method.delivery_tag)
