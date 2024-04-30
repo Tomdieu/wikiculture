@@ -11,4 +11,20 @@ services:
       - key: RABBITMQ_DEFAULT_USER
         value: guest
     region: oregon
+  - type: web
+    name: user_service
+    runtime: image
+    image:
+      url: hcr.io/tomdieu/wikiculture/user_service:latest
+    plan: free
+    envVars:
+      - key: RABBITMQ_HOST
+        value: wikiculture-rabbitmq
+      - key: RABBITMQ_PORT
+        value: 5672
+      - key: RABBITMQ_USERNAME
+        value: guest
+      - key: RABBITMQ_PASSWORD
+        value: guest
+    dockerCommand: ./startup.sh
 version: "1"

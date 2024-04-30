@@ -12,7 +12,7 @@ services:
       - .:/users
     ports:
       - "8000:8000"
-    command: ["python", "manage.py", "runserver", "8000"]
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
     container_name: user_service
     networks:
       - wikiculture_network
