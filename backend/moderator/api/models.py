@@ -16,6 +16,17 @@ class User(models.Model):
     def __str__(self):
         return f"User {self.user_id}"
     
+
+class Moderator(User):
+    
+    class Meta:
+        
+        proxy = True
+
+    
+
+    objects = models.Manager().filter()    
+    
     
 class Article(models.Model):
     

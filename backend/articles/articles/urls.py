@@ -22,9 +22,9 @@ from drf_yasg import openapi
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Accounts API",
+        title="Articles API",
         default_version="v1",
-        description="Users API for the Accounts app",
+        description="Users API for the Articles app",
         terms_of_service="https://www.google.com/policies/terms/",
         contact=openapi.Contact(email="ivan.tomdieu@gmail.com"),
         license=openapi.License(name="BSD License"),

@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: search-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: search-service
+  template:
+    metadata:
+      labels:
+        app: search-service
+    spec:
+      containers:
+        - name: search-service
+          image: search
+          ports:
+            - containerPort: 8004
+          command: ["python", "manage.py", "runserver", "0.0.0.0:8004"]
+          volumeMounts:
+            - name: search-volume
+              mountPath: /search
+          resources:
+            limits:
+              memory: "512Mi"
+            requests:
+              memory: "512Mi"
+        - name: consumer
+          image: search
+          command: ["python", "consumer.py"]
+          restartPolicy: Always
+      volumes:
+        - name: search-volume
+          emptyDir: {}

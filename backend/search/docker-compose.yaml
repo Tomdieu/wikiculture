@@ -14,6 +14,11 @@ services:
       - esdata:/usr/share/elasticsearch/data  # Create a volume for persistent data
     networks:
       - bridge
+    mem_limit: 1073741824
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
 
   search_service:
     image: search
