@@ -15,7 +15,7 @@ services:
     name: user_service
     runtime: image
     image:
-      url: hcr.io/tomdieu/wikiculture/user_service:latest
+      url: ghcr.io/tomdieu/wikiculture/user_service:latest
     plan: free
     envVars:
       - key: RABBITMQ_HOST
