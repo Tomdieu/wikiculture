@@ -30,6 +30,11 @@ spec:
           image: search
           command: ["python", "consumer.py"]
           restartPolicy: Always
+          resources:
+            limits:
+              memory: "512Mi"
+            requests:
+              memory: "512Mi"
       volumes:
         - name: search-volume
           emptyDir: {}

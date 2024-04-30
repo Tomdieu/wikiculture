@@ -11,10 +11,16 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import environ
+import os
+
+env = environ.Env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+# reading .env file
 
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -148,18 +154,6 @@ ELASTICSEARCH_DSL = {
 }
 
 
-# ELASTICSEARCH_DSL = {
-#     'default': {
-#         'hosts': 'https://localhost:9200/',  # Adjust the host and port as needed
-#         'http_auth': ('elastic', 'qnfQ8c04Rrei-tNP97f7'),
-#         # 'sniff_on_start': True,
-#         'ca_certs':BASE_DIR/'http_ca.crt'
-#         # 'http_certificate':'64313f12210dbe13a167ca4749d9334f5fc4d11d661619fb04c14d3e37660910',
-#         # 'username':'elastic',
-#         # 'password':'qnfQ8c04Rrei-tNP97f7'
-#     },
-# }
-
 ELASTICSEARCH_DSL_SIGNAL_PROCESSOR = 'django_elasticsearch_dsl.signals.RealTimeSignalProcessor'
 
 ELASTICSEARCH_INDEX_NAMES = {
@@ -169,7 +163,7 @@ ELASTICSEARCH_INDEX_NAMES = {
 
 # Rabbitmq configuration
 
-RABBITMQ_HOST = 'localhost'
-RABBITMQ_PORT = 5672
-RABBITMQ_USERNAME = 'guest'
-RABBITMQ_PASSWORD = 'guest'
+RABBITMQ_HOST = env('RABBITMQ_HOST',default='localhost')
+RABBITMQ_PORT = env('RABBITMQ_PORT',default=5672)
+RABBITMQ_USERNAME = env('RABBITMQ_USERNAME',default='guest')
+RABBITMQ_PASSWORD = env('RABBITMQ_PASSWORD',default='guest')
