@@ -1,0 +1,53 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wikiculture-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: wikiculture.com # Replace with your actual domain
+      http:
+        paths:
+          - path: /articles
+            pathType: Prefix
+            backend:
+              service:
+                name: articles-service
+                port:
+                  number: 8001
+          - path: /comment
+            pathType: Prefix
+            backend:
+              service:
+                name: comment-service
+                port:
+                  number: 8002
+          - path: /media
+            pathType: Prefix
+            backend:
+              service:
+                name: media-service
+                port:
+                  number: 8003
+          - path: /moderator
+            pathType: Prefix
+            backend:
+              service:
+                name: moderator-service
+                port:
+                  number: 8004
+          - path: /user
+            pathType: Prefix
+            backend:
+              service:
+                name: user-service
+                port:
+                  number: 8000
+          - path: /notification
+            pathType: Prefix
+            backend:
+              service:
+                name: notification-service
+                port:
+                  number: 8006
