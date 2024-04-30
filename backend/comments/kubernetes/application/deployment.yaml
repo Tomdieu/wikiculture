@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: comment-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: comment-service
+  template:
+    metadata:
+      labels:
+        app: comment-service
+    spec:
+      containers:
+        - name: comment-service
+          image: comment
+          ports:
+            - containerPort: 8002
+          command: ["python", "manage.py", "runserver", "0.0.0.0:8002"]
+          volumeMounts:
+            - name: comments-volume
+              mountPath: /comments
+        - name: consumer
+          image: comment
+          command: ["python", "consumer.py"]
+          volumeMounts:
+            - name: comments-volume
+              mountPath: /comments
+      volumes:
+        - name: comments-volume
+          emptyDir: {}
