@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moderator-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: moderator-service
+  template:
+    metadata:
+      labels:
+        app: moderator-service
+    spec:
+      containers:
+        - name: moderator-service
+          image: moderator
+          ports:
+            - containerPort: 8005
+          command: ["python", "manage.py", "runserver", "0.0.0.0:8005"]
+          volumeMounts:
+            - name: moderator-volume
+              mountPath: /moderator
+        - name: consumer
+          image: moderator
+          command: ["python", "consumer.py"]
+          volumeMounts:
+            - name: moderator-volume
+              mountPath: /moderator
+      volumes:
+        - name: moderator-volume
+          emptyDir: {}

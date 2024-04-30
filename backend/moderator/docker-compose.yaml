@@ -1,15 +1,15 @@
 version: '3.8'
 
 services:
-  articles_service:
-    image: article
+  moderator_service:
+    image: moderator
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "8005:8005"
-    command: ["python", "manage.py", "runserver", "8005"]
-    container_name: articles_service
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8005"]
+    container_name: moderator_service
     restart: unless-stopped
     networks:
       - wikiculture_network
@@ -17,14 +17,14 @@ services:
       - .:/moderator
 
   consumer:
-    image: article
+    image: moderator
     build:
       context: .
       dockerfile: Dockerfile
     command: ["python","consumer.py"]
     restart: unless-stopped
     depends_on:
-      - articles_service
+      - moderator_service
     networks:
       - wikiculture_network
 
