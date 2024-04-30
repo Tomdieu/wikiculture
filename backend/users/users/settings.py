@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -41,10 +42,6 @@ INSTALLED_APPS = [
     'api',
     
     # third aparty apps
-    # 'drf_yasg',
-    # 'oauth2_provider',
-    # 'social_django',
-    # 'drf_social_oauth2',
     "drf_yasg",
     "rest_framework",
     "rest_framework.authtoken",
@@ -74,9 +71,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                
-                'social_django.context_processors.backends',
-                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -149,29 +143,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #     ),
 # }
 
-# AUTHENTICATION_BACKENDS = (
-    
-#     # Google  OAuth2
-#     'social_core.backends.google.GoogleOAuth2',
-#     # drf-social-oauth2
-#     'drf_social_oauth2.backends.DjangoOAuth2',
-#     # Django
-#     'django.contrib.auth.backends.ModelBackend',
-# )
-
-# OAUTH2_PROVIDER = {
-#     'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups'}
-# }
-
-# # Google configuration
-# SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "583298646821-3g7sjbb2ok0qkh9a3vba8qoatiitlf49.apps.googleusercontent.com"
-# SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "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"
-
-# # Define SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE to get extra permissions from Google.
-# SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
-#     'https://www.googleapis.com/auth/userinfo.email',
-#     'https://www.googleapis.com/auth/userinfo.profile',
-# ]
 
 
 # Rabbitmq configuration
