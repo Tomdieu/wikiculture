@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: media-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: media-service
+  template:
+    metadata:
+      labels:
+        app: media-service
+    spec:
+      containers:
+        - name: media-service
+          image: media
+          ports:
+            - containerPort: 8003
+          command: ["python", "manage.py", "runserver", "0.0.0.0:8003"]
+          volumeMounts:
+            - name: media-files-volume
+              mountPath: /media_files
+        - name: consumer
+          image: media
+          command: ["python", "consumer.py"]
+          volumeMounts:
+            - name: media-files-volume
+              mountPath: /media_files
+      volumes:
+        - name: media-files-volume
+          emptyDir: {}
