@@ -14,6 +14,7 @@ services:
   - type: web
     name: user_service
     runtime: image
+    region: ohio
     image:
       url: ghcr.io/tomdieu/wikiculture/user_service:latest
     plan: free
