@@ -19,7 +19,7 @@ services:
     plan: free
     envVars:
       - key: RABBITMQ_HOST
-        value: wikiculture-rabbitmq
+        value: https://wikiculture-rabbitmq.onrender.com
       - key: RABBITMQ_PORT
         value: 5672
       - key: RABBITMQ_USERNAME

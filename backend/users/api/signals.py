@@ -18,6 +18,8 @@ def create_auth_token(sender,instance=None,created=False,**kwargs):
             body=serializer.data
         )
         
+        print("Send To RabbitMq")
+        
     else:
         
         serializer = UserSerializer(instance)
@@ -26,6 +28,9 @@ def create_auth_token(sender,instance=None,created=False,**kwargs):
             body=serializer.data
         )
         
+        print("Send To RabbitMq")
+        
+        
 @receiver(pre_delete,sender=User)
 def delete_auth_token(sender,instance=None,**kwargs):
     serializer = UserSerializer(instance)
@@ -33,3 +38,5 @@ def delete_auth_token(sender,instance=None,**kwargs):
         event_type=events.USER_DELETED,
         body=serializer.data
     )
+    
+    print("Send To RabbitMq")
