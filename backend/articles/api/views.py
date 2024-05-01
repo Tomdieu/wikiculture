@@ -4,11 +4,13 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, ListModelMixin, DestroyModelMixin, \
     UpdateModelMixin
 from rest_framework.response import Response
-from .models import Article, Category
-from .serializers import ArticleSerializer, CategorySerializer, ArticleListSerializer
+from .models import Article, Category,ReadingTime
+from .serializers import ArticleSerializer, CategorySerializer, ArticleListSerializer,ReadingTimeSerializer
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from .authentication import TokenAuthentication
+from rest_framework.views import APIView
+from rest_framework import status
 
 
 # Create your views here.
@@ -57,3 +59,26 @@ class CategoryViewSet(GenericViewSet, CreateModelMixin, RetrieveModelMixin, List
                       UpdateModelMixin):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+
+
+class ReadingTimeView(APIView):
+    permission_classes = [IsAuthenticated,AllowAny]
+    authentication_classes = [TokenAuthentication]
+    def post(self, request, format=None):
+        user = request.user
+        
+        ip_address = request.META.get('REMOTE_ADDR')
+        user_agent = request.META.get('HTTP_USER_AGENT')
+        
+        article_id = request.data.get('article_id')
+        time_spent = request.data.get('time_spent')
+
+        # Retrieve or create ReadingTime object
+        reading_time, created = ReadingTime.objects.get_or_create(user=user, article_id=article_id,ip_address=ip_address,user_agent=user_agent)
+        
+        # Update total time spent
+        reading_time.total_time_spent += int(time_spent)
+        reading_time.save()
+
+        serializer = ReadingTimeSerializer(reading_time)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

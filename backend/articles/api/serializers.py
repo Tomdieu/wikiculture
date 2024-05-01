@@ -2,7 +2,7 @@ from rest_framework import serializers
 from simple_history.models import HistoricalRecords
 from taggit.serializers import (TagListSerializerField,
                                 TaggitSerializer)
-from .models import Article, Category,User
+from .models import Article, Category,User,ReadingTime
 
 class UserSerializer(serializers.ModelSerializer):
     
@@ -50,3 +50,8 @@ class ArticleListSerializer(TaggitSerializer,serializers.ModelSerializer):
             _categories.append(category.name)
 
         return _categories
+    
+class ReadingTimeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReadingTime
+        fields = ['user', 'article', 'time_spent']

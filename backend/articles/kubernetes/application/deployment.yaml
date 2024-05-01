@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: articles-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: articles-service
+  template:
+    metadata:
+      labels:
+        app: articles-service
+    spec:
+      containers:
+        - name: articles-service
+          image: article
+          ports:
+            - containerPort: 8001
+          command: ["python", "manage.py", "runserver", "8001"]
+          volumeMounts:
+            - name: articles-volume
+              mountPath: /articles
+        - name: consumer
+          image: article
+          command: ["python", "consumer.py"]
+          volumeMounts:
+            - name: articles-volume
+              mountPath: /articles
+      volumes:
+        - name: articles-volume
+          emptyDir: {}

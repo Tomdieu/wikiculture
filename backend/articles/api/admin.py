@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from import_export.admin import ImportExportModelAdmin
 from simple_history.admin import SimpleHistoryAdmin
-from .models import User, Article, Category, Event
+from .models import User, Article, Category, Event,ReadingTime
 
 
 # Register your models here.
@@ -50,3 +50,10 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name',)
     search_fields = ('name',)
     ordering = ('name',)
+
+@admin.register(ReadingTime)
+class ReadingTimeAdmin(admin.ModelAdmin):
+    
+    list_display = ('id','user','article','total_time_spent')
+    search_fields = ('user__username','article__title')
+    ordering = ('article__title','user__username')

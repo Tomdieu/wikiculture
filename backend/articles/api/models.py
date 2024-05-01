@@ -78,6 +78,19 @@ class ArticleLike(models.Model):
 
     def __str__(self) -> str:
         return f"{self.user} Liked {self.article}"
+
+class ReadingTime(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    
+    ip_address = models.CharField(max_length=45,blank=True)
+    user_agent = models.TextField(blank=True)
+    
+    total_time_spent = models.PositiveIntegerField(default=0)  # Store total time in seconds
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user} spent {self.total_time_spent} seconds reading {self.article}"
     
 # class ArticleView(models.)
 
