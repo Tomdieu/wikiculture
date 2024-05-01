@@ -139,3 +139,11 @@ RABBITMQ_HOST = env('RABBITMQ_HOST',default='localhost')
 RABBITMQ_PORT = env('RABBITMQ_PORT',default=5672)
 RABBITMQ_USERNAME = env('RABBITMQ_USERNAME',default='guest')
 RABBITMQ_PASSWORD = env('RABBITMQ_PASSWORD',default='guest')
+
+# Channel
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}

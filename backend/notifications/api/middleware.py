@@ -12,7 +12,7 @@ from channels.auth import UserLazyObject
 @database_sync_to_async
 def get_user(token_string):
     try:
-        USER_INFO = settings.USER_SERVICE + "/api/users/"
+        USER_INFO = settings.USER_SERVICE + "/api/users/current_user/"
 
         headers = {'Authorization': token_string}
 
