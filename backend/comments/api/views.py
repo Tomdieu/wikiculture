@@ -8,7 +8,9 @@ from .authentication import TokenAuthentication
 from rest_framework.permissions import AllowAny,IsAuthenticated
 
 from .serializers import CommentSerializer,CommentCreateSerializer
-from .models import Article,Comments
+from .models import Article,Comments,User
+
+from rest_framework import status
 
 # Create your views here.
 
@@ -27,12 +29,21 @@ class CommentViewSet(CreateModelMixin,UpdateModelMixin,DestroyModelMixin,ListMod
         else:
             return CommentCreateSerializer
             
-    # serializer_class = CommentSerializer
     
     authentication_classes = [TokenAuthentication]
     
     queryset = Comments.objects.filter(parent=None)
     
+    def destroy(self, request, *args, **kwargs):
+        user:User = request.user
+        
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        if user.id == serializer.author.id:
+            return super().destroy(request, *args, **kwargs)
+
+        return Response({"message":"You are not allowed to delete someone comment"},status=status.HTTP_401_UNAUTHORIZED)
 
 class ArticleCommentsViewSet(APIView):
     

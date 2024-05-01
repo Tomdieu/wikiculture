@@ -14,7 +14,7 @@ class TokenAuthentication(BaseAuthentication):
         if not token:
             return None
 
-        USER_INFO = settings.USER_SERVICE + "/api/users/"
+        USER_INFO = settings.USER_SERVICE + "/api/users/current_user/"
 
         headers = {'Authorization': token}
 
