@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: media-service
-          image: media
+          image: ghcr.io/tomdieu/wikiculture/media_service:latest
           ports:
             - containerPort: 8003
           command: ["python", "manage.py", "runserver", "0.0.0.0:8003"]
@@ -22,7 +22,7 @@ spec:
             - name: media-files-volume
               mountPath: /media_files
         - name: consumer
-          image: media
+          image: ghcr.io/tomdieu/wikiculture/media_service:latest
           command: ["python", "consumer.py"]
           volumeMounts:
             - name: media-files-volume

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: search-service
-          image: search
+          image: ghcr.io/tomdieu/wikiculture/search_service:latest
           ports:
             - containerPort: 8004
           command: ["python", "manage.py", "runserver", "0.0.0.0:8004"]

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: moderator-service
-          image: moderator
+          image: ghcr.io/tomdieu/wikiculture/moderator_service:latest
           ports:
             - containerPort: 8005
           command: ["python", "manage.py", "runserver", "0.0.0.0:8005"]
@@ -22,7 +22,7 @@ spec:
             - name: moderator-volume
               mountPath: /moderator
         - name: consumer
-          image: moderator
+          image: ghcr.io/tomdieu/wikiculture/moderator_service:latest
           command: ["python", "consumer.py"]
           volumeMounts:
             - name: moderator-volume

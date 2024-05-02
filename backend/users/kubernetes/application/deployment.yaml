@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: user-service
-          image: user
+          image: ghcr.io/tomdieu/wikiculture/user_service:latest
           ports:
             - containerPort: 8000
           command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]

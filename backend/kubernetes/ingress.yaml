@@ -30,11 +30,11 @@ spec:
                 name: media-service
                 port:
                   number: 8003
-          - path: /moderator
+          - path: /search
             pathType: Prefix
             backend:
               service:
-                name: moderator-service
+                name: search-service
                 port:
                   number: 8004
           - path: /user
@@ -51,3 +51,10 @@ spec:
                 name: notification-service
                 port:
                   number: 8006
+          - path: /moderator
+            pathType: Prefix
+            backend:
+              service:
+                name: moderator-service
+                port:
+                  number: 8005

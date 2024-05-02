@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: articles-service
-          image: article
+          image: ghcr.io/tomdieu/wikiculture/article_service:latest
           ports:
             - containerPort: 8001
           command: ["python", "manage.py", "runserver", "8001"]
@@ -22,7 +22,7 @@ spec:
             - name: articles-volume
               mountPath: /articles
         - name: consumer
-          image: article
+          image: ghcr.io/tomdieu/wikiculture/article_service:latest
           command: ["python", "consumer.py"]
           volumeMounts:
             - name: articles-volume

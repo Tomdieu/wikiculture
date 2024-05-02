@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: notification-service
-          image: notification
+          image: ghcr.io/tomdieu/wikiculture/notifications_service:latest
           ports:
             - containerPort: 8006
           command: ["python", "manage.py", "runserver", "0.0.0.0:8006"]
@@ -22,7 +22,7 @@ spec:
             - name: notifications-volume
               mountPath: /notifications
         - name: consumer
-          image: notification
+          image: ghcr.io/tomdieu/wikiculture/notifications_service:latest
           command: ["python", "consumer.py"]
           volumeMounts:
             - name: notifications-volume

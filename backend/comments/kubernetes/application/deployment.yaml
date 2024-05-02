@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: comment-service
-          image: comment
+          image: ghcr.io/tomdieu/wikiculture/comment_service:latest
           ports:
             - containerPort: 8002
           command: ["python", "manage.py", "runserver", "0.0.0.0:8002"]
@@ -22,7 +22,7 @@ spec:
             - name: comments-volume
               mountPath: /comments
         - name: consumer
-          image: comment
+          image: ghcr.io/tomdieu/wikiculture/comment_service:latest
           command: ["python", "consumer.py"]
           volumeMounts:
             - name: comments-volume
