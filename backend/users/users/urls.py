@@ -36,9 +36,6 @@ schema_view = get_schema_view(
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('api/', include('api.urls')),
-    # path("auth/", include("drf_social_oauth2.urls", namespace="drf")),
-    # path("o/", include("oauth2_provider.urls", namespace="oauth2_provider")),
-    # path("social/", include("social_django.urls", namespace="social")),
     path(
         "swagger<format>/", schema_view.without_ui(cache_timeout=0), name="schema-json"
     ),
