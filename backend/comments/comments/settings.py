@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "drf_yasg",
     "rest_framework",
     "corsheaders",
+    
 ]
 
 MIDDLEWARE = [
@@ -62,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = 'comments.urls'
@@ -141,3 +143,8 @@ RABBITMQ_HOST = env('RABBITMQ_HOST',default='localhost')
 RABBITMQ_PORT = env('RABBITMQ_PORT',default=5672)
 RABBITMQ_USERNAME = env('RABBITMQ_USERNAME',default='guest')
 RABBITMQ_PASSWORD = env('RABBITMQ_PASSWORD',default='guest')
+
+# Cors Configuration
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_METHODS = ("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")

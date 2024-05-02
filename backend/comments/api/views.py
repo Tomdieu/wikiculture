@@ -47,7 +47,7 @@ class CommentViewSet(CreateModelMixin,UpdateModelMixin,DestroyModelMixin,ListMod
 
 class ArticleCommentsViewSet(APIView):
     
-    permission_classes = [IsAuthenticated()]
+    # permission_classes = [IsAuthenticated()]
     
     def get(self,request,article_id:int):
         
