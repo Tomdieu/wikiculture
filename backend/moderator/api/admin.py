@@ -26,6 +26,7 @@ class ArticleAdmin(ReadOnlyAdmin):
     list_display = ['id']
     
 @admin.register(ModerationRecord)
-class ModerationRecordAdmin(ReadOnlyAdmin):
+class ModerationRecordAdmin(admin.ModelAdmin):
     
     list_display = ['id','user','article','decision','timestamp']
+    list_filter = ['decision']

@@ -22,9 +22,7 @@ class Moderator(User):
     class Meta:
         
         proxy = True
-
-    
-
+        
     objects = models.Manager().filter()    
     
     

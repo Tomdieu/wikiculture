@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from .serializer import ModerationRecordCreateSerializer,ModerationRecordSerializer
 from .models import ModerationRecord
 from .authentication import TokenAuthentication
-from .permissions import IsModerator,IsAdmin
+from .permissions import IsModeratorOrAdmin
 
 
 # Create your views here.
@@ -17,7 +17,7 @@ from .permissions import IsModerator,IsAdmin
 class ModerationViewSet(CreateModelMixin,RetrieveModelMixin,ListModelMixin,DestroyModelMixin,GenericViewSet):
     
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated,IsModerator,IsAdmin]
+    permission_classes = [IsAuthenticated,IsModeratorOrAdmin]
     
     queryset = ModerationRecord.objects.all()
     
