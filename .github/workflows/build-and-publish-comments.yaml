@@ -1,4 +1,4 @@
-name: Build and Push User Comment Image
+name: Build and Push Comments Image
 on:
   push:
     branches:
