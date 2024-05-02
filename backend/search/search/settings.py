@@ -147,9 +147,11 @@ REST_FRAMEWORK = {
 
 # Elastic Search Config
 
+ELASTICSEARCH_HOST = env('ELASTICSEARCH_HOST',default='localhost')
+
 ELASTICSEARCH_DSL = {
     'default': {
-        'hosts': 'http://localhost:9200/',  # Adjust the host and port as needed
+        'hosts': f'http://{ELASTICSEARCH_HOST}:9200/',  # Adjust the host and port as needed
         # 'http_auth': ('elastic', 'qnfQ8c04Rrei-tNP97f7'),
         # 'ca_certs':BASE_DIR/'http_ca.crt'
     },

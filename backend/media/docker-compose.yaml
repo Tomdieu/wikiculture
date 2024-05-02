@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  media_servicea:
+  media_service:
     image: media
     build:
       context: .
@@ -15,8 +15,11 @@ services:
     restart: unless-stopped
     networks:
       - wikiculture_network
-    volumes:
-      - .:/media_files
+    environment:        # Add environment variables here
+      - RABBITMQ_USERNAME=guest
+      - RABBITMQ_PASSWORD=guest
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
 
   consumer:
     image: media
@@ -29,6 +32,11 @@ services:
       - media_service
     networks:
       - wikiculture_network
+    environment:        # Add environment variables here
+      - RABBITMQ_USERNAME=guest
+      - RABBITMQ_PASSWORD=guest
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
 
 networks: 
   wikiculture_network:

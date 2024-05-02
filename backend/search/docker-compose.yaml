@@ -30,34 +30,56 @@ services:
     networks:
       - bridge
 
-  # search_service:
-  #   image: search
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "8004:8004"
-  #   command: ["python", "manage.py", "runserver", "0.0.0.0:8004"]
-  #   container_name: search_service
-  #   restart: unless-stopped
-  #   depends_on:
-  #     - elasticsearch
-  #   networks:
-  #     - bridge
-  #   volumes:
-  #     - .:/search
+  kibana:
+    image: kibana:7.17.16
+    container_name: kibana
+    restart: always
+    ports:
+      - "5601:5601"
+    environment:
+      - "ELASTICSEARCH_HOSTS=http://elasticsearch:9200"
+    networks:
+      - bridge
 
-  # consumer:
-  #   image: search
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   command: ["python","consumer.py"]
-  #   restart: unless-stopped
-  #   depends_on:
-  #     - search_service
-  #   networks:
-  #     - bridge
+  search_service:
+    image: search
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8004:8004"
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8004"]
+    container_name: search_service
+    restart: unless-stopped
+    environment:        # Add environment variables here
+      - RABBITMQ_USERNAME=guest
+      - RABBITMQ_PASSWORD=guest
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - ELASTICSEARCH_HOST=elasticsearch
+    depends_on:
+      - elasticsearch
+    networks:
+      - bridge
+    volumes:
+      - .:/search
+
+  consumer:
+    image: search
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python","consumer.py"]
+    restart: unless-stopped
+    environment:        # Add environment variables here
+      - RABBITMQ_USERNAME=guest
+      - RABBITMQ_PASSWORD=guest
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+    depends_on:
+      - search_service
+    networks:
+      - bridge
 
 networks: 
   bridge:

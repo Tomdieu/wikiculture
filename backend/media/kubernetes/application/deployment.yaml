@@ -13,20 +13,48 @@ spec:
         app: media-service
     spec:
       containers:
-        - name: media-service
-          image: ghcr.io/tomdieu/wikiculture/media_service:latest
-          ports:
-            - containerPort: 8003
-          command: ["python", "manage.py", "runserver", "0.0.0.0:8003"]
-          volumeMounts:
-            - name: media-files-volume
-              mountPath: /media_files
-        - name: consumer
-          image: ghcr.io/tomdieu/wikiculture/media_service:latest
-          command: ["python", "consumer.py"]
-          volumeMounts:
-            - name: media-files-volume
-              mountPath: /media_files
-      volumes:
+      - name: media-service
+        image: ghcr.io/tomdieu/wikiculture/media_service:latest
+        ports:
+        - containerPort: 8003
+        command: ["python", "manage.py", "runserver", "0.0.0.0:8003"]
+        volumeMounts:
         - name: media-files-volume
-          emptyDir: {}
+          mountPath: /media_files
+        env:
+        - name: RABBITMQ_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-secret
+              key: RABBITMQ_USERNAME
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-secret
+              key: RABBITMQ_PASSWORD
+        envFrom:
+        - configMapRef:
+            name: rabbitmq-config
+      - name: consumer
+        image: ghcr.io/tomdieu/wikiculture/media_service:latest
+        command: ["python", "consumer.py"]
+        volumeMounts:
+        - name: media-files-volume
+          mountPath: /media_files
+        env:
+        - name: RABBITMQ_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-secret
+              key: RABBITMQ_USERNAME
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-secret
+              key: RABBITMQ_PASSWORD
+        envFrom:
+        - configMapRef:
+            name: rabbitmq-config
+      volumes:
+      - name: media-files-volume
+        emptyDir: {}

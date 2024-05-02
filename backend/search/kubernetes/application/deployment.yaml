@@ -13,28 +13,41 @@ spec:
         app: search-service
     spec:
       containers:
-        - name: search-service
-          image: ghcr.io/tomdieu/wikiculture/search_service:latest
-          ports:
-            - containerPort: 8004
-          command: ["python", "manage.py", "runserver", "0.0.0.0:8004"]
-          volumeMounts:
-            - name: search-volume
-              mountPath: /search
-          resources:
-            limits:
-              memory: "512Mi"
-            requests:
-              memory: "512Mi"
-        - name: consumer
-          image: search
-          command: ["python", "consumer.py"]
-          restartPolicy: Always
-          resources:
-            limits:
-              memory: "512Mi"
-            requests:
-              memory: "512Mi"
-      volumes:
+      - name: search-service
+        image: ghcr.io/tomdieu/wikiculture/search_service:latest
+        ports:
+        - containerPort: 8004
+        command: ["python", "manage.py", "runserver", "0.0.0.0:8004"]
+        volumeMounts:
         - name: search-volume
-          emptyDir: {}
+          mountPath: /search
+        resources:
+          limits:
+            memory: "512Mi"
+          requests:
+            memory: "512Mi"
+        envFrom:
+        - configMapRef:
+            name: elastic-config
+        - configMapRef:
+            name: rabbitmq-config
+        - secretRef:
+            name: rabbitmq-secret
+      - name: consumer
+        image: search
+        command: ["python", "consumer.py"]
+        resources:
+          limits:
+            memory: "512Mi"
+          requests:
+            memory: "512Mi"
+        envFrom:
+        - configMapRef:
+            name: elastic-config
+        - configMapRef:
+            name: rabbitmq-config
+        - secretRef:
+            name: rabbitmq-secret
+      volumes:
+      - name: search-volume
+        emptyDir: {}

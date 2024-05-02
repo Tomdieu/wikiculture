@@ -13,20 +13,48 @@ spec:
         app: articles-service
     spec:
       containers:
-        - name: articles-service
-          image: ghcr.io/tomdieu/wikiculture/article_service:latest
-          ports:
-            - containerPort: 8001
-          command: ["python", "manage.py", "runserver", "8001"]
-          volumeMounts:
-            - name: articles-volume
-              mountPath: /articles
-        - name: consumer
-          image: ghcr.io/tomdieu/wikiculture/article_service:latest
-          command: ["python", "consumer.py"]
-          volumeMounts:
-            - name: articles-volume
-              mountPath: /articles
-      volumes:
+      - name: articles-service
+        image: ghcr.io/tomdieu/wikiculture/article_service:latest
+        ports:
+        - containerPort: 8001
+        command: ["python", "manage.py", "runserver", "8001"]
+        volumeMounts:
         - name: articles-volume
-          emptyDir: {}
+          mountPath: /article
+        env:
+        - name: RABBITMQ_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-secret
+              key: RABBITMQ_USERNAME
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-secret
+              key: RABBITMQ_PASSWORD
+        envFrom:
+        - configMapRef:
+            name: rabbitmq-config
+      - name: consumer
+        image: ghcr.io/tomdieu/wikiculture/consumer:latest # Make sure to use the correct image
+        command: ["python", "consumer.py"] # Enclose the command within square brackets
+        volumeMounts:
+        - name: articles-volume
+          mountPath: /articles
+        env:
+        - name: RABBITMQ_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-secret
+              key: RABBITMQ_USERNAME
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-secret
+              key: RABBITMQ_PASSWORD
+        envFrom:
+        - configMapRef:
+            name: rabbitmq-config
+      volumes:
+      - name: articles-volume
+        emptyDir: {}
