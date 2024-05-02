@@ -15,6 +15,11 @@ services:
       - wikiculture_network
     volumes:
       - .:/notifications
+    environment:        # Add environment variables here
+      - RABBITMQ_USERNAME=guest
+      - RABBITMQ_PASSWORD=guest
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
 
   consumer:
     image: notification
@@ -27,6 +32,11 @@ services:
       - notification_service
     networks:
       - wikiculture_network
+    environment:        # Add environment variables here
+      - RABBITMQ_USERNAME=guest
+      - RABBITMQ_PASSWORD=guest
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
 
 networks: 
   wikiculture_network:

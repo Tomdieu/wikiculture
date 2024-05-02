@@ -32,6 +32,9 @@ spec:
             secretKeyRef:
               name: rabbitmq-secret
               key: RABBITMQ_PASSWORD
+        envFrom:
+        - configMapRef:
+            name: rabbitmq-config
       volumes:
       - name: user-volume
         emptyDir: {}

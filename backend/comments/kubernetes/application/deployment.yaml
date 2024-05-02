@@ -13,20 +13,48 @@ spec:
         app: comment-service
     spec:
       containers:
-        - name: comment-service
-          image: ghcr.io/tomdieu/wikiculture/comment_service:latest
-          ports:
-            - containerPort: 8002
-          command: ["python", "manage.py", "runserver", "0.0.0.0:8002"]
-          volumeMounts:
-            - name: comments-volume
-              mountPath: /comments
-        - name: consumer
-          image: ghcr.io/tomdieu/wikiculture/comment_service:latest
-          command: ["python", "consumer.py"]
-          volumeMounts:
-            - name: comments-volume
-              mountPath: /comments
-      volumes:
+      - name: comment-service
+        image: ghcr.io/tomdieu/wikiculture/comment_service:latest
+        ports:
+        - containerPort: 8002
+        command: ["python", "manage.py", "runserver", "0.0.0.0:8002"]
+        volumeMounts:
         - name: comments-volume
-          emptyDir: {}
+          mountPath: /comments
+        env:
+        - name: RABBITMQ_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-secret
+              key: RABBITMQ_USERNAME
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-secret
+              key: RABBITMQ_PASSWORD
+        envFrom:
+        - configMapRef:
+            name: rabbitmq-config
+      - name: consumer
+        image: ghcr.io/tomdieu/wikiculture/comment_service:latest
+        command: ["python", "consumer.py"]
+        volumeMounts:
+        - name: comments-volume
+          mountPath: /comments
+        env:
+        - name: RABBITMQ_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-secret
+              key: RABBITMQ_USERNAME
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-secret
+              key: RABBITMQ_PASSWORD
+        envFrom:
+        - configMapRef:
+            name: rabbitmq-config
+      volumes:
+      - name: comments-volume
+        emptyDir: {}

@@ -13,20 +13,48 @@ spec:
         app: moderator-service
     spec:
       containers:
-        - name: moderator-service
-          image: ghcr.io/tomdieu/wikiculture/moderator_service:latest
-          ports:
-            - containerPort: 8005
-          command: ["python", "manage.py", "runserver", "0.0.0.0:8005"]
-          volumeMounts:
-            - name: moderator-volume
-              mountPath: /moderator
-        - name: consumer
-          image: ghcr.io/tomdieu/wikiculture/moderator_service:latest
-          command: ["python", "consumer.py"]
-          volumeMounts:
-            - name: moderator-volume
-              mountPath: /moderator
-      volumes:
+      - name: moderator-service
+        image: ghcr.io/tomdieu/wikiculture/moderator_service:latest
+        ports:
+        - containerPort: 8005
+        command: ["python", "manage.py", "runserver", "0.0.0.0:8005"]
+        volumeMounts:
         - name: moderator-volume
-          emptyDir: {}
+          mountPath: /moderator
+        env:
+        - name: RABBITMQ_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-secret
+              key: RABBITMQ_USERNAME
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-secret
+              key: RABBITMQ_PASSWORD
+        envFrom:
+        - configMapRef:
+            name: rabbitmq-config
+      - name: consumer
+        image: ghcr.io/tomdieu/wikiculture/moderator_service:latest
+        command: ["python", "consumer.py"]
+        volumeMounts:
+        - name: moderator-volume
+          mountPath: /moderator
+        env:
+        - name: RABBITMQ_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-secret
+              key: RABBITMQ_USERNAME
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-secret
+              key: RABBITMQ_PASSWORD
+        envFrom:
+        - configMapRef:
+            name: rabbitmq-config
+      volumes:
+      - name: moderator-volume
+        emptyDir: {}
