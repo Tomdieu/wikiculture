@@ -21,7 +21,7 @@ connection = pika.BlockingConnection(parameters)
 
 channel = connection.channel()
 
-queue_name = "articles_queue"
+queue_name = "notification_queue"
 
 channel.queue_declare(queue=queue_name, durable=True)
 
@@ -35,8 +35,7 @@ channel.exchange_declare(exchange=topic_exchange_name, exchange_type='topic', du
 
 channel.queue_bind(exchange=topic_exchange_name, queue=queue_name, routing_key="account.*")
 
-
-moderation_topic_exchange_name = "moderation"
+moderation_topic_exchange_name = "article"
 channel.exchange_declare(exchange=moderation_topic_exchange_name, exchange_type='topic', durable=True)
 channel.queue_bind(exchange=moderation_topic_exchange_name, queue=queue_name, routing_key="moderation.*")
 
@@ -50,17 +49,15 @@ def callback(ch, method, properties, body):
     if event_type == events.USER_CREATED:
         print(" [x] User created event received")
         print(" [x] Done")
-        User.objects.create(**body)
+        User.objects.create(user_id=body['id'])
         ch.basic_ack(delivery_tag=method.delivery_tag)
-        return
 
     elif event_type == events.USER_UPDATED:
 
         print(" [x] User updated event received")
         print(" [x] Done")
-        User.objects.filter(id=body['id']).update(**body)
+        User.objects.get_or_create(id=body['id'])
         ch.basic_ack(delivery_tag=method.delivery_tag)
-        return
 
     elif event_type == events.USER_DELETED:
 
@@ -68,7 +65,6 @@ def callback(ch, method, properties, body):
         print(" [x] Done")
         User.objects.filter(id=body['id']).delete()
         ch.basic_ack(delivery_tag=method.delivery_tag)
-        return
 
     elif event_type == events.ARTICLE_APPROVED:
 
