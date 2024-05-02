@@ -51,6 +51,12 @@ class ArticleListSerializer(TaggitSerializer,serializers.ModelSerializer):
 
         return _categories
     
+class ArticleDetailSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Article
+        fields = ['id','title','content']
+    
 class ReadingTimeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReadingTime

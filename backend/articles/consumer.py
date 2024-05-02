@@ -7,6 +7,8 @@ django.setup()
 from django.conf import settings
 from api.models import Event,User,Article
 
+from api.serializers import ArticleDetailSerializer
+
 from api import events
 
 from logs import logger
@@ -17,8 +19,6 @@ timeout_seconds = 3 * 60 * 60
 credentials = pika.PlainCredentials(settings.RABBITMQ_USERNAME, settings.RABBITMQ_PASSWORD)
 parameters = pika.ConnectionParameters(settings.RABBITMQ_HOST, settings.RABBITMQ_PORT, '/',
                                        credentials, socket_timeout=timeout_seconds)
-# credentials = pika.PlainCredentials("guest", "guest")
-# parameters = pika.ConnectionParameters("localhost", 5672, "/", credentials)
 connection = pika.BlockingConnection(parameters)
 
 channel = connection.channel()
@@ -40,7 +40,7 @@ channel.queue_bind(exchange=topic_exchange_name, queue=queue_name, routing_key="
 
 moderation_topic_exchange_name = "moderation"
 channel.exchange_declare(exchange=moderation_topic_exchange_name, exchange_type='topic', durable=True)
-channel.queue_bind(exchange=moderation_topic_exchange_name, queue=queue_name, routing_key="moderation.*")
+channel.queue_bind(exchange=moderation_topic_exchange_name, queue=queue_name, routing_key="moderation.article.*")
 
 
 def callback(ch, method, properties, body):
@@ -53,22 +53,28 @@ def callback(ch, method, properties, body):
 
     if event_type == events.USER_CREATED:
         print(" [x] User created event received")
-        logger.info("[x] User Created event received body:"+body)
+        logger.info("[x] User Created event received body : %r" % body)
+        exists = User.objects.filter(id=body['id']).exists()
+        if exists:
+            ch.basic_ack(delivery_tag=method.delivery_tag)
+        else:
+            user = User.objects.create(**body)
+            logger.info("[x] User Created : %r" % user)
+            ch.basic_ack(delivery_tag=method.delivery_tag)
         print(" [x] Done")
-        user = User.objects.create(**body)
-        logger.info("[x] User Created : "+user)
-        ch.basic_ack(delivery_tag=method.delivery_tag)
-        return
+        
+        
 
     elif event_type == events.USER_UPDATED:
 
         print(" [x] User updated event received ")
-        print(" [x] Done")
-        logger.info("[x] User updated event received body: "+body)
+        logger.info("[x] User updated event received body : %r" % body)
         user = User.objects.filter(id=body['id']).update(**body)
-        logger.info("[x] User updated : "+user)
+        logger.info("[x] User updated : %r " % user)
         ch.basic_ack(delivery_tag=method.delivery_tag)
-        return
+        print(" [x] Done")
+        
+        
 
     elif event_type == events.USER_DELETED:
 
@@ -76,7 +82,7 @@ def callback(ch, method, properties, body):
         print(" [x] Done")
         User.objects.filter(id=body['id']).delete()
         ch.basic_ack(delivery_tag=method.delivery_tag)
-        return
+        
 
     # handles events from the moderator service
 
@@ -95,6 +101,14 @@ def callback(ch, method, properties, body):
             article.approved = True
             
             article.save()
+            
+            notification_data = {
+                "article":ArticleDetailSerializer(article),
+                "message":feedback,
+                "user_id":article.author.id
+            }
+            
+            event_type = events.ARTICLE_APPROVED
     
     if event_type == events.ARTICLE_REJECTED:
         
@@ -106,6 +120,16 @@ def callback(ch, method, properties, body):
         if articles.exists():
             
             article = articles.first()
+            article.approved = False
+            article.save()
+            
+            notification_data = {
+                "article":ArticleDetailSerializer(article),
+                "message":feedback,
+                "user_id":article.author.id
+            }
+            
+            event_type = events.ARTICLE_REJECTED
             
             
         
