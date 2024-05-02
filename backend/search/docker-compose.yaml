@@ -30,17 +30,6 @@ services:
     networks:
       - bridge
 
-  kibana:
-    image: kibana:7.17.16
-    container_name: kibana
-    restart: always
-    ports:
-      - "5601:5601"
-    environment:
-      - "ELASTICSEARCH_HOSTS=http://elasticsearch:9200"
-    networks:
-      - bridge
-
   search_service:
     image: search
     build:
