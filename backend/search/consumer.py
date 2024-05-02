@@ -49,26 +49,27 @@ def callback(ch, method, properties, body):
 
     if event_type == events.USER_CREATED:
         print(" [x] User created event received")
+        exists = User.objects.filter(id=body['id']).exists()
+        if exists:
+            ch.basic_ack(delivery_tag=method.delivery_tag)
+        else:
+            User.objects.create(**body)
+            ch.basic_ack(delivery_tag=method.delivery_tag)
         print(" [x] Done")
-        User.objects.create(**body)
-        ch.basic_ack(delivery_tag=method.delivery_tag)
-        return
 
     elif event_type == events.USER_UPDATED:
 
         print(" [x] User updated event received")
-        print(" [x] Done")
         User.objects.filter(id=body['id']).update(**body)
         ch.basic_ack(delivery_tag=method.delivery_tag)
-        return
+        print(" [x] Done")
 
     elif event_type == events.USER_DELETED:
 
         print(" [x] User deleted event received")
-        print(" [x] Done")
         User.objects.filter(id=body['id']).delete()
         ch.basic_ack(delivery_tag=method.delivery_tag)
-        return
+        print(" [x] Done")
 
     # Articles Events
 
@@ -76,6 +77,7 @@ def callback(ch, method, properties, body):
         print(" [x] Article created event received")
         
         del body['history']
+        del body['updated']
         
         tags = ', '.join(body['tags'])
         categories = ', '.join(body['categories'])
@@ -90,15 +92,23 @@ def callback(ch, method, properties, body):
             if not user.exists():
                 
                 author_obj=User.objects.create(**author)
+            author_obj = User.objects.get(id=author['id'])
+                
+        else:
+            author_obj = User.objects.get(id=author['id'])
+            
+        print("Author : ",author)
         
         body['tags'] = tags
         body['categories'] = categories
         body['author'] = author_obj
         
-        if author_obj:
+        print("Body : ",body)
         
-            Article.objects.create(**body)
+        # if author_obj:
         
+        Article.objects.create(**body)
+    
         print(" [x] Done")
         ch.basic_ack(delivery_tag=method.delivery_tag)
         
@@ -106,6 +116,8 @@ def callback(ch, method, properties, body):
         print(" [x] Article updated event received")
 
         del body['history']
+        del body['updated']
+        
         
         tags = ', '.join(body['tags'])
         categories = ', '.join(body['categories'])
@@ -120,22 +132,23 @@ def callback(ch, method, properties, body):
             if not user.exists():
                 
                 author_obj=User.objects.create(**author)
+        else:
+            author_obj = User.objects.get(id=author['id'])
         
         body['tags'] = tags
         body['categories'] = categories
         body['author'] = author_obj
         
-        if author_obj:
+        # if author_obj:
             
-            Article.objects.filter(id=body['id']).update(**body)
-        
+        Article.objects.filter(id=body['id']).update(**body)
         ch.basic_ack(delivery_tag=method.delivery_tag)
+        print(" [x] Done")
     
     elif event_type == events.ARTICLE_DELETED:
         print(" [x] Article deleted event received")
         Article.objects.filter(id=body['id']).delete()
         ch.basic_ack(delivery_tag=method.delivery_tag)
-        return
         
     print(" [x] Done")
 
