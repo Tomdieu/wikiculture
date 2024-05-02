@@ -28,7 +28,7 @@ RUN apt-get clean && \
 
 # Copy the application
 
-COPY . .
+COPY . /notifications
 
 # Migrate the database
 RUN python manage.py migrate

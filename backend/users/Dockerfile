@@ -28,7 +28,7 @@ RUN apt-get clean && \
 
 # Copy the application
 
-COPY . .
+COPY . /users
 
 # Migrate the database
 RUN python manage.py migrate

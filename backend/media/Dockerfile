@@ -29,7 +29,7 @@ RUN apt-get clean && \
 
 # Copy the application
 
-COPY . .
+COPY . /media_files
 
 # Migrate the database
 RUN python manage.py migrate
