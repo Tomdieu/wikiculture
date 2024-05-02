@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: articles-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: articles-service
+  template:
+    metadata:
+      labels:
+        app: articles-service
+    spec:
+      containers:
+        - name: articles-service
+          image: ghcr.io/tomdieu/wikiculture/article_service:latest
+          ports:
+            - containerPort: 8001
+          command: ["python", "manage.py", "runserver", "8001"]
+          volumeMounts:
+            - name: articles-volume
+              mountPath: /article
+          env:
+            - name: RABBITMQ_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_USERNAME
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_PASSWORD
+          envFrom:
+            - configMapRef:
+                name: rabbitmq-config
+        - name: consumer
+          image: ghcr.io/tomdieu/wikiculture/consumer:latest # Make sure to use the correct image
+          command: ["python", "consumer.py"] # Enclose the command within square brackets
+          volumeMounts:
+            - name: articles-volume
+              mountPath: /articles
+          env:
+            - name: RABBITMQ_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_USERNAME
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_PASSWORD
+          envFrom:
+            - configMapRef:
+                name: rabbitmq-config
+      volumes:
+        - name: articles-volume
+          emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: articles-service
+spec:
+  selector:
+    app: articles-service
+  ports:
+    - protocol: TCP
+      port: 8001
+      targetPort: 8001

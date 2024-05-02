@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification-service
+  template:
+    metadata:
+      labels:
+        app: notification-service
+    spec:
+      containers:
+        - name: notification-service
+          image: ghcr.io/tomdieu/wikiculture/notifications_service:latest
+          ports:
+            - containerPort: 8006
+          command: ["python", "manage.py", "runserver", "0.0.0.0:8006"]
+          volumeMounts:
+            - name: notifications-volume
+              mountPath: /notifications
+          env:
+            - name: RABBITMQ_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_USERNAME
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_PASSWORD
+          envFrom:
+            - configMapRef:
+                name: rabbitmq-config
+        - name: consumer
+          image: ghcr.io/tomdieu/wikiculture/notifications_service:latest
+          command: ["python", "consumer.py"]
+          volumeMounts:
+            - name: notifications-volume
+              mountPath: /notifications
+          env:
+            - name: RABBITMQ_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_USERNAME
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_PASSWORD
+          envFrom:
+            - configMapRef:
+                name: rabbitmq-config
+      volumes:
+        - name: notifications-volume
+          emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification-service
+spec:
+  selector:
+    app: notification-service
+  ports:
+    - protocol: TCP
+      port: 8006
+      targetPort: 8006

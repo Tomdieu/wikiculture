@@ -51,3 +51,16 @@ spec:
       volumes:
         - name: search-volume
           emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: search-service
+spec:
+  selector:
+    app: search-service
+  ports:
+    - protocol: TCP
+      port: 8004
+      targetPort: 8004

@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: media-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: media-service
+  template:
+    metadata:
+      labels:
+        app: media-service
+    spec:
+      containers:
+        - name: media-service
+          image: ghcr.io/tomdieu/wikiculture/media_service:latest
+          ports:
+            - containerPort: 8003
+          command: ["python", "manage.py", "runserver", "0.0.0.0:8003"]
+          volumeMounts:
+            - name: media-files-volume
+              mountPath: /media_files
+          env:
+            - name: RABBITMQ_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_USERNAME
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_PASSWORD
+          envFrom:
+            - configMapRef:
+                name: rabbitmq-config
+        - name: consumer
+          image: ghcr.io/tomdieu/wikiculture/media_service:latest
+          command: ["python", "consumer.py"]
+          volumeMounts:
+            - name: media-files-volume
+              mountPath: /media_files
+          env:
+            - name: RABBITMQ_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_USERNAME
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_PASSWORD
+          envFrom:
+            - configMapRef:
+                name: rabbitmq-config
+      volumes:
+        - name: media-files-volume
+          emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: media-service
+spec:
+  selector:
+    app: media-service
+  ports:
+    - protocol: TCP
+      port: 8003
+      targetPort: 8003

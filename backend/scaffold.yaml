@@ -1,0 +1,6 @@
+apiVersion: scaffold.dev/v1alpha1
+kind: Config
+deploy:
+  kubectl:
+    manifests:
+      - ./kubernetes/*.yaml
