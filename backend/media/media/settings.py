@@ -57,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = 'media.urls'
@@ -142,3 +143,8 @@ RABBITMQ_HOST = env('RABBITMQ_HOST',default='localhost')
 RABBITMQ_PORT = 5672
 RABBITMQ_USERNAME = env('RABBITMQ_USERNAME',default='guest')
 RABBITMQ_PASSWORD = env(RABBITMQ_USERNAME,default='guest')
+
+# Cors Configuration
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_METHODS = ("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
