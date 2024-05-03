@@ -18,9 +18,6 @@ spec:
           ports:
             - containerPort: 8004
           command: ["python", "manage.py", "runserver", "0.0.0.0:8004"]
-          volumeMounts:
-            - name: search-volume
-              mountPath: /search
           resources:
             limits:
               memory: "512Mi"
@@ -48,9 +45,6 @@ spec:
                 name: rabbitmq-config
             - secretRef:
                 name: rabbitmq-secret
-      volumes:
-        - name: search-volume
-          emptyDir: {}
 
 ---
 apiVersion: v1

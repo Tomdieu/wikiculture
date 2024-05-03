@@ -19,9 +19,6 @@ services:
       - RABBITMQ_PASSWORD=guest
       - RABBITMQ_HOST=rabbitmq
       - RABBITMQ_PORT=5672
-    networks:
-      - wikiculture_network
-
-networks: 
-  wikiculture_network:
-    driver: bridge
+    network_mode: bridge
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

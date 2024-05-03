@@ -13,28 +13,26 @@ spec:
         app: user-service
     spec:
       containers:
-      - name: user-service
-        image: ghcr.io/tomdieu/wikiculture/user_service:latest
-        ports:
-        - containerPort: 8000
-        command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-        volumeMounts:
-        - name: user-volume
-          mountPath: /users
-        env:
-        - name: RABBITMQ_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: rabbitmq-secret
-              key: RABBITMQ_USERNAME
-        - name: RABBITMQ_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: rabbitmq-secret
-              key: RABBITMQ_PASSWORD
-        envFrom:
-        - configMapRef:
-            name: rabbitmq-config
-      volumes:
-      - name: user-volume
-        emptyDir: {}
+        - name: user-service
+          image: ghcr.io/tomdieu/wikiculture/user_service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+          # volumeMounts:
+          #   - name: user-volume
+          #     mountPath: /users
+          env:
+            - name: RABBITMQ_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_USERNAME
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_PASSWORD
+          envFrom:
+            - configMapRef:
+                name: rabbitmq-config

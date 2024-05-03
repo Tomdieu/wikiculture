@@ -3,58 +3,66 @@ kind: Deployment
 metadata:
   name: comment-service
 spec:
+  minReadySeconds: 0
+  progressDeadlineSeconds: 600
+  revisionHistoryLimit: 10
   replicas: 1
   selector:
     matchLabels:
       app: comment-service
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
   template:
     metadata:
       labels:
         app: comment-service
     spec:
       containers:
-      - name: comment-service
-        image: ghcr.io/tomdieu/wikiculture/comment_service:latest
-        ports:
-        - containerPort: 8002
-        command: ["python", "manage.py", "runserver", "0.0.0.0:8002"]
-        volumeMounts:
-        - name: comments-volume
-          mountPath: /comments
-        env:
-        - name: RABBITMQ_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: rabbitmq-secret
-              key: RABBITMQ_USERNAME
-        - name: RABBITMQ_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: rabbitmq-secret
-              key: RABBITMQ_PASSWORD
-        envFrom:
-        - configMapRef:
-            name: rabbitmq-config
-      - name: consumer
-        image: ghcr.io/tomdieu/wikiculture/comment_service:latest
-        command: ["python", "consumer.py"]
-        volumeMounts:
-        - name: comments-volume
-          mountPath: /comments
-        env:
-        - name: RABBITMQ_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: rabbitmq-secret
-              key: RABBITMQ_USERNAME
-        - name: RABBITMQ_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: rabbitmq-secret
-              key: RABBITMQ_PASSWORD
-        envFrom:
-        - configMapRef:
-            name: rabbitmq-config
-      volumes:
-      - name: comments-volume
-        emptyDir: {}
+        - name: comment-service
+          image: ghcr.io/tomdieu/wikiculture/comment_service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8002
+          command: ["python", "manage.py", "runserver", "0.0.0.0:8002"]
+
+          env:
+            - name: RABBITMQ_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_USERNAME
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_PASSWORD
+          envFrom:
+            - configMapRef:
+                name: rabbitmq-config
+        - name: consumer
+          image: ghcr.io/tomdieu/wikiculture/comment_service:latest
+          command: ["python", "consumer.py"]
+          imagePullPolicy: Always
+
+          env:
+            - name: RABBITMQ_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_USERNAME
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_PASSWORD
+          envFrom:
+            - configMapRef:
+                name: rabbitmq-config
+
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      securityContext: {}
+      terminationGracePeriodSeconds: 3

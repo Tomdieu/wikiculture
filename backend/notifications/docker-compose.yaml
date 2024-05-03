@@ -11,8 +11,6 @@ services:
       - "8006:8006"
     command: ["python", "manage.py", "runserver", "0.0.0.0:8006"]
     container_name: notification_service
-    networks:
-      - wikiculture_network
     volumes:
       - .:/notifications
     environment:        # Add environment variables here
@@ -30,14 +28,8 @@ services:
     command: ["python","consumer.py"]
     depends_on:
       - notification_service
-    networks:
-      - wikiculture_network
     environment:        # Add environment variables here
       - RABBITMQ_USERNAME=guest
       - RABBITMQ_PASSWORD=guest
       - RABBITMQ_HOST=rabbitmq
       - RABBITMQ_PORT=5672
-
-networks: 
-  wikiculture_network:
-    driver: bridge

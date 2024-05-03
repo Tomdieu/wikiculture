@@ -18,9 +18,7 @@ spec:
           ports:
             - containerPort: 8001
           command: ["python", "manage.py", "runserver", "8001"]
-          volumeMounts:
-            - name: articles-volume
-              mountPath: /article
+
           env:
             - name: RABBITMQ_USERNAME
               valueFrom:
@@ -36,11 +34,9 @@ spec:
             - configMapRef:
                 name: rabbitmq-config
         - name: consumer
-          image: ghcr.io/tomdieu/wikiculture/consumer:latest # Make sure to use the correct image
-          command: ["python", "consumer.py"] # Enclose the command within square brackets
-          volumeMounts:
-            - name: articles-volume
-              mountPath: /articles
+          image: ghcr.io/tomdieu/wikiculture/article_service:latest
+          command: ["python", "consumer.py"]
+
           env:
             - name: RABBITMQ_USERNAME
               valueFrom:
@@ -55,9 +51,6 @@ spec:
           envFrom:
             - configMapRef:
                 name: rabbitmq-config
-      volumes:
-        - name: articles-volume
-          emptyDir: {}
 
 ---
 apiVersion: v1

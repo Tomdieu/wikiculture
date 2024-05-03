@@ -3,10 +3,18 @@ kind: Deployment
 metadata:
   name: articles-service
 spec:
+  minReadySeconds: 0
+  progressDeadlineSeconds: 600
+  revisionHistoryLimit: 10
   replicas: 1
   selector:
     matchLabels:
       app: articles-service
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -19,9 +27,7 @@ spec:
             - containerPort: 8001
           command:
             ["gunicorn", "articles.wsgi:application", "--bind", "0.0.0.0:8001"]
-          volumeMounts:
-            - name: articles-volume
-              mountPath: /article
+
           env:
             - name: RABBITMQ_USERNAME
               valueFrom:
@@ -37,11 +43,9 @@ spec:
             - configMapRef:
                 name: rabbitmq-config
         - name: consumer
-          image: ghcr.io/tomdieu/wikiculture/consumer:latest # Make sure to use the correct image
-          command: ["python", "consumer.py"] # Enclose the command within square brackets
-          volumeMounts:
-            - name: articles-volume
-              mountPath: /articles
+          image: ghcr.io/tomdieu/wikiculture/article_service:latest
+          command: ["python", "consumer.py"]
+
           env:
             - name: RABBITMQ_USERNAME
               valueFrom:
@@ -56,6 +60,11 @@ spec:
           envFrom:
             - configMapRef:
                 name: rabbitmq-config
-      volumes:
-        - name: articles-volume
-          emptyDir: {}
+          resources:
+            requests:
+              cpu: 600m
+
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      securityContext: {}
+      terminationGracePeriodSeconds: 3
