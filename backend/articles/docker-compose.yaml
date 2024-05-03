@@ -11,15 +11,16 @@ services:
     command: ["python", "manage.py", "runserver", "8001"]
     container_name: articles_service
     restart: unless-stopped
-    networks:
-      - wikiculture_network
     volumes:
       - .:/articles
     environment:        # Add environment variables here
       - RABBITMQ_USERNAME=guest
       - RABBITMQ_PASSWORD=guest
-      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_HOST=172.17.0.4
       - RABBITMQ_PORT=5672
+    network_mode: bridge
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   consumer:
     image: article
@@ -30,16 +31,11 @@ services:
     restart: unless-stopped
     depends_on:
       - articles_service
-    networks:
-      - wikiculture_network
     volumes:
       - .:/articles
     environment:        # Add environment variables here
       - RABBITMQ_USERNAME=guest
       - RABBITMQ_PASSWORD=guest
-      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_HOST=172.17.0.4
       - RABBITMQ_PORT=5672
-
-networks: 
-  wikiculture_network:
-    driver: bridge
+    network_mode: bridge

@@ -3,10 +3,18 @@ kind: Deployment
 metadata:
   name: articles-service
 spec:
+  minReadySeconds: 0
+  progressDeadlineSeconds: 600
+  revisionHistoryLimit: 10
   replicas: 1
   selector:
     matchLabels:
       app: articles-service
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -37,8 +45,8 @@ spec:
             - configMapRef:
                 name: rabbitmq-config
         - name: consumer
-          image: ghcr.io/tomdieu/wikiculture/consumer:latest # Make sure to use the correct image
-          command: ["python", "consumer.py"] # Enclose the command within square brackets
+          image: ghcr.io/tomdieu/wikiculture/article_service:latest
+          command: ["python", "consumer.py"]
           volumeMounts:
             - name: articles-volume
               mountPath: /articles
@@ -56,6 +64,13 @@ spec:
           envFrom:
             - configMapRef:
                 name: rabbitmq-config
+          resources:
+            requests:
+              cpu: 600m
       volumes:
         - name: articles-volume
           emptyDir: {}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      securityContext: {}
+      terminationGracePeriodSeconds: 3

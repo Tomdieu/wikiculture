@@ -11,8 +11,6 @@ services:
     command: ["python", "manage.py", "runserver", "0.0.0.0:8005"]
     container_name: moderator_service
     restart: unless-stopped
-    networks:
-      - wikiculture_network
     volumes:
       - .:/moderator
     environment:        # Add environment variables here
@@ -30,14 +28,9 @@ services:
     restart: unless-stopped
     depends_on:
       - moderator_service
-    networks:
-      - wikiculture_network
     environment:        # Add environment variables here
       - RABBITMQ_USERNAME=guest
       - RABBITMQ_PASSWORD=guest
       - RABBITMQ_HOST=rabbitmq
       - RABBITMQ_PORT=5672
 
-networks: 
-  wikiculture_network:
-    driver: bridge

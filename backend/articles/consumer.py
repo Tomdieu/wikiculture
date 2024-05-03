@@ -17,8 +17,10 @@ from logs import logger
 timeout_seconds = 3 * 60 * 60
 
 credentials = pika.PlainCredentials(settings.RABBITMQ_USERNAME, settings.RABBITMQ_PASSWORD)
-parameters = pika.ConnectionParameters(settings.RABBITMQ_HOST, settings.RABBITMQ_PORT, '/',
-                                       credentials, socket_timeout=timeout_seconds)
+print(credentials)
+parameters = pika.ConnectionParameters(host=settings.RABBITMQ_HOST,port= settings.RABBITMQ_PORT, virtual_host='/',
+                                       credentials=credentials, socket_timeout=timeout_seconds)
+print(parameters)
 connection = pika.BlockingConnection(parameters)
 
 channel = connection.channel()
