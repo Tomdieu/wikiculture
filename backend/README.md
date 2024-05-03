@@ -1,39 +1,85 @@
 # Services
 
-- **Users**
+This repository contains a collection of services that can be run on Kubernetes using Minikube.
 
-    Running on port `8000`
+## Running in Minikube
 
-- **Articles**
+To run this project in Minikube, follow these steps:
 
-    Running on port `8001`
+1. Start Minikube:
 
-- **Comments**
+    ```bash
+    minikube start
+    ```
 
-    Running on port `8002`
+2. Enable Minikube add-on `ingress`:
 
-- **Media**
+    ```bash
+    minikube addons enable ingress
+    ```
 
-    Running on port `8003`
+3. Apply Kubernetes resources:
 
-- **Search**
+    ```bash
+    kubectl apply -f kubernetes/
+    ```
 
-    Running on port `8004`
+    or
 
-- **Moderator**
+    Using Skaffold:
 
-    Running on port `8005`
+    ```bash
+    skaffold dev
+    ```
 
-- **Notifications**
+4. Get the Ingress IP address and host:
 
-    Running on port `8006`
+    ```bash
+    kubectl get ingress
+    ```
 
-## Some helps
+5. Open the hosts file:
 
-- **Error** :  Exiting due to MK_ADDON_ENABLE: run callbacks: running callbacks: [waiting for app.kubernetes.io/name=ingress-nginx pods: timed out waiting for the condition]
+    ```bash
+    sudo nano /etc/hosts
+    ```
 
-  **How to fix**
+6. Map the Minikube IP address to `wikiculture.com`:
 
-  - docker exec -it minikube /bin/bash
-  - docker pull k8s.gcr.io/ingress-nginx/controller:v1.2.1@sha256:5516d103a9c2ecc4f026efbd4b40662ce22dc1f824fb129ed121460aaa5c47f8
-  - minikube addons enable ingress
+    ```text
+    <minikube ip>   wikiculture.com
+    ```
+
+## Services and Their Running Pods
+
+- **Users**: Running on port `8000`
+- **Articles**: Running on port `8001`
+- **Comments**: Running on port `8002`
+- **Media**: Running on port `8003`
+- **Search**: Running on port `8004`
+- **Moderator**: Running on port `8005`
+- **Notifications**: Running on port `8006`
+
+## Troubleshooting
+
+**Error**: Exiting due to MK_ADDON_ENABLE: run callbacks: running callbacks: [waiting for app.kubernetes.io/name=ingress-nginx pods: timed out waiting for the condition]
+
+**How to fix**:
+
+1. Connect to Minikube's Docker daemon:
+
+    ```bash
+    docker exec -it minikube /bin/bash
+    ```
+
+2. Pull the required image:
+
+    ```bash
+    docker pull k8s.gcr.io/ingress-nginx/controller:v1.2.1@sha256:5516d103a9c2ecc4f026efbd4b40662ce22dc1f824fb129ed121460aaa5c47f8
+    ```
+
+3. Enable the Ingress add-on again:
+
+    ```bash
+    minikube addons enable ingress
+    ```

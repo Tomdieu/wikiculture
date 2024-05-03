@@ -1,0 +1,17 @@
+apiVersion: skaffold/v4beta10
+kind: Config
+metadata:
+  name: backend
+manifests:
+  rawYaml:
+    - kubernetes/articles.yaml
+    - kubernetes/comments.yaml
+    - kubernetes/configmap.yaml
+    - kubernetes/elastic.yaml
+    - kubernetes/ingress.yaml
+    - kubernetes/media.yaml
+    - kubernetes/moderator.yaml
+    - kubernetes/notifications.yaml
+    - kubernetes/rabbitmq.yaml
+    - kubernetes/search.yaml
+    - kubernetes/users.yaml
