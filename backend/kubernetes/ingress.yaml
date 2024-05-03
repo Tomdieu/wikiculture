@@ -6,7 +6,7 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-    - host: wikiculture.com # Replace with your actual domain
+    - host: wikiculture.com
       http:
         paths:
           - path: /articles
