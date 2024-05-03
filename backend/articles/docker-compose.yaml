@@ -18,7 +18,7 @@ services:
     environment:        # Add environment variables here
       - RABBITMQ_USERNAME=guest
       - RABBITMQ_PASSWORD=guest
-      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_HOST=host.docker.internal
       - RABBITMQ_PORT=5672
 
   consumer:
@@ -37,7 +37,7 @@ services:
     environment:        # Add environment variables here
       - RABBITMQ_USERNAME=guest
       - RABBITMQ_PASSWORD=guest
-      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_HOST=host.docker.internal
       - RABBITMQ_PORT=5672
 
 networks: 
