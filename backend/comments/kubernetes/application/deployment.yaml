@@ -27,9 +27,7 @@ spec:
           ports:
             - containerPort: 8002
           command: ["python", "manage.py", "runserver", "0.0.0.0:8002"]
-          volumeMounts:
-            - name: comments-volume
-              mountPath: /comments
+
           env:
             - name: RABBITMQ_USERNAME
               valueFrom:
@@ -48,9 +46,7 @@ spec:
           image: ghcr.io/tomdieu/wikiculture/comment_service:latest
           command: ["python", "consumer.py"]
           imagePullPolicy: Always
-          volumeMounts:
-            - name: comments-volume
-              mountPath: /comments
+
           env:
             - name: RABBITMQ_USERNAME
               valueFrom:
@@ -65,9 +61,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: rabbitmq-config
-      volumes:
-        - name: comments-volume
-          emptyDir: {}
+
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       securityContext: {}

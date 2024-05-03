@@ -19,9 +19,9 @@ spec:
           ports:
             - containerPort: 8000
           command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-          volumeMounts:
-            - name: user-volume
-              mountPath: /users
+          # volumeMounts:
+          #   - name: user-volume
+          #     mountPath: /users
           env:
             - name: RABBITMQ_USERNAME
               valueFrom:
@@ -36,6 +36,3 @@ spec:
           envFrom:
             - configMapRef:
                 name: rabbitmq-config
-      volumes:
-        - name: user-volume
-          emptyDir: {}

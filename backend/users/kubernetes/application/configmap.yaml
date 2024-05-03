@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: user-service-env
-data:
-  DEBUG: "True"
-  RABBITMQ_HOST: "rabbitmq"
-  RABBITMQ_USERNAME: "guest"
-  RABBITMQ_PASSWORD: "guest"

@@ -18,9 +18,7 @@ spec:
           ports:
             - containerPort: 8005
           command: ["python", "manage.py", "runserver", "0.0.0.0:8005"]
-          volumeMounts:
-            - name: moderator-volume
-              mountPath: /moderator
+
           env:
             - name: RABBITMQ_USERNAME
               valueFrom:
@@ -38,9 +36,7 @@ spec:
         - name: consumer
           image: ghcr.io/tomdieu/wikiculture/moderator_service:latest
           command: ["python", "consumer.py"]
-          volumeMounts:
-            - name: moderator-volume
-              mountPath: /moderator
+
           env:
             - name: RABBITMQ_USERNAME
               valueFrom:
@@ -55,9 +51,6 @@ spec:
           envFrom:
             - configMapRef:
                 name: rabbitmq-config
-      volumes:
-        - name: moderator-volume
-          emptyDir: {}
 
 ---
 apiVersion: v1
