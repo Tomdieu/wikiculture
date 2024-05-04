@@ -3,71 +3,73 @@ kind: Ingress
 metadata:
   name: wikiculture-ingress
   annotations:
-    kubernetes.io/ingress.class: "nginx"
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
+  ingressClassName: nginx
   rules:
     - host: wikiculture.com
       http:
         paths:
-          - path: /articles
-            pathType: Prefix
-            backend:
-              service:
-                name: articles-service
-                port:
-                  number: 8001
-          - path: /comment
-            pathType: Prefix
-            backend:
-              service:
-                name: comment-service
-                port:
-                  number: 8002
-          - path: /media
-            pathType: Prefix
-            backend:
-              service:
-                name: media-service
-                port:
-                  number: 8003
-          - path: /search
-            pathType: Prefix
-            backend:
-              service:
-                name: search-service
-                port:
-                  number: 8004
-          - path: /user
+          - path: /user(/|$)(.*)
             pathType: Prefix
             backend:
               service:
                 name: user-service
                 port:
                   number: 8000
-          - path: /notification
+          - path: /articles(/|$)(.*)
             pathType: Prefix
             backend:
               service:
-                name: notification-service
+                name: articles-service
                 port:
-                  number: 8006
-          - path: /moderator
+                  number: 8001
+          - path: /comment(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: comment-service
+                port:
+                  number: 8002
+          - path: /media(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: media-service
+                port:
+                  number: 8003
+          - path: /search(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: search-service
+                port:
+                  number: 8004
+          - path: /moderator(/|$)(.*)
             pathType: Prefix
             backend:
               service:
                 name: moderator-service
                 port:
                   number: 8005
-          - path: /management
+          - path: /notification(/|$)(.*)
             pathType: Prefix
+            backend:
+              service:
+                name: notification-service
+                port:
+                  number: 8006
+
+          - path: /management
+            pathType: Exact
             backend:
               service:
                 name: rabbitmq
                 port:
                   number: 15672
           - path: /elasticsearch
-            pathType: Prefix
+            pathType: Exact
             backend:
               service:
                 name: elasticsearch
