@@ -33,6 +33,13 @@ spec:
           envFrom:
             - configMapRef:
                 name: rabbitmq-config
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "200m"
+            limits:
+              memory: "256Mi"
+              cpu: "250m"
         - name: consumer
           image: ghcr.io/tomdieu/wikiculture/notifications_service:latest
           command: ["python", "consumer.py"]
@@ -51,6 +58,13 @@ spec:
           envFrom:
             - configMapRef:
                 name: rabbitmq-config
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "200m"
+            limits:
+              memory: "128Mi"
+              cpu: "250m"
 
 ---
 apiVersion: v1

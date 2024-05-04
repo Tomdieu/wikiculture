@@ -19,10 +19,12 @@ spec:
             - containerPort: 8004
           command: ["python", "manage.py", "runserver", "0.0.0.0:8004"]
           resources:
-            limits:
-              memory: "512Mi"
             requests:
-              memory: "512Mi"
+              memory: "128Mi"
+              cpu: "400m"
+            limits:
+              memory: "256Mi"
+              cpu: "550m"
           envFrom:
             - configMapRef:
                 name: elastic-config
@@ -34,10 +36,12 @@ spec:
           image: ghcr.io/tomdieu/wikiculture/search_service:latest
           command: ["python", "consumer.py"]
           resources:
-            limits:
-              memory: "512Mi"
             requests:
-              memory: "512Mi"
+              memory: "128Mi"
+              cpu: "200m"
+            limits:
+              memory: "256Mi"
+              cpu: "250m"
           envFrom:
             - configMapRef:
                 name: elastic-config
