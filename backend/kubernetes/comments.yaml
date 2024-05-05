@@ -36,7 +36,7 @@ spec:
                 name: rabbitmq-config
           volumeMounts:
             - name: comments-static-volume
-              mountPath: /comments
+              mountPath: /comments/staticfiles
       containers:
         - name: comment-service
           image: ghcr.io/tomdieu/wikiculture/comment_service:latest
@@ -70,7 +70,7 @@ spec:
               cpu: "250m"
           volumeMounts:
             - name: comments-static-volume
-              mountPath: /comments
+              mountPath: /comments/staticfiles
         - name: consumer
           image: ghcr.io/tomdieu/wikiculture/comment_service:latest
           command: ["python", "consumer.py"]

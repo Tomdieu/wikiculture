@@ -36,7 +36,7 @@ spec:
                 name: rabbitmq-config
           volumeMounts:
             - name: articles-static-volume
-              mountPath: /articles
+              mountPath: /articles/staticfiles
       containers:
         - name: articles-service
           image: ghcr.io/tomdieu/wikiculture/article_service:latest
@@ -70,7 +70,7 @@ spec:
               cpu: "250m"
           volumeMounts:
             - name: articles-static-volume
-              mountPath: /articles
+              mountPath: /articles/staticfiles
         - name: consumer
           image: ghcr.io/tomdieu/wikiculture/article_service:latest
           command: ["python", "consumer.py"]
