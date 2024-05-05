@@ -2,12 +2,9 @@ from django.db import models
 
 # Create your models here.
 
+
 class User(models.Model):
-    USER_TYPE = (
-        ('User', 'User'),
-        ('Moderator','Moderator'),
-        ('Admin', 'Admin')
-    )
+    USER_TYPE = (("User", "User"), ("Moderator", "Moderator"), ("Admin", "Admin"))
     id = models.IntegerField(primary_key=True)
     username = models.CharField(max_length=255)
     first_name = models.CharField(max_length=255)
@@ -21,7 +18,6 @@ class User(models.Model):
 
 
 class Article(models.Model):
-
     id = models.IntegerField(primary_key=True)
 
     def __str__(self) -> str:
@@ -29,10 +25,20 @@ class Article(models.Model):
 
 
 class Comments(models.Model):
-    article = models.ForeignKey(Article, on_delete=models.CASCADE,related_name='comments')
+    COMMENT_STATUS = [
+        ("Pending", "Pending"),
+        ("Approved", "Approved"),
+        ("Rejected", "Rejected"),
+    ]
+    article = models.ForeignKey(
+        Article, on_delete=models.CASCADE, related_name="comments"
+    )
     content = models.TextField(blank=True, null=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    parent = models.ForeignKey("self", on_delete=models.CASCADE, blank=True, null=True,related_name='replies')
+    parent = models.ForeignKey(
+        "self", on_delete=models.CASCADE, blank=True, null=True, related_name="replies"
+    )status
+    status = models.CharField(max_length=25, choices=COMMENT_STATUS, default="Pending")
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
 

@@ -11,6 +11,7 @@ from drf_yasg import openapi
 from .authentication import TokenAuthentication
 from rest_framework.views import APIView
 from rest_framework import status
+from rest_framework.decorators import action
 
 
 # Create your views here.
@@ -52,6 +53,14 @@ class ArticleViewSet(GenericViewSet, CreateModelMixin, RetrieveModelMixin, ListM
             queryset = queryset.filter(categories__name=category)
 
         serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    @action(methods=['get'],detail=False)
+    def mine(self,request,*args, **kwargs):
+        
+        user = request.user
+        articles = self.get_queryset().filter(author=user)
+        serializer = self.get_serializer(articles,many=True)
         return Response(serializer.data)
 
 

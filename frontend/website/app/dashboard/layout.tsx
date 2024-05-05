@@ -15,11 +15,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     return (
         <ResizablePanelGroup
             direction="horizontal"
-            className="min-h-screen w-screen rounded-lg border"
+            className="min-h-screen max-h-screen w-screen rounded-lg border"
         >
-            <ResizablePanel defaultSize={25} maxSize={28} minSize={10}>
+            <ResizablePanel defaultSize={25} maxSize={28} minSize={18}>
                 <div className="flex h-full flex-col">
-                    {/* <span className="font-semibold">Sidebar</span> */}
                     <Sidebar />
                 </div>
             </ResizablePanel>

@@ -48,9 +48,13 @@ def callback(ch, method, properties, body):
     if event_type == events.USER_CREATED:
         print(" [x] User created event received")
         print(" [x] Done")
-        User.objects.create(**body)
-        ch.basic_ack(delivery_tag=method.delivery_tag)
-        return
+        exists = User.objects.filter(id=body['id']).exists()
+        if exists:
+            ch.basic_ack(delivery_tag=method.delivery_tag)
+        else:
+            User.objects.create(**body)
+            ch.basic_ack(delivery_tag=method.delivery_tag)
+        
 
     elif event_type == events.USER_UPDATED:
 
@@ -58,7 +62,7 @@ def callback(ch, method, properties, body):
         print(" [x] Done")
         User.objects.filter(id=body['id']).update(**body)
         ch.basic_ack(delivery_tag=method.delivery_tag)
-        return
+        
 
     elif event_type == events.USER_DELETED:
 
@@ -66,7 +70,7 @@ def callback(ch, method, properties, body):
         print(" [x] Done")
         User.objects.filter(id=body['id']).delete()
         ch.basic_ack(delivery_tag=method.delivery_tag)
-        return
+        
 
     # Articles Events
 

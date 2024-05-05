@@ -1,8 +1,6 @@
 from django_elasticsearch_dsl import Document, fields, Index
 from django_elasticsearch_dsl.registries import registry
 
-# from elasticsearch_dsl import analyzer
-
 from .models import Article, User
 
 

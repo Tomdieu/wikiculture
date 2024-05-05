@@ -3,6 +3,7 @@ import { Input } from './ui/input'
 import UserInfo from './user-info'
 import { Bell, Menu, Search } from 'lucide-react'
 import { Button } from './ui/button'
+import { ModeToggle } from './theme-toggle'
 
 
 type Props = {}
@@ -23,10 +24,13 @@ const AdminHeader = (props: Props) => {
             </div>
 
             <div className="flex space-x-2 gap-5 mx items-center">
+                <div className='flex items-center'>
                 <Button variant={"link"} className="relative">
                     <Bell className='text-muted-foreground'/>
-                    <span className='absolute -top-1 right-1 bg-blue-500 text-stone-50 border rounded-full p-1 text-xs h-5 w-5 z-50 flex items-center justify-center'>05</span>
+                    <span className='absolute -top-1 right-1 bg-blue-500 text-stone-50 border border-muted-foreground rounded-full p-1 text-xs h-5 w-5 z-50 flex items-center justify-center'>05</span>
                 </Button>
+                <ModeToggle/>
+                </div>
                 <UserInfo />
             </div>
 

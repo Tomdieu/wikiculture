@@ -12,6 +12,7 @@ from drf_yasg import openapi
 
 from .models import File,User
 from .serializers import FileSerializer, FileCreateSerializer, FileUpdateSerializer
+from rest_framework.decorators import action
 
 from rest_framework.parsers import MultiPartParser
 
@@ -75,8 +76,39 @@ class FileUploadViewSet(ListModelMixin, CreateModelMixin, RetrieveModelMixin, Up
 
         name = data['file'].name
 
-        file_obj = File.objects.create(name=name,user=user,file =data['file'])
+        file_obj = File.objects.create(name=name,user=user,file=data['file'])
 
-        return Response(FileSerializer(file_obj).data,status=status.HTTP_201_CREATED)
+        return Response(FileSerializer(file_obj,context={'request':request}).data,status=status.HTTP_201_CREATED)
 
 
+class MediaViewSet(ListModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin,
+                        GenericViewSet):
+    serializer_class = FileSerializer
+
+    parser_classes = [MultiPartParser]
+
+    queryset = File.objects.all()
+
+    permission_classes = [TokenAuthentication]
+    
+    def get_permissions(self):
+
+        if self.action in ['list','retrieve']:
+            return [ AllowAny()]
+        return  [IsAuthenticated()]
+
+    def get_serializer_class(self):
+
+        if self.action in ['update']:
+            return FileUpdateSerializer
+        else:
+            return FileSerializer
+        
+    @action(methods=['get'],detail=False)
+    def my_files(self,request,pk=None):
+        
+        user = request.user
+        
+        media_files = File.objects.filter(user=user)
+        serializer = self.get_serializer(media_files,many=True)
+        return Response(serializer.data)

@@ -4,9 +4,10 @@ from .models import Notification, User
 
 
 class UserSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = User
-        fields = ['user_id']
+        fields = '__all__'
 
 
 class NotificationSerializer(serializers.ModelSerializer):

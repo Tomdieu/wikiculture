@@ -4,4 +4,4 @@ metadata:
   name: wikiculture-config
 data:
   USER_SERVICE_HOST: user-service
-  USER_SERVICE_PORT: 8000
+  USER_SERVICE_PORT: "8000"

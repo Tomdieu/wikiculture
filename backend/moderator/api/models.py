@@ -9,29 +9,26 @@ class User(models.Model):
         ('Moderator','Moderator'),
         ('Admin', 'Admin')
     )
+    id = models.IntegerField(primary_key=True)
+    username = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    email = models.EmailField()
+    date_joined = models.DateTimeField()
+    user_type = models.CharField(max_length=10, choices=USER_TYPE)
 
-    user_id = models.IntegerField(unique=True)
-    user_type = models.CharField(max_length=25,choices=USER_TYPE)
-    
     def __str__(self):
-        return f"User {self.user_id}"
+        return f"{self.username} - {self.user_type}"
     
 
-class Moderator(User):
-    
-    class Meta:
-        
-        proxy = True
-        
-    objects = models.Manager().filter()    
-    
-    
 class Article(models.Model):
     
-    article_id = models.IntegerField(unique=True)
+    id = models.IntegerField(primary_key=True)
+    title = models.CharField(max_length=255)
+    content = models.TextField()
     
     def __str__(self):
-        return f"Article {self.article_id}"
+        return f"Article {self.title}"
     
     
 class ModerationRecord(models.Model):

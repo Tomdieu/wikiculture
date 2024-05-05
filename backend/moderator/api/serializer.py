@@ -1,12 +1,18 @@
 from rest_framework import serializers
 
-from .models import ModerationRecord,Article
+from .models import ModerationRecord,Article,User
+
+class UserSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = User
+        fields = '__all__'
 
 class ArticleSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Article
-        fields = ['article_id']
+        fields = ['id',"title","content"]
 
 class ModerationRecordCreateSerializer(serializers.ModelSerializer):
     
@@ -18,6 +24,7 @@ class ModerationRecordCreateSerializer(serializers.ModelSerializer):
 class ModerationRecordSerializer(serializers.ModelSerializer):
     
     article = ArticleSerializer()
+    user = UserSerializer()
     
     class Meta:
         model = ModerationRecord
