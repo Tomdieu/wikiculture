@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: wikiculture-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
   ingressClassName: nginx
@@ -11,49 +11,49 @@ spec:
     - host: wikiculture.com
       http:
         paths:
-          - path: /user(/|$)(.*)
+          - path: /user/.*
             pathType: Prefix
             backend:
               service:
                 name: user-service
                 port:
                   number: 8000
-          - path: /articles(/|$)(.*)
+          - path: /articles/.*
             pathType: Prefix
             backend:
               service:
                 name: articles-service
                 port:
                   number: 8001
-          - path: /comment(/|$)(.*)
+          - path: /comment/.*
             pathType: Prefix
             backend:
               service:
                 name: comment-service
                 port:
                   number: 8002
-          - path: /media(/|$)(.*)
+          - path: /media/.*
             pathType: Prefix
             backend:
               service:
                 name: media-service
                 port:
                   number: 8003
-          - path: /search(/|$)(.*)
+          - path: /search/.*
             pathType: Prefix
             backend:
               service:
                 name: search-service
                 port:
                   number: 8004
-          - path: /moderator(/|$)(.*)
+          - path: /moderator/.*
             pathType: Prefix
             backend:
               service:
                 name: moderator-service
                 port:
                   number: 8005
-          - path: /notification(/|$)(.*)
+          - path: /notification/.*
             pathType: Prefix
             backend:
               service:
@@ -61,7 +61,7 @@ spec:
                 port:
                   number: 8006
 
-          - path: /management
+          - path: /rabbitmq
             pathType: Exact
             backend:
               service:

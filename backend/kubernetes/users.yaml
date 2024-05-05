@@ -12,12 +12,39 @@ spec:
       labels:
         app: user-service
     spec:
+      volumes:
+        - name: users-static-volume
+          emptyDir: {}
+      initContainers:
+        - name: collectstatic
+          image: ghcr.io/tomdieu/wikiculture/user_service:latest
+          command: ["python", "manage.py", "collectstatic", "--noinput"]
+          imagePullPolicy: "IfNotPresent"
+          env:
+            - name: RABBITMQ_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_USERNAME
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_PASSWORD
+          envFrom:
+            - configMapRef:
+                name: rabbitmq-config
+          volumeMounts:
+            - name: users-static-volume
+              mountPath: /users
       containers:
         - name: user-service
           image: ghcr.io/tomdieu/wikiculture/user_service:latest
           ports:
             - containerPort: 8000
           command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+          imagePullPolicy: "IfNotPresent"
+
           env:
             - name: RABBITMQ_USERNAME
               valueFrom:
@@ -39,6 +66,9 @@ spec:
             limits:
               memory: "128Mi"
               cpu: "250m"
+          volumeMounts:
+            - name: users-static-volume
+              mountPath: /users
 
 ---
 apiVersion: v1

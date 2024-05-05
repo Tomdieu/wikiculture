@@ -12,12 +12,69 @@ spec:
       labels:
         app: notification-service
     spec:
+      volumes:
+        - name: notifications-static-volume
+          emptyDir: {}
+      initContainers:
+        - name: collectstatic
+          image: ghcr.io/tomdieu/wikiculture/notifications_service:latest
+          command: ["python", "manage.py", "collectstatic", "--noinput"]
+          imagePullPolicy: "IfNotPresent"
+          env:
+            - name: RABBITMQ_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_USERNAME
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_PASSWORD
+          envFrom:
+            - configMapRef:
+                name: rabbitmq-config
+          volumeMounts:
+            - name: notifications-static-volume
+              mountPath: /notifications/staticfiles
       containers:
         - name: notification-service
           image: ghcr.io/tomdieu/wikiculture/notifications_service:latest
           ports:
             - containerPort: 8006
           command: ["python", "manage.py", "runserver", "0.0.0.0:8006"]
+          imagePullPolicy: "IfNotPresent"
+
+          env:
+            - name: RABBITMQ_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_USERNAME
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_PASSWORD
+          envFrom:
+            - configMapRef:
+                name: rabbitmq-config
+            - configMapRef:
+                name: wikiculture-config
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "200m"
+            limits:
+              memory: "256Mi"
+              cpu: "550m"
+          volumeMounts:
+            - name: notifications-static-volume
+              mountPath: /notifications/staticfiles
+        - name: consumer
+          image: ghcr.io/tomdieu/wikiculture/notifications_service:latest
+          command: ["python", "consumer.py"]
+          imagePullPolicy: "IfNotPresent"
 
           env:
             - name: RABBITMQ_USERNAME
@@ -39,32 +96,7 @@ spec:
               cpu: "200m"
             limits:
               memory: "256Mi"
-              cpu: "250m"
-        - name: consumer
-          image: ghcr.io/tomdieu/wikiculture/notifications_service:latest
-          command: ["python", "consumer.py"]
-
-          env:
-            - name: RABBITMQ_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: rabbitmq-secret
-                  key: RABBITMQ_USERNAME
-            - name: RABBITMQ_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: rabbitmq-secret
-                  key: RABBITMQ_PASSWORD
-          envFrom:
-            - configMapRef:
-                name: rabbitmq-config
-          resources:
-            requests:
-              memory: "64Mi"
-              cpu: "200m"
-            limits:
-              memory: "128Mi"
-              cpu: "250m"
+              cpu: "450m"
 
 ---
 apiVersion: v1

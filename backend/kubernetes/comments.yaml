@@ -12,12 +12,38 @@ spec:
       labels:
         app: comment-service
     spec:
+      volumes:
+        - name: comments-static-volume
+          emptyDir: {}
+      initContainers:
+        - name: collectstatic
+          image: ghcr.io/tomdieu/wikiculture/comment_service:latest
+          command: ["python", "manage.py", "collectstatic", "--noinput"]
+          imagePullPolicy: "IfNotPresent"
+          env:
+            - name: RABBITMQ_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_USERNAME
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_PASSWORD
+          envFrom:
+            - configMapRef:
+                name: rabbitmq-config
+          volumeMounts:
+            - name: comments-static-volume
+              mountPath: /comments
       containers:
         - name: comment-service
           image: ghcr.io/tomdieu/wikiculture/comment_service:latest
           ports:
             - containerPort: 8002
           command: ["python", "manage.py", "runserver", "0.0.0.0:8002"]
+          imagePullPolicy: "IfNotPresent"
 
           env:
             - name: RABBITMQ_USERNAME
@@ -33,6 +59,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: rabbitmq-config
+            - configMapRef:
+                name: wikiculture-config
           resources:
             requests:
               memory: "64Mi"
@@ -40,9 +68,13 @@ spec:
             limits:
               memory: "128Mi"
               cpu: "250m"
+          volumeMounts:
+            - name: comments-static-volume
+              mountPath: /comments
         - name: consumer
           image: ghcr.io/tomdieu/wikiculture/comment_service:latest
           command: ["python", "consumer.py"]
+          imagePullPolicy: "IfNotPresent"
 
           env:
             - name: RABBITMQ_USERNAME

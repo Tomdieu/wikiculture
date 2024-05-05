@@ -12,19 +12,14 @@ spec:
       labels:
         app: search-service
     spec:
-      containers:
-        - name: search-service
+      volumes:
+        - name: search-static-volume
+          emptyDir: {}
+      initContainers:
+        - name: collectstatic
           image: ghcr.io/tomdieu/wikiculture/search_service:latest
-          ports:
-            - containerPort: 8004
-          command: ["python", "manage.py", "runserver", "0.0.0.0:8004"]
-          resources:
-            requests:
-              memory: "128Mi"
-              cpu: "400m"
-            limits:
-              memory: "256Mi"
-              cpu: "550m"
+          command: ["python", "manage.py", "collectstatic", "--noinput"]
+          imagePullPolicy: "IfNotPresent"
           envFrom:
             - configMapRef:
                 name: elastic-config
@@ -32,9 +27,40 @@ spec:
                 name: rabbitmq-config
             - secretRef:
                 name: rabbitmq-secret
+          volumeMounts:
+            - name: search-static-volume
+              mountPath: /search/staticfiles
+      containers:
+        - name: search-service
+          image: ghcr.io/tomdieu/wikiculture/search_service:latest
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 8004
+          command: ["python", "manage.py", "runserver", "0.0.0.0:8004"]
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "400m"
+            limits:
+              memory: "512Mi"
+              cpu: "650m"
+          envFrom:
+            - configMapRef:
+                name: elastic-config
+            - configMapRef:
+                name: rabbitmq-config
+            - secretRef:
+                name: rabbitmq-secret
+            - configMapRef:
+                name: wikiculture-config
+          volumeMounts:
+            - name: search-static-volume
+              mountPath: /search/staticfiles
         - name: consumer
           image: ghcr.io/tomdieu/wikiculture/search_service:latest
           command: ["python", "consumer.py"]
+          imagePullPolicy: "IfNotPresent"
+
           resources:
             requests:
               memory: "128Mi"

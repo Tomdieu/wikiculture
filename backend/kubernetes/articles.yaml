@@ -12,12 +12,38 @@ spec:
       labels:
         app: articles-service
     spec:
+      volumes:
+        - name: articles-static-volume
+          emptyDir: {}
+      initContainers:
+        - name: collectstatic
+          image: ghcr.io/tomdieu/wikiculture/article_service:latest
+          command: ["python", "manage.py", "collectstatic", "--noinput"]
+          imagePullPolicy: "IfNotPresent"
+          env:
+            - name: RABBITMQ_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_USERNAME
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_PASSWORD
+          envFrom:
+            - configMapRef:
+                name: rabbitmq-config
+          volumeMounts:
+            - name: articles-static-volume
+              mountPath: /articles
       containers:
         - name: articles-service
           image: ghcr.io/tomdieu/wikiculture/article_service:latest
           ports:
             - containerPort: 8001
           command: ["python", "manage.py", "runserver", "8001"]
+          imagePullPolicy: "IfNotPresent"
 
           env:
             - name: RABBITMQ_USERNAME
@@ -42,9 +68,13 @@ spec:
             limits:
               memory: "256Mi"
               cpu: "250m"
+          volumeMounts:
+            - name: articles-static-volume
+              mountPath: /articles
         - name: consumer
           image: ghcr.io/tomdieu/wikiculture/article_service:latest
           command: ["python", "consumer.py"]
+          imagePullPolicy: "IfNotPresent"
 
           env:
             - name: RABBITMQ_USERNAME

@@ -12,13 +12,14 @@ spec:
       labels:
         app: moderator-service
     spec:
-      containers:
-        - name: moderator-service
+      volumes:
+        - name: moderator-static-volume
+          emptyDir: {}
+      initContainers:
+        - name: collectstatic
           image: ghcr.io/tomdieu/wikiculture/moderator_service:latest
-          ports:
-            - containerPort: 8005
-          command: ["python", "manage.py", "runserver", "0.0.0.0:8005"]
-
+          command: ["python", "manage.py", "collectstatic", "--noinput"]
+          imagePullPolicy: "IfNotPresent"
           env:
             - name: RABBITMQ_USERNAME
               valueFrom:
@@ -33,16 +34,18 @@ spec:
           envFrom:
             - configMapRef:
                 name: rabbitmq-config
-          resources:
-            requests:
-              memory: "64Mi"
-              cpu: "200m"
-            limits:
-              memory: "128Mi"
-              cpu: "250m"
-        - name: consumer
+            - configMapRef:
+                name: wikiculture-config
+          volumeMounts:
+            - name: moderator-static-volume
+              mountPath: /moderator/staticfiles
+      containers:
+        - name: moderator-service
           image: ghcr.io/tomdieu/wikiculture/moderator_service:latest
-          command: ["python", "consumer.py"]
+          ports:
+            - containerPort: 8005
+          command: ["python", "manage.py", "runserver", "0.0.0.0:8005"]
+          imagePullPolicy: "IfNotPresent"
 
           env:
             - name: RABBITMQ_USERNAME
@@ -64,7 +67,36 @@ spec:
               cpu: "200m"
             limits:
               memory: "256Mi"
-              cpu: "250m"
+              cpu: "550m"
+          volumeMounts:
+            - name: moderator-static-volume
+              mountPath: /moderator/staticfiles
+        - name: consumer
+          image: ghcr.io/tomdieu/wikiculture/moderator_service:latest
+          command: ["python", "consumer.py"]
+          imagePullPolicy: "IfNotPresent"
+
+          env:
+            - name: RABBITMQ_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_USERNAME
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-secret
+                  key: RABBITMQ_PASSWORD
+          envFrom:
+            - configMapRef:
+                name: rabbitmq-config
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "200m"
+            limits:
+              memory: "256Mi"
+              cpu: "550m"
 
 ---
 apiVersion: v1
