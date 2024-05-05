@@ -42,7 +42,7 @@ spec:
           image: ghcr.io/tomdieu/wikiculture/article_service:latest
           ports:
             - containerPort: 8001
-          command: ["python", "manage.py", "runserver", "8001"]
+          command: ["python", "manage.py", "runserver", "0.0.0.0:8001"]
           imagePullPolicy: "IfNotPresent"
 
           env:

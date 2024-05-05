@@ -36,7 +36,7 @@ spec:
                 name: rabbitmq-config
           volumeMounts:
             - name: users-static-volume
-              mountPath: /users
+              mountPath: /users/staticfiles
       containers:
         - name: user-service
           image: ghcr.io/tomdieu/wikiculture/user_service:latest
@@ -68,7 +68,7 @@ spec:
               cpu: "250m"
           volumeMounts:
             - name: users-static-volume
-              mountPath: /users
+              mountPath: /users/staticfiles
 
 ---
 apiVersion: v1

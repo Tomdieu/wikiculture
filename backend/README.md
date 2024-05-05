@@ -4,6 +4,8 @@ This repository contains a collection of services that can be run on Kubernetes 
 
 ## Running in Minikube
 
+Note : make sure you have atleast **6GB** of data bundle because total image size of all docker images for this project is `3GB`
+
 To run this project in Minikube, follow these steps:
 
 1. Start Minikube:
