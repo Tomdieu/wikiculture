@@ -35,4 +35,4 @@ COPY . /media_files
 RUN python manage.py migrate
 
 # Collect Static 
-RUN python manage.py collectstatic
+# RUN python manage.py collectstatic
