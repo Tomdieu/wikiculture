@@ -3,4 +3,5 @@ kind: ConfigMap
 metadata:
   name: wikiculture-config
 data:
-  USER_SERVICE: user-service
+  USER_SERVICE_HOST: user-service
+  USER_SERVICE_PORT: 8000

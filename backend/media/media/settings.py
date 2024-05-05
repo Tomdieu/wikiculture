@@ -135,7 +135,8 @@ MEDIA_ROOT = BASE_DIR / 'mediafiles'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-USER_SERVICE = env('USER_SERVICE', default='http://localhost:8000')
+USER_SERVICE_HOST = env("USER_SERVICE_HOST",default="localhost")
+USER_SERVICE_PORT = env("USER_SERVICE_PORT",default="8000")
 
 # Rabbitmq configuration
 

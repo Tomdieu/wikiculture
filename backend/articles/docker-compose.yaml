@@ -18,6 +18,7 @@ services:
       - RABBITMQ_PASSWORD=guest
       - RABBITMQ_HOST=rabbitmq
       - RABBITMQ_PORT=5672
+      - USER_SERVICE=user_service
     network_mode: bridge
     extra_hosts:
       - "host.docker.internal:host-gateway"

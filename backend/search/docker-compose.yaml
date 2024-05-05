@@ -44,6 +44,7 @@ services:
       - RABBITMQ_HOST=rabbitmq
       - RABBITMQ_PORT=5672
       - ELASTICSEARCH_HOST=elasticsearch
+      - USER_SERVICE=user_service
     depends_on:
       - elasticsearch
     volumes:

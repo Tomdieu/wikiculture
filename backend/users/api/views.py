@@ -11,6 +11,7 @@ from rest_framework.mixins import (
 from rest_framework.decorators import action
 from .serializers import UserSerializer, LoginSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 
 from rest_framework import status
@@ -65,6 +66,7 @@ class UserViewSet(
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
+    authentication_classes = [TokenAuthentication]
 
     def get_permissions(self):
         if self.action == "create":

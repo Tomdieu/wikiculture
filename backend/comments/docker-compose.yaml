@@ -18,6 +18,7 @@ services:
       - RABBITMQ_PASSWORD=guest
       - RABBITMQ_HOST=172.17.0.4
       - RABBITMQ_PORT=5672
+      - USER_SERVICE=user_service
     network_mode: bridge
 
   consumer:
