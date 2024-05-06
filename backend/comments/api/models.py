@@ -37,7 +37,7 @@ class Comments(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     parent = models.ForeignKey(
         "self", on_delete=models.CASCADE, blank=True, null=True, related_name="replies"
-    )status
+    )
     status = models.CharField(max_length=25, choices=COMMENT_STATUS, default="Pending")
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()

@@ -15,7 +15,17 @@ class ReadOnlyAdmin(admin.ModelAdmin):
 
 @admin.register(User)
 class UserAdmin(ReadOnlyAdmin):
-    list_display = ['user_id']
+    list_display = (
+        "username",
+        "first_name",
+        "last_name",
+        "email",
+        "user_type",
+        "date_joined",
+    )
+    list_filter = ("user_type", "date_joined")
+    search_fields = ("username", "first_name", "last_name", "email")
+    ordering = ("username",)
 
 @admin.register(Notification)
 class NotificationAdmin(admin.ModelAdmin):
