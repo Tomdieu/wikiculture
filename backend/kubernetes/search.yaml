@@ -40,10 +40,10 @@ spec:
           resources:
             requests:
               memory: "256Mi"
-              cpu: "400m"
+              cpu: "1000m"
             limits:
               memory: "512Mi"
-              cpu: "650m"
+              cpu: "1000m"
           envFrom:
             - configMapRef:
                 name: elastic-config
@@ -63,11 +63,11 @@ spec:
 
           resources:
             requests:
-              memory: "128Mi"
-              cpu: "200m"
-            limits:
               memory: "256Mi"
-              cpu: "250m"
+              cpu: "1000m"
+            limits:
+              memory: "512Mi"
+              cpu: "1000m"
           envFrom:
             - configMapRef:
                 name: elastic-config

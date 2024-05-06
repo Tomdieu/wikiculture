@@ -63,11 +63,11 @@ spec:
                 name: wikiculture-config
           resources:
             requests:
-              memory: "128Mi"
-              cpu: "200m"
-            limits:
               memory: "256Mi"
-              cpu: "250m"
+              cpu: "1000m"
+            limits:
+              memory: "512Mi"
+              cpu: "1000m"
           volumeMounts:
             - name: articles-static-volume
               mountPath: /articles/staticfiles
@@ -92,11 +92,11 @@ spec:
                 name: rabbitmq-config
           resources:
             requests:
-              memory: "128Mi"
-              cpu: "200m"
-            limits:
               memory: "256Mi"
-              cpu: "250m"
+              cpu: "1000m"
+            limits:
+              memory: "512Mi"
+              cpu: "1000m"
 
 ---
 apiVersion: v1
