@@ -32,7 +32,7 @@ RUN apt-get clean && \
 COPY . /media_files
 
 # Migrate the database
-RUN python manage.py migrate
+RUN python manage.py makemigrations &&  python manage.py migrate
 
 # Collect Static 
 # RUN python manage.py collectstatic

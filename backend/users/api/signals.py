@@ -20,15 +20,15 @@ def create_auth_token(sender,instance=None,created=False,**kwargs):
         
         print("Send To RabbitMq")
         
-    else:
+    # else:
         
-        serializer = UserSerializer(instance)
-        publish(
-            event_type=events.USER_UPDATED,
-            body=serializer.data
-        )
+    #     serializer = UserSerializer(instance)
+    #     publish(
+    #         event_type=events.USER_UPDATED,
+    #         body=serializer.data
+    #     )
         
-        print("Send To RabbitMq")
+    #     print("Send To RabbitMq")
         
         
 @receiver(pre_delete,sender=User)

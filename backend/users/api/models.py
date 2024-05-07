@@ -6,17 +6,13 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    USER_TYPE = (
-        ('User','User'),
-        ('Moderator','Moderator'),
-        ('Admin','Admin')
-    )
-    
-    user_type = models.CharField(max_length=10,choices=USER_TYPE,default='User')
+    USER_TYPE = (("User", "User"), ("Moderator", "Moderator"), ("Admin", "Admin"))
+    image = models.ImageField(upload_to="profile/", blank=True, null=True)
+
+    user_type = models.CharField(max_length=10, choices=USER_TYPE, default="User")
 
 
 class Event(models.Model):
-    
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     event_type = models.CharField(max_length=255)
     timestamp = models.DateTimeField(auto_now_add=True)

@@ -59,13 +59,13 @@ spec:
           envFrom:
             - configMapRef:
                 name: rabbitmq-config
-          resources:
-            requests:
-              memory: "256Mi"
-              cpu: "1000m"
-            limits:
-              memory: "512Mi"
-              cpu: "1000m"
+          # resources:
+          #   requests:
+          #     memory: "256Mi"
+          #     cpu: "300m"
+          #   limits:
+          #     memory: "512Mi"
+          #     cpu: "500m"
           volumeMounts:
             - name: users-static-volume
               mountPath: /users/staticfiles

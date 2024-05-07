@@ -20,6 +20,7 @@ class User(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     email = models.EmailField()
+    image = models.CharField(max_length=255,blank=True,null=True)
     date_joined = models.DateTimeField()
     user_type = models.CharField(max_length=10, choices=USER_TYPE)
 
@@ -69,6 +70,15 @@ class Article(models.Model):
         if not self.slug:
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
+        
+class ArticleRevision(models.Model):
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='revisions')
+    content = RichTextField()
+    editor = models.ForeignKey(User, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Revision of {self.article.title} by {self.editor.username}"
 
 
 class ArticleLike(models.Model):

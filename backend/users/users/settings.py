@@ -57,12 +57,12 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "corsheaders.middleware.CorsMiddleware",
     
 ]
 
@@ -143,15 +143,16 @@ STATIC_ROOT  = os.path.join(BASE_DIR, 'staticfiles')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
-#     ),
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
 
-#     'DEFAULT_PERMISSION_CLASSES': (
-#         'rest_framework.permissions.IsAuthenticated',
-#     ),
-# }
+    'DEFAULT_PERMISSION_CLASSES': (
+        "rest_framework.authentication.SessionAuthentication",
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+}
 
 
 
@@ -166,3 +167,7 @@ RABBITMQ_PASSWORD = env('RABBITMQ_PASSWORD',default='guest')
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = ("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+CORS_ALLOW_ALL_ORIGINS = True
+CSRF_TRUSTED_ORIGINS=["http://*","https://*"]
+
+LOGIN_URL = '/api/login/'

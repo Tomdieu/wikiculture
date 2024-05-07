@@ -37,13 +37,13 @@ spec:
           ports:
             - containerPort: 8004
           command: ["python", "manage.py", "runserver", "0.0.0.0:8004"]
-          resources:
-            requests:
-              memory: "256Mi"
-              cpu: "1000m"
-            limits:
-              memory: "512Mi"
-              cpu: "1000m"
+          # resources:
+          #   requests:
+          #     memory: "256Mi"
+          #     cpu: "300m"
+          #   limits:
+          #     memory: "512Mi"
+          #     cpu: "500m"
           envFrom:
             - configMapRef:
                 name: elastic-config
@@ -61,13 +61,13 @@ spec:
           command: ["python", "consumer.py"]
           imagePullPolicy: "IfNotPresent"
 
-          resources:
-            requests:
-              memory: "256Mi"
-              cpu: "1000m"
-            limits:
-              memory: "512Mi"
-              cpu: "1000m"
+          # resources:
+          #   requests:
+          #     memory: "256Mi"
+          #     cpu: "1000m"
+          #   limits:
+          #     memory: "512Mi"
+          #     cpu: "1000m"
           envFrom:
             - configMapRef:
                 name: elastic-config

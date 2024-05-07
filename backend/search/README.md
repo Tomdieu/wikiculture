@@ -93,7 +93,7 @@ To install the dependencies, run the following command:
 To run the service, run the following command:
 
 ```bash
-python manage.py runserver 0.0.0.0:8004 & python consumer.py
+python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8004 & python consumer.py
 ```
 
 Or

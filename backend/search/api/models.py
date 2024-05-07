@@ -9,6 +9,7 @@ class User(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     email = models.EmailField()
+    image = models.CharField(max_length=255,blank=True,null=True)
     date_joined = models.DateTimeField()
     user_type = models.CharField(max_length=10)
 
