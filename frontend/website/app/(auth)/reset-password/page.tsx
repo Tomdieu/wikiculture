@@ -8,9 +8,18 @@ import React from "react";
 import Image from "next/image";
 import Img from "@/components/Img";
 
+import { Metadata } from "next";
+
+
+export const metadata: Metadata = {
+    title: 'Wikiculture | Reset Password',
+    description: 'Reset Password',
+  
+  }
+
 type Props = {};
 
-const LoginPage = (props: Props) => {
+const ResetPasswordPage = (props: Props) => {
     return (
         <React.Fragment>
             <div className="mx-auto space-y-4 w-full">
@@ -54,4 +63,4 @@ const LoginPage = (props: Props) => {
     );
 };
 
-export default LoginPage;
+export default ResetPasswordPage;

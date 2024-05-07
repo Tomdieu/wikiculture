@@ -7,12 +7,37 @@ import Link from "next/link"
 import {Separator} from "@/components/ui/separator"
 import Img from "@/components/Img";
 
+import {
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+import { signUpSchema, signUpSchemaType } from '@/schema/register.schema'
+
+
 type Props = {}
 
 const RegisterPage = (props: Props) => {
+    const form = useForm<signUpSchemaType>({resolver:zodResolver(signUpSchema),defaultValues:{
+        username:"",
+        email:"",
+        password:"",
+        first_name:"",
+        last_name:"",
+        confirmPassword:""
+    }})
+    async function onSubmit(values: signUpSchemaType) {}
     return (
         <React.Fragment>
-            <div className="mx-auto space-y-4 w-full">
+            <Form {...form}>
+            <form method="post" onSubmit={form.handleSubmit(onSubmit)} className="mx-auto space-y-4 w-full">
                 <div className={"w-full flex items-center justify-center"}>
                 <Img/>
                 </div>
@@ -22,14 +47,40 @@ const RegisterPage = (props: Props) => {
                 </div>
                 <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="first-name">First name</Label>
-                            <Input id="first-name" placeholder="Ivan" required/>
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="last-name">Last name</Label>
-                            <Input id="last-name" placeholder="Tom" required/>
-                        </div>
+                    <FormField
+                                control={form.control}
+                                name="first_name"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>First Name</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Navi" {...field} />
+                                        </FormControl>
+                                        {/* <FormDescription>
+                                        This is your public display name.
+                                    </FormDescription> */}
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                        <FormField
+                                control={form.control}
+                                name="last_name"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Last Name</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Corp" {...field} />
+                                        </FormControl>
+                                        {/* <FormDescription>
+                                        This is your public display name.
+                                    </FormDescription> */}
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="username">Username</Label>
+                        <Input id="username" placeholder="ivantom" required type="email"/>
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="email">Email</Label>
@@ -57,7 +108,8 @@ const RegisterPage = (props: Props) => {
                         </Link>
                     </div>
                 </div>
-            </div>
+            </form>
+            </Form>
         </React.Fragment>
     )
 }

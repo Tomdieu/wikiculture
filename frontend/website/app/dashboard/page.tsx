@@ -1,8 +1,11 @@
+import { getSession } from '@/lib/getSession'
 import React from 'react'
 
 type Props = {}
 
-const Dashboard = (props: Props) => {
+const Dashboard = async (props: Props) => {
+  const session = await getSession()
+  console.log({session})
   return (
     <div className='container mx-auto flex-1 flex flex-col'>
       <div>
@@ -12,12 +15,12 @@ const Dashboard = (props: Props) => {
 
       <div className='shadow-lg p-5 rounded-md flex space-y-4 flex-col'>
         <div>
-          <h2 className="text-xl text-muted-foreground">Tomdieu Ivan</h2>
+          <h2 className="text-xl text-muted-foreground">{session?.user?.username}</h2>
           <p className='text-muted-foreground text-xs'>Writer/Author</p>
-          </div>
-          <div>
-            <span className="text-xl">35</span> <span className="text-xs text-muted-foreground">Total Articles</span>
-          </div>
+        </div>
+        <div>
+          <span className="text-xl">35</span> <span className="text-xs text-muted-foreground">Total Articles</span>
+        </div>
       </div>
 
     </div>

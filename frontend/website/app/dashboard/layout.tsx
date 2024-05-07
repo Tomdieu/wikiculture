@@ -4,7 +4,8 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/componen
 import AdminHeader from "@/components/admin-header";
 
 export const metadata: Metadata = {
-    title: "Dashboard"
+    title: "Dashboard",
+    description:"Dashboard"
 }
 
 type DashboardLayoutProps = {

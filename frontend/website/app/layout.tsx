@@ -5,6 +5,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster"
 import React from "react";
 import { Analytics } from "@vercel/analytics/react"
+import NextAuthProvider from "@/providers/NextAuthProvider";
+import { getSession } from "@/lib/getSession";
 
 const poppins = localFont({
   src: [
@@ -25,18 +27,18 @@ const poppins = localFont({
       weight: "800",
     },
     {
-      path:"../public/fonts/poppins/Poppins-ExtraBold.ttf",
-      weight:"900"
+      path: "../public/fonts/poppins/Poppins-ExtraBold.ttf",
+      weight: "900"
     },
   ],
   variable: "--font-poppins",
-  display:"swap"
+  display: "swap"
 });
 
 export const metadata: Metadata = {
   title: {
-    default:"WikiCulture - The Free Culture Encyclopedia",
-    template:`%s | WikiCulture`
+    default: "WikiCulture - The Free Culture Encyclopedia",
+    template: `%s | WikiCulture`
   },
   description:
     "WikiCulture is a free culture encyclopedia that anyone can edit. It is a collaborative creation by people all over the world. It is a free content project with the goal of creating a free culture encyclopedia to the highest possible quality. We welcome everyone to contribute to it and help it grow.",
@@ -74,17 +76,17 @@ export const metadata: Metadata = {
     creators: ["@tomdieu ivan"],
     url: "https://wikiculture.vercel.app",
   },
-  icons:{
-    icon:[
+  icons: {
+    icon: [
       {
-        media:"(prefers-color-scheme:light)",
-        url:"/dark.svg",
-        href:"/dark.svg"
+        media: "(prefers-color-scheme:light)",
+        url: "/dark.svg",
+        href: "/dark.svg"
       },
       {
-        media:"(prefers-color-scheme:dark)",
-        url:"/white.svg",
-        href:"/white.svg"
+        media: "(prefers-color-scheme:dark)",
+        url: "/white.svg",
+        href: "/white.svg"
       }
     ]
   }
@@ -95,20 +97,24 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // const session = getSession();
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${poppins.variable} w-full h-full font-poppins`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange={false}
-        >
-          <Analytics/>
-          <Toaster />
-          {children}
-        </ThemeProvider>
-      </body>
+      <NextAuthProvider>
+        <body className={`${poppins.variable} w-full h-full font-poppins`}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange={false}
+          >
+            <Analytics />
+            <Toaster />
+
+            {children}
+
+          </ThemeProvider>
+        </body></NextAuthProvider>
     </html>
   );
 }
