@@ -9,26 +9,25 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { signOut } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 
 
 type Props = {}
 
 const UserInfo = (props: Props) => {
+    const {data:session} = useSession()
     return (
         <DropdownMenu>
             <DropdownMenuTrigger className='rounded-full'>
-                <Avatar className="rounded-full border p-0.5">
-                    <AvatarImage className='rounded-full' src="https://github.com/tomdieu.png" />
-                    <AvatarFallback className='rounded-full'>T</AvatarFallback>
+                <Avatar className="rounded-full p-0.5">
+                    <AvatarImage className='rounded-full' src={session?.user?.image} />
+                    <AvatarFallback className='rounded-full shadow-sm uppercase'>{session?.user?.username.charAt(0)}</AvatarFallback>
                 </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Billing</DropdownMenuItem>
-                <DropdownMenuItem>Team</DropdownMenuItem>
                 <DropdownMenuItem onClick={()=>signOut()}>Logout</DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
