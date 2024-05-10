@@ -1,5 +1,5 @@
 import type { Config } from "tailwindcss"
-// import {nextui} from "@nextui-org/react";
+
 
 const config = {
   darkMode: ["class"],
@@ -8,8 +8,7 @@ const config = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
-    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}"
-	],
+  ],
   prefix: "",
   theme: {
     container: {
@@ -20,8 +19,8 @@ const config = {
       },
     },
     extend: {
-      fontFamily:{
-        poppins:['var(--font-poppins)']
+      fontFamily: {
+        poppins: ['var(--font-poppins)']
       },
       colors: {
         border: "hsl(var(--border))",
@@ -72,14 +71,19 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "caret-blink": {
+          "0%,70%,100%": { opacity: "1" },
+          "20%,50%": { opacity: "0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "caret-blink": "caret-blink 1.25s ease-out infinite",
       },
     },
   },
-  plugins: [require("tailwindcss-animate"),require('daisyui'),],
+  plugins: [require("tailwindcss-animate"), require('@tailwindcss/typography'),],
 } satisfies Config
 
 export default config
