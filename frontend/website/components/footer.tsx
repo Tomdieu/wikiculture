@@ -11,6 +11,7 @@ export default function Footer() {
             <Link href={"/"}>
                 <Img  width={32} height={32} className={"cursor-pointer hidden md:inline-block"}/>
             </Link>
+            <a href="https://storyset.com/home">Home illustrations by Storyset</a>
             <div
                 className={"w-full justify-between md:justify-end flex items-center gap-x-2 text-muted-foreground md:ml-auto"}>
                 <Button variant={"ghost"} size={"sm"}>Privacy Policy</Button>
