@@ -1,3 +1,4 @@
+import { NextAuthUserType } from '@/types';
 import { User } from 'next-auth';
 import type { AdapterUser as BaseAdapterUser } from "next-auth/adapters";
 
