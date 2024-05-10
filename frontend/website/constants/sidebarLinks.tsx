@@ -1,24 +1,84 @@
-import { BarChart2, Bell, ChevronRight, ChevronsLeft, Files, FolderClosed, LibraryBig, LogOut, MessageSquareMore, MoreHorizontalIcon, Plus, Upload, Users } from "lucide-react";
+import { BarChart2, Bell,Newspaper,Book,User,BookPlus,UserCog, Files, FolderClosed, LogOut, MessageSquareMore, Upload, Users, Tags, Pen } from "lucide-react";
 
-export const sidebarLinks = [
+const sidebarData = [
     {
-        label: 'Dashboard',
+        text: "Dashboard",
         icon: BarChart2,
-        path: '/dashboard'
+        link: "/dashboard"
     },
     {
-        label: 'Users',
+        text: "Users",
         icon: Users,
-        path: '/users',
         sublinks: [
             {
-                label: 'Users',
-                path: '/users'
+                text: "Users",
+                icon: User,
+                link: "/dashboard/users"
             },
             {
-                label: 'Moderators',
-                path: '/moderators'
+                text: "Moderators",
+                icon: UserCog,
+                link: "/dashboard/moderators"
             }
         ]
     },
-]
+    {
+        text: "Articles",
+        icon: Newspaper,
+        sublinks: [
+            {
+                text: "All Articles",
+                icon: Book,
+                link: "/dashboard/articles"
+            },
+            {
+                text: "New Articles",
+                icon: BookPlus,
+                link: "/dashboard/articles/new",
+            },
+            {
+                text:"Categories",
+                icon:Tags,
+                link:"/dashboard/articles/categories/"
+            },
+            {
+                text:"Moderate Articles",
+                icon:Pen,
+                link:"/dashboard/articles/moderate/"
+            }
+        ]
+    },
+    {
+        text: "Media",
+        icon: FolderClosed,
+        sublinks: [
+            {
+                text: "All Files",
+                icon: Files,
+                link: "/dashboard/media"
+            },
+            {
+                text: "Upload File",
+                icon: Upload,
+                link: "/dashboard/media/upload"
+            }
+        ]
+    },
+    {
+        text: "Comments",
+        icon: MessageSquareMore,
+        link: "/dashboard/comments"
+    },
+    {
+        text: "Notifications",
+        icon: Bell,
+        link: "/dashboard/notifications"
+    },
+    {
+        text: "Logout",
+        icon: LogOut,
+        link: "/logout"
+    }
+];
+
+export default sidebarData;
