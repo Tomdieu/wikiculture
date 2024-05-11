@@ -13,3 +13,6 @@ rabbitmq_data
 tests
 
 .$wikiculture.drawio.bkp
+
+*.sqlite3
+db.*
