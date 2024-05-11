@@ -40,8 +40,8 @@ class UserAdmin(ReadOnlyAdmin):
 class ArticleAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
     readonly_fields = ['slug','updated','approved']
 
-    list_display = ('title', 'slug', 'status', 'author', 'created_at', 'updated_at')
-    list_filter = ('status', 'categories', 'author', 'created_at', 'updated_at')
+    list_display = ('title', 'slug',  'author', 'created_at', 'updated_at')
+    list_filter = ('categories', 'author', 'created_at', 'updated_at')
     search_fields = ('title', 'content')
 
 
