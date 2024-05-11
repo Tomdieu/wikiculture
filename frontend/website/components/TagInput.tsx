@@ -83,7 +83,7 @@ export default function TagInput({ tags, onTagChange,maxTags=10 }: TagInputProps
         handleDelete(lastTagIndex);
       } else {
         // remove last chars from the value instead
-        setValue(value.split(0, value.length - 1).join(""));
+        setValue(value.substring(0, value.length - 1));
       }
     }
   };
