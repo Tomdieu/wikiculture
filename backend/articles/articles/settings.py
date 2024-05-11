@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "ckeditor",
     "import_export",
     "simple_history",
+    'django_user_agents'
     # 'categories',
     # 'categories.editor',
 ]
@@ -151,12 +152,44 @@ RABBITMQ_PORT = env('RABBITMQ_PORT',default=5672)
 RABBITMQ_USERNAME = env('RABBITMQ_USERNAME',default='guest')
 RABBITMQ_PASSWORD = env('RABBITMQ_PASSWORD',default='guest')
 
-print("HOST : ",RABBITMQ_HOST, " Password : ",RABBITMQ_PASSWORD)
 
 # Cors Configuration
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = ("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+
+# Rest framework
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": ("api.authentication.TokenAuthentication",),
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.AllowAny",),
+}
+
+# SWAGGER
+
+SWAGGER_SETTINGS = {
+    "SECURITY_DEFINITIONS": {
+        "TokenAuth": {
+            "type": "apiKey",
+            "in": "header",
+            "name": "Authorization",
+            "description": "Use the format 'token <token>' where <token> is your authentication token.",
+        },
+    }
+}
+
+
+# Cache backend is optional, but recommended to speed up user agent parsing
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+#         'LOCATION': '127.0.0.1:11211',
+#     }
+# }
+
+# Name of cache backend to cache user agents. If it not specified default
+# cache alias will be used. Set to `None` to disable caching.
+USER_AGENTS_CACHE = 'default'
 
 # CKEDITOR CONFIGURATION
 
