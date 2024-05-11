@@ -24,6 +24,13 @@ const ArticleTable = (props: Props) => {
       </div>
     );
   }
+  if(isError){
+    return (
+      <div className="w-full h-full ">
+        <h1 className="text-4xl">Error</h1>
+      </div>
+    )
+  }
   return <DataTable columns={columns} data={data!} />;
 };
 
