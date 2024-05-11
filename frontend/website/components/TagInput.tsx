@@ -4,8 +4,6 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 
-const suggestions = [];
-
 const KeyCodes = {
   comma: 188,
   enter: 13,
