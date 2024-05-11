@@ -19,6 +19,9 @@ services:
       - RABBITMQ_PASSWORD=guest
       - RABBITMQ_HOST=rabbitmq
       - RABBITMQ_PORT=5672
+      - EMAIL_HOST='smtp.gmail.com'
+      - EMAIL_HOST_USER=
+      - EMAIL_HOST_PASSWORD=
     network_mode: bridge
     extra_hosts:
       - "host.docker.internal:host-gateway"
