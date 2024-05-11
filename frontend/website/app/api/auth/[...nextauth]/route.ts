@@ -1,5 +1,4 @@
-import { NextAuthUserType } from "@/types";
-import NextAuth, { AuthOptions, User } from "next-auth"
+import NextAuth, {  } from "next-auth"
 import { authOptions } from "./options";
 
 
