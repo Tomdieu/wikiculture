@@ -5,7 +5,7 @@ from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, ListMode
     UpdateModelMixin
 from rest_framework.response import Response
 from .models import Article, Category,ReadingTime
-from .serializers import ArticleSerializer, CategorySerializer, ArticleListSerializer,ReadingTimeSerializer
+from .serializers import ArticleSerializer, CategorySerializer, ArticleListSerializer,ReadingTimeSerializer,ArticleHistorySerializer,ArticleHistoryDeleteSerializer
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from .authentication import TokenAuthentication
@@ -55,13 +55,71 @@ class ArticleViewSet(GenericViewSet, CreateModelMixin, RetrieveModelMixin, ListM
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
     
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        instance = serializer.save()
+        headers = self.get_success_headers(serializer.data)
+        return Response(ArticleListSerializer(instance).data, status=status.HTTP_201_CREATED, headers=headers)
+    
+    # def update(self, request, *args, **kwargs):
+    #     partial = kwargs.pop('partial', False)
+    #     instance = self.get_object()
+    #     print("Body : ")
+    #     print(request.data)
+    #     # serializer = self.get_serializer(instance, data=request.data, partial=partial)
+    #     # serializer.is_valid(raise_exception=True)
+    #     # self.perform_update(serializer)
+
+    #     # if getattr(instance, '_prefetched_objects_cache', None):
+    #         # If 'prefetch_related' has been applied to a queryset, we need to
+    #         # forcibly invalidate the prefetch cache on the instance.
+    #         # instance._prefetched_objects_cache = {}
+
+    #     return Response(ArticleListSerializer(instance).data)
+    
+    
     @action(methods=['get'],detail=False)
     def mine(self,request,*args, **kwargs):
         
         user = request.user
-        articles = self.get_queryset().filter(author=user)
-        serializer = self.get_serializer(articles,many=True)
+        print("User : ",user, " id : ",user.id)
+        articles = Article.objects.filter(author_id=user.id)
+        serializer = ArticleListSerializer(articles,many=True)
         return Response(serializer.data)
+    
+
+    @action(detail=True)
+    def versions(self,request,*args,**kwargs):
+        instance = self.get_object()
+
+        history = Article.history.model.objects.filter(id=instance.id)
+
+        serializer = ArticleHistorySerializer(history,many=True)
+
+        return Response(serializer.data)
+    
+    @action(detail=True,methods=['post'],url_path='delete-version',serializer_class=ArticleHistoryDeleteSerializer)
+    def delete_version(self,request,*args,**kwargs):
+        user = request.user
+        instance = self.get_object()
+
+        if instance.author == user or (user.user_type == "Moderator" or  user.user_type == "Admin"):
+
+            HistoryModel = Article.history.model
+
+            serializer = ArticleHistoryDeleteSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+
+            ids = serializer.validate.get('ids',[])
+            histories = HistoryModel.objects.filter(id__in=ids)
+            histories.delete()
+
+            return Response({"message":"History Deleted Successfully"},status=status.HTTP_204_NO_CONTENT)
+        return Response({"message":"Permission deny"},status=status.HTTP_401_UNAUTHORIZED)
+
+
+
 
 
 class CategoryViewSet(GenericViewSet, CreateModelMixin, RetrieveModelMixin, ListModelMixin, DestroyModelMixin,
