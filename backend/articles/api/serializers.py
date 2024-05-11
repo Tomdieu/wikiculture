@@ -19,19 +19,36 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class ArticleSerializer(TaggitSerializer,serializers.ModelSerializer):
     tags = TagListSerializerField()
+    categories = serializers.ListSerializer(child=serializers.PrimaryKeyRelatedField(queryset=Category.objects.all()))
     class Meta:
         model = Article
-        fields = '__all__'
+        # fields = '__all__'
+        exclude = ('author',)
+        
+
+    def save(self, **kwargs):
+        author = self.context['request'].user
+        categories_data = self.validated_data.pop('categories', None)
+        article = super().save(author=author, **kwargs)
+        if categories_data:
+            article.categories.set(categories_data)
+        return article
 
 class ArticleHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Article.history.model
         fields = '__all__'
 
+class ArticleHistoryDeleteSerializer(serializers.Serializer):
+
+    ids = serializers.ListSerializer(child=serializers.IntegerField())
+
+
+
 
 class ArticleListSerializer(TaggitSerializer,serializers.ModelSerializer):
-    categories = serializers.SerializerMethodField()
-
+    # categories = serializers.SerializerMethodField()
+    categories = CategorySerializer(many=True)
     tags = TagListSerializerField()
     history = ArticleHistorySerializer(many=True)
     author = UserSerializer()
@@ -42,14 +59,14 @@ class ArticleListSerializer(TaggitSerializer,serializers.ModelSerializer):
         model = Article
         fields = '__all__'
 
-    def get_categories(self, obj: Article):
-        categories = obj.categories.all()
-        _categories = []
+    # def get_categories(self, obj: Article):
+    #     categories = obj.categories.all()
+    #     _categories = []
 
-        for category in categories:
-            _categories.append(category.name)
+    #     for category in categories:
+    #         _categories.append(category.name)
 
-        return _categories
+    #     return _categories
     
 class ArticleDetailSerializer(serializers.ModelSerializer):
     
