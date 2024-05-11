@@ -32,7 +32,7 @@ const ArticleVersionModel = (props: Props) => {
           >
             <CarouselContent>
               {article?.history?.map((history,index) => (
-                <CarouselItem key={index} className={cn(1==5 && "md:basis-1/2")}>
+                <CarouselItem key={index} className={cn(history.history_change_reason!=="" && "md:basis-1/2")}>
                   <Version version={history} />
                 </CarouselItem>
               ))}
