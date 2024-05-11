@@ -24,6 +24,7 @@ import { signUpSchema, signUpSchemaType } from '@/schema/register.schema'
 import { useToast } from "@/components/ui/use-toast"
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { UserType } from '@/types'
 
 
 
