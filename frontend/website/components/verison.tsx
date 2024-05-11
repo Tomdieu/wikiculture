@@ -17,15 +17,16 @@ type VersionProps = {
 };
 
 const Version = ({ version }: VersionProps) => {
+
   return (
     <Card className="shadow-lg rounded-md p-4">
       <CardHeader>
         <Cover preview={true} url={version.cover_image} />
       </CardHeader>
       <CardContent>
-        <Toolbar preview article={version as ArticleType} />
+        {/* <Toolbar preview article={version as ArticleType} /> */}
         <article className="prose">
-            {parse(version.content)}
+            {parse(version.content!)}
         </article>
       </CardContent>
       <CardFooter>
