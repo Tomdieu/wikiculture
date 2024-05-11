@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path,include
+from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 
@@ -28,17 +28,17 @@ schema_view = get_schema_view(
         title="Media API",
         default_version="v1",
         description="API for the Media app",
-        terms_of_service="https://www.google.com/policies/terms/",
+        # terms_of_service="https://www.google.com/policies/terms/",
         contact=openapi.Contact(email="ivan.tomdieu@gmail.com"),
-        license=openapi.License(name="BSD License"),
+        license=openapi.License(name="MIT License"),
     ),
     public=True,
     permission_classes=[permissions.AllowAny],
 )
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/',include('api.urls')),
+    path("admin/", admin.site.urls),
+    path("api/", include("api.urls")),
     path(
         "swagger<format>/", schema_view.without_ui(cache_timeout=0), name="schema-json"
     ),
