@@ -2,6 +2,7 @@ import Sidebar from "@/components/Sidebar";
 import { Metadata } from "next";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import AdminHeader from "@/components/admin-header";
+import ArticleVersionModel from "@/components/models/article-versions";
 
 export const metadata: Metadata = {
     title: "Dashboard",
@@ -18,15 +19,16 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             direction="horizontal"
             className="min-h-screen max-h-screen w-screen rounded-lg border"
         >
-            <ResizablePanel defaultSize={25} maxSize={28} minSize={18}>
+            <ResizablePanel defaultSize={25} maxSize={28} minSize={18} className="hidden md:block">
                 <div className="flex h-full flex-col">
                     <Sidebar />
                 </div>
             </ResizablePanel>
-            <ResizableHandle withHandle />
+            <ResizableHandle withHandle className="hidden md:flex"/>
             <ResizablePanel defaultSize={75}>
-                <div className="flex h-full flex-col">
+                <div className="flex h-full flex-col overflow-y-auto">
                     <AdminHeader/>
+                    <ArticleVersionModel/>
                     {children}
                 </div>
             </ResizablePanel>
