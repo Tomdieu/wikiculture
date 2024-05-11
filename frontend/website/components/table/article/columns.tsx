@@ -92,7 +92,7 @@ export const columns: ColumnDef<ArticleType>[] = [
       const article = row.original;
       return (
         <span className="border max-w-fit px-2 rounded-full text-muted-foreground txt-xs flex items-center justify-center">
-          {data?.user.id == article.author.id ? "You" : article.author.username}
+          {parseInt(data?.user?.id!) == article.author?.id ? "You" : article.author.username}
         </span>
       );
     },
