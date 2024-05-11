@@ -3,10 +3,13 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster"
+import { Toaster as ReactHotToaster } from "react-hot-toast"
 import React from "react";
 import { Analytics } from "@vercel/analytics/react"
 import NextAuthProvider from "@/providers/NextAuthProvider";
-import { getSession } from "@/lib/getSession";
+import NextTopLoader from "nextjs-toploader";
+import ModelProvider from "@/providers/model-provider";
+import ReactQueryProvider from "@/providers/ReactQueryProvider";
 
 const poppins = localFont({
   src: [
@@ -97,24 +100,31 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // const session = getSession();
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning={true}>
       <NextAuthProvider>
-        <body className={`${poppins.variable} w-full h-full font-poppins`}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange={false}
-          >
-            <Analytics />
-            <Toaster />
+        <ReactQueryProvider>
 
-            {children}
+          <body className={`${poppins.variable} w-full h-full font-poppins`}>
 
-          </ThemeProvider>
-        </body></NextAuthProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange={false}
+            >
+              <NextTopLoader showSpinner={false} />
+              <Analytics />
+              <Toaster />
+              <ReactHotToaster position="top-center" />
+              <ModelProvider />
+              {children}
+
+
+            </ThemeProvider>
+          </body>
+        </ReactQueryProvider>
+      </NextAuthProvider>
     </html>
   );
 }
