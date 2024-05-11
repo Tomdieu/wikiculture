@@ -1,7 +1,7 @@
 "use client";
 import JoditEditor from "jodit-react";
 import React, { useState, useRef, useEffect } from "react";
-import dynamic from "next/dynamic";
+// import dynamic from "next/dynamic";
 import Toolbar from "@/components/Toolbar";
 import Cover from "@/components/Cover";
 import Publish from "@/components/Publish";
@@ -15,13 +15,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import TagInput from "@/components/TagInput";
 import CategoryInput from "@/components/CategoryInput";
 import { ArticleType } from "@/types";
-import QuilEditor from "@/components/editor/QuilEditor";
 import { Button } from "@/components/ui/button";
 import { Save } from "lucide-react";
 import toast from "react-hot-toast";
 import PageNotFound from "./404";
 
-const Editor = dynamic(() => import("@/components/Editor"), { ssr: false });
+// const Editor = dynamic(() => import("@/components/Editor"), { ssr: false });
 
 type ArticlePageParams = {
   params: {
@@ -139,7 +138,6 @@ export default function ArticlePage({
       <Toolbar article={(article as ArticleType)!} preview={false} />
       {/* <Editor /> */}
 
-      {/* <QuilEditor/> */}
       <JoditEditor
         ref={editor}
         // value={content}
@@ -169,7 +167,5 @@ export default function ArticlePage({
       </Button>
       <div className="mb-50 h-24"></div>
     </div>
-    // <main className="flex min-h-screen flex-col items-center py-3 justify-between dark:bg-stone-900">
-    // </main>
   );
 }
