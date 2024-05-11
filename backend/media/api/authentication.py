@@ -20,13 +20,15 @@ class TokenAuthentication(BaseAuthentication):
         try:
             response = requests.get(USER_INFO, headers=headers)
             response.raise_for_status()
-            user_data = response.json()[0]
+            user_data = response.json()
         except requests.RequestException as e:
             raise AuthenticationFailed(
                 "Failed to authenticate. Error: {}".format(str(e))
             )
+        # Check if the authenticated data exists in the service, if not create it
+        user, _ = User.objects.get_or_create(id=user_data["id"], defaults=user_data)
 
-        # Get the user base on the user id
-        user = User.objects.get(id=user_data["id"])
+        # Manually set is_authenticated to True
+        user.is_authenticated = True
 
         return user, None
