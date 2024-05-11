@@ -20,7 +20,7 @@ const UserInfo = (props: Props) => {
         <DropdownMenu>
             <DropdownMenuTrigger className='rounded-full'>
                 <Avatar className="rounded-full p-0.5">
-                    <AvatarImage className='rounded-full' src={session?.user?.image} />
+                    <AvatarImage className='rounded-full' src={session?.user?.image || ""} />
                     <AvatarFallback className='rounded-full shadow-sm uppercase'>{session?.user?.username.charAt(0)}</AvatarFallback>
                 </Avatar>
             </DropdownMenuTrigger>
