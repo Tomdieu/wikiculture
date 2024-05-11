@@ -1,4 +1,5 @@
-import NextAuth, { AuthOptions } from "next-auth"
+import { NextAuthUserType } from "@/types";
+import NextAuth, { AuthOptions, User } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials";
 
 export const authOptions: AuthOptions = {
@@ -32,8 +33,6 @@ export const authOptions: AuthOptions = {
                 const data = await res.json();
                 const {user,token} = data;
                 const userData = {...user,token};
-                console.log(userData)
-
                 if (res.ok && !userData.token) {
                     return null;
                 }
@@ -57,7 +56,10 @@ export const authOptions: AuthOptions = {
     },
     callbacks:{
         jwt({token,user}) {
-            token.user = user;
+
+            token.user = user as User;
+            
+            // return token;
             return {...token,...user};
         },
         session({session,token}) {
@@ -65,7 +67,8 @@ export const authOptions: AuthOptions = {
             delete token.iat;
             delete token.sub;
             delete token.jti;
-
+            delete token.picture;
+            delete token.user;
             session.user = token;
             
             return session;
