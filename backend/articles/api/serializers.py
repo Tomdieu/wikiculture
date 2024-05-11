@@ -1,8 +1,8 @@
 from rest_framework import serializers
-from simple_history.models import HistoricalRecords
 from taggit.serializers import (TagListSerializerField,
                                 TaggitSerializer)
 from .models import Article, Category,User,ReadingTime
+
 
 class UserSerializer(serializers.ModelSerializer):
     
@@ -35,9 +35,41 @@ class ArticleSerializer(TaggitSerializer,serializers.ModelSerializer):
         return article
 
 class ArticleHistorySerializer(serializers.ModelSerializer):
+    
+    tags = serializers.SerializerMethodField()
+    categories = serializers.SerializerMethodField()
+
     class Meta:
         model = Article.history.model
         fields = '__all__'
+
+    def get_tags(self,obj):
+
+        article_id = obj.id
+
+        article = Article.objects.prefetch_related('tags').get(id=article_id)
+
+        tags = article.tags.all()
+
+
+        _tags = [t.name for t in tags]
+
+        print("Tags : ",tags)
+
+        return _tags
+    
+    def get_categories(self,obj):
+
+        article_id = obj.id
+
+        category = Article.objects.prefetch_related("categories").get(id=article_id)
+
+        categories = category.categories.all()
+
+        return CategorySerializer(categories,many=True).data
+
+
+
 
 class ArticleHistoryDeleteSerializer(serializers.Serializer):
 
