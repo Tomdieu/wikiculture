@@ -47,7 +47,7 @@ class Article(models.Model):
     title = models.CharField(max_length=255, default="Untitled")
     cover_image = models.CharField(max_length=1000,blank=True,null=True)
     content = RichTextField(blank=True,null=True)
-    tags = TaggableManager(blank=True)
+    tags = TaggableManager(blank=True,related_name="tags")
     
     approved = models.BooleanField(default=False)
     categories = models.ManyToManyField(Category, blank=True, related_name="categories")
