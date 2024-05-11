@@ -43,12 +43,9 @@ const LoginPage = (props: Props) => {
 
 
     async function onSubmit(values: z.infer<typeof loginSchema>) {
-        console.log(values)
         const res = await signIn("credentials", { username: values.username, password: values.password, redirect: false })
-        console.log("Response : ", { ...res })
         if (res && res.ok) {
             router.refresh()
-            console.log("Url : ", res.url)
             toast({
                 title: "Authentication",
                 description: "Login Successfully",
