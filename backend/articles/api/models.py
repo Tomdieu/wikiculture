@@ -6,21 +6,21 @@ from ckeditor.fields import RichTextField
 
 from simple_history.models import HistoricalRecords
 
+from django.utils import timezone
+
 
 # Create your models here.
 
+
 class User(models.Model):
-    USER_TYPE = (
-        ('User', 'User'),
-        ('Moderator','Moderator'),
-        ('Admin', 'Admin')
-    )
+    USER_TYPE = (("User", "User"), ("Moderator", "Moderator"), ("Admin", "Admin"))
     id = models.IntegerField(primary_key=True)
     username = models.CharField(max_length=255)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     email = models.EmailField()
-    image = models.CharField(max_length=255,blank=True,null=True)
+    bio = models.TextField(blank=True,null=True)
+    image = models.CharField(max_length=255, blank=True, null=True)
     date_joined = models.DateTimeField()
     user_type = models.CharField(max_length=10, choices=USER_TYPE)
 
@@ -29,50 +29,52 @@ class User(models.Model):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=255,unique=True)
+    name = models.CharField(max_length=255, unique=True)
     is_cultural = models.BooleanField(default=False)
     description = models.TextField(blank=True)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
 
     class Meta:
-        verbose_name_plural = 'Categories'
+        verbose_name_plural = "Categories"
 
     def __str__(self) -> str:
         return f"{self.name}"
 
-
 class Article(models.Model):
-    STATUS = (
-        ('draft', 'Draft'),
-        ('published', 'Published')
-    )
 
-    slug = models.SlugField(max_length=255, unique=True)
-    title = models.CharField(max_length=255)
-    content = RichTextField()
-    tags = TaggableManager()
+    slug = models.SlugField(max_length=255,blank=True,null=True)
+    icon = models.CharField(max_length=10,default="",null=True,blank=True)
+    title = models.CharField(max_length=255, default="Untitled")
+    cover_image = models.CharField(max_length=1000,blank=True,null=True)
+    content = RichTextField(blank=True,null=True)
+    tags = TaggableManager(blank=True)
+    
     approved = models.BooleanField(default=False)
-    categories = models.ManyToManyField(Category, blank=True, related_name='categories')
-    status = models.CharField(max_length=20, choices=STATUS, default='draft')
-    author = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True)
+    categories = models.ManyToManyField(Category, blank=True, related_name="categories")
+    is_published = models.BooleanField(default=False)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True,blank=True,null=True)
     updated = models.BooleanField(default=False)
-    history = HistoricalRecords()
+    history = HistoricalRecords(user_model=User)
 
     class Meta:
-        ordering = ('-created_at',)
-        verbose_name_plural = 'Articles'
+        ordering = ("-created_at",)
+        verbose_name_plural = "Articles"
 
     def __str__(self):
         return f"{self.title} by {self.author}"
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.title)
+        # if not self.slug:
+        self.slug = slugify(self.title)
         super().save(*args, **kwargs)
-        
+
+
 class ArticleRevision(models.Model):
-    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='revisions')
+    article = models.ForeignKey(
+        Article, on_delete=models.CASCADE, related_name="revisions"
+    )
     content = RichTextField()
     editor = models.ForeignKey(User, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -89,20 +91,36 @@ class ArticleLike(models.Model):
     def __str__(self) -> str:
         return f"{self.user} Liked {self.article}"
 
+
 class ReadingTime(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
-    
-    ip_address = models.CharField(max_length=45,blank=True)
+
+    ip_address = models.CharField(max_length=45, blank=True)
     user_agent = models.TextField(blank=True)
-    
-    total_time_spent = models.PositiveIntegerField(default=0)  # Store total time in seconds
+
+    total_time_spent = models.PositiveIntegerField(
+        default=0
+    )  # Store total time in seconds
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.user} spent {self.total_time_spent} seconds reading {self.article}"
-    
-# class ArticleView(models.)
+        return (
+            f"{self.user} spent {self.total_time_spent} seconds reading {self.article}"
+        )
+
+
+class ArticleVistors(models.Model):
+
+    article = models.ForeignKey(Article,on_delete=models.CASCADE,related_name="visitors")
+    date = models.DateField(default=timezone.now)
+    count = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        unique_together = ('article', 'date') 
+
+    def __str__(self):
+        return f"{self.article} - {self.date}: {self.count} visitors"
 
 
 class Event(models.Model):
