@@ -61,13 +61,13 @@ export declare interface ArticleHistoryType {
     content?:string;
     tags?:string[];
     approved:boolean;
-    categories:number[];
+    categories:CategoryType[];
     author:UserType;
     created_at:string;
     updated_at:string;
     updated:boolean;
     history_date:string;
-    history_change_reason:string;
+    history_change_reason:string|null;
     history_type:string;
     history_user:number
 }
