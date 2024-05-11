@@ -10,16 +10,22 @@ from rest_framework.mixins import (
 )
 from rest_framework.views import APIView
 from rest_framework.decorators import action
-from .serializers import UserSerializer, LoginSerializer
+from .serializers import UserSerializer, LoginSerializer, UserImageSerializer, PasswordResetConfirmSerializer, PasswordResetSerializer, ChangePasswordSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
-from rest_framework.parsers import MultiPartParser
-
+from rest_framework.parsers import MultiPartParser, JSONParser
 from rest_framework import status
 
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+
+from django.core.mail import send_mail
+from django.conf import settings
+
+from .models import UserPasswordResetToken
+import datetime
+from django.utils import timezone
 
 # Create your views here.
 
@@ -27,6 +33,8 @@ User = get_user_model()
 
 
 class CheckUserNameView(APIView):
+    permission_classes = [AllowAny]
+
     @swagger_auto_schema(
         operation_description="Check If a Username Already exists",
         manual_parameters=[
@@ -82,7 +90,6 @@ class LoginViewSet(GenericViewSet, CreateAPIView):
 class RegisterViewSet(CreateModelMixin, GenericViewSet):
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
-    parser_classes = [MultiPartParser]
 
 
 class UserViewSet(
@@ -93,10 +100,14 @@ class UserViewSet(
     GenericViewSet,
 ):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
     permission_classes = [AllowAny]
     authentication_classes = [TokenAuthentication]
-    parser_classes = [MultiPartParser]
+
+    def get_serializer_class(self):
+
+        if self.action == "update_image":
+            return UserImageSerializer
+        return UserSerializer
 
     def get_permissions(self):
         if self.action == "create":
@@ -123,3 +134,92 @@ class UserViewSet(
         user = self.get_queryset().filter(id=self.request.user.id).first()
         serializer = self.get_serializer_class()(user)
         return Response(serializer.data)
+
+    @action(methods=["post"], detail=True, url_path='update-image', parser_classes=[MultiPartParser])
+    def update_image(self, request, pk=None):
+        user = self.get_object()
+        serializer = UserImageSerializer(user, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+
+class PasswordResetView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(request_body=PasswordResetSerializer)
+    def post(self, request):
+
+        serializer = PasswordResetSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        email = serializer.validated_data.get('email')
+
+        user = User.objects.get(email=email)
+
+        user_password_reset_token = UserPasswordResetToken.objects.create(
+            user=user)
+
+        subject = 'Reset Password Code'
+        message = f'Hello,\n\nYou have requested to reset your password for the wikiculture app. Please copy the following code and paste it in the appropriate field: {user_password_reset_token.code}\n\nIf you did not request this, please ignore this email.\n\nBest regards,\nThe wikiculture Team'
+        send_mail(subject=subject,
+                  message=message,
+                  from_email=settings.EMAIL_HOST_USER,
+                  recipient_list=[email])
+
+        return Response({"success": "Password reset code has been sent to your email."}, status=status.HTTP_200_OK)
+
+
+class VerifyCodeView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, code):
+
+        current_datetime = timezone.now()
+
+        # Calculate the datetime 4 hours ago
+        four_hours_ago = current_datetime - datetime.timedelta(hours=4)
+
+        # Filter UserPasswordResetToken objects with created_at <= 4 hours ago
+        exists = UserPasswordResetToken.objects.filter(
+            code=code,
+            reset_at=None,
+            created_at__gte=four_hours_ago
+        ).exists()
+
+        return Response({"exists": exists})
+
+
+class ResetPasswordView(APIView):
+    permission_classes = [AllowAny]
+
+
+    @swagger_auto_schema(request_body=PasswordResetConfirmSerializer)
+    def post(self,request):
+
+        serializer = PasswordResetConfirmSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        code = serializer.validate['code']
+        new_password = serializer.validate['new_password']
+
+        current_datetime = timezone.now()
+
+        # Calculate the datetime 4 hours ago
+        four_hours_ago = current_datetime - datetime.timedelta(hours=4)
+
+        user_token =  UserPasswordResetToken.objects.get(
+            code=code,
+            reset_at=None,
+            created_at__gte=four_hours_ago
+        )
+
+        user =  user_token.user
+        user.set_password(new_password)
+        user.save()
+
+        user_token.reset_at = timezone.now()
+
+        user_token.save()
+
+        return Response({"message":"Password Reset Successfully"})
