@@ -4,24 +4,30 @@ import { useNavigation } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons'; // Import FontAwesome icons or any other icon library
 import moment from 'moment'; // Import moment library for date formatting
 import { Share2, Activity, Dot } from 'lucide-react-native';
-import { useFonts } from 'expo-font';
 
 
 const Explore = () => {
   const navigation = useNavigation();
 
-  const handleItemClick = () => {
-    // Navigate to the details screen or perform other actions
-    // Replace 'Details' with the actual screen name you want to navigate to
-    navigation.navigate('Details');
+  // const handleItemClick = () => {
+  //   navigation.navigate('Details');
+  // };
+
+  const handleItemClick = (name, description, title) => {
+    navigation.navigate('Details', { name, description, title });
   };
 
   const handleEllipsisIconPress = () => {
-    // Handle ellipsis icon press action
-    // You can add more options or a menu here
+
   };
 
   const todayDate = moment().format('MMMM D, YYYY'); // Format today's date
+
+  const yesterdayDate = moment().subtract(1, 'days').format('MMMM D, YYYY'); // Yesterday's date
+
+  const twodaysagoDate = moment().subtract(2, 'days').format('MMMM D, YYYY'); // Yesterday's date
+
+  const threedaysagoDate = moment().subtract(3, 'days').format('MMMM D, YYYY'); // Yesterday's date
 
   const renderVerticalElements = () => {
     const elements = [];
@@ -68,11 +74,11 @@ const Explore = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-    <View style={{ fontWeight: 700, ...styles.head}}>
-      <Text>W</Text>
-      <Text>ikiCultur</Text>
-      <Text>E</Text>
-      </View>
+    <View style={styles.headcontainer}>
+      <Text style={styles.boldh1}>W</Text>
+      <Text style={styles.boldh2}>ikiCultur</Text>
+      <Text style={styles.boldl1}>E</Text>
+    </View>
       {/* <Text style={{ fontSize: 30,...styles.title }}>Inter Black</Text> */}
       <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
         <View style={styles.searchContainer}>
@@ -104,7 +110,7 @@ const Explore = () => {
           </View>
         </View>
 
-        <TouchableOpacity style={styles.itemContainer} onPress={handleItemClick}>
+        <TouchableOpacity style={styles.itemContainer} onPress={() => handleItemClick('Item Name 2', 'Description for Item 2', 'Item Title 2')}>
           <Image source={require('../../assets/me.jpeg')} style={styles.itemImage} />
           <Text style={styles.itemName}>Item Name 2</Text>
           <Text style={styles.itemDescription}>Description for Item 2</Text>
@@ -117,6 +123,107 @@ const Explore = () => {
 
         <View style={styles.sectionContainer}>
           {/* <Text style={styles.sectionHeaderTitle}>{todayDate}</Text> */}
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Top read</Text>
+            <TouchableOpacity onPress={() => { }}>
+              <FontAwesome name="ellipsis-v" size={24} color="#888" />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View style={[styles.sectionContainer, styles.topReadSection]}>
+          <View style={styles.topReadContainer}>{renderVerticalElements()}</View>
+        </View>
+
+        <TouchableOpacity onPress={() => { }}>
+          <Text style={styles.moretop}>More top read <FontAwesome name="arrow-right" size={18} color="#4169E1" /> </Text>
+        </TouchableOpacity>
+
+        <View style={styles.sectionContainer}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Picture of the day</Text>
+            <View style={styles.iconContainer}>
+              <TouchableOpacity onPress={() => { }}>
+                {/* <FontAwesome name="time" size={24} color="#888" /> */}
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => { }}>
+                <FontAwesome name="ellipsis-v" size={24} color="#888" />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+
+        <TouchableOpacity style={styles.pictureCon} onPress={() => handleItemClick('Item Name 3', 'Description for Item 3', 'Item Title 3')}>
+          <Image source={require('../../assets/me.jpeg')} style={styles.itemImage} />
+          <Text style={styles.picDescription}>
+            Description for Item 3 Description for Item 3 Description for Item 3 Description for Item 3
+          </Text>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.button} onPress={() => console.log('Download button pressed')}>
+              <FontAwesome name="download" size={24} color="#4169E1" />
+              <Text style={styles.buttonText}>Download</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={() => console.log('Share button pressed')}>
+              <Share2 color="#4169E1" size={18} />
+              <Text style={styles.buttonText}>Share</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+
+
+        <View style={styles.daysectionContainer}>
+          {/* <Text style={styles.sectionHeaderTitle}>{todayDate}</Text> */}
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>On this day</Text>
+            <TouchableOpacity onPress={() => { }}>
+              <FontAwesome name="ellipsis-v" size={24} color="#888" />
+            </TouchableOpacity>
+          </View>
+
+        </View>
+
+        <View style={{ borderLeftWidth: 1, borderLeftColor: "#ccc", marginBottom: 25, position: "relative", minHeight: 100, marginLeft: 9 }}>
+          <Dot color={"#3a3ae9"} size={64} style={{ position: "absolute", top: -44, left: -32, marginBottom: 100, zIndex: 30 }} />
+          <View style={{ paddingHorizontal: 17 }}>
+            <Text style={{ color: "#3a3ae9", fontSize: 20, fontWeight: "bold",marginTop:-27 }}>1969</Text>
+            <Text style={{fontWeight:"bold",fontSize:18}}>26 years old</Text> 
+            <Text>Lorem ipsum</Text>
+
+            <TouchableOpacity
+              style={{ borderRadius: 10, backgroundColor: "#fff", shadowColor: "#000", ...styles.pictureCon }}
+              onPress={() => handleItemClick('Drudge Report', 'Lorem ipsum dolore Loreme ipsum dolore')}>
+              <Image source={require('../../assets/me.jpeg')} style={{ width: "100%", height: 200 }} />
+              <View style={{ paddingHorizontal: 10, paddingVertical: 5, backgroundColor: "#fff" }}>
+                <Text style={{ fontWeight: "bold", fontSize: 16 }}>Drudge Report</Text>
+                <Text style={{ fontWeight: "400", fontSize: 14 }}>Lorem ipsum dolore Loreme ipsum dolore</Text>
+              </View>
+            </TouchableOpacity>
+
+          </View>
+        </View>
+
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionHeaderTitle}>{yesterdayDate}</Text>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Featured Content</Text>
+            <TouchableOpacity onPress={handleEllipsisIconPress}>
+              <FontAwesome name="ellipsis-v" size={24} color="#888" />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <TouchableOpacity style={styles.itemContainer} onPress={handleItemClick}>
+          <Image source={require('../../assets/me.jpeg')} style={styles.itemImage} />
+          <Text style={styles.itemName}>Item Name 2</Text>
+          <Text style={styles.itemDescription}>Description for Item 2</Text>
+          <Text style={styles.itemTitle}>Item Title 2</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => {}}>
+          <Text style={styles.moreto}>Today on WikiCulture <FontAwesome name="arrow-right" size={18} color="#4169E1" /> </Text>
+        </TouchableOpacity>
+
+        <View style={styles.sectionContainer}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Top read</Text>
             <TouchableOpacity onPress={() => { }}>
@@ -190,14 +297,213 @@ const Explore = () => {
               <Image  source={require('../../assets/me.jpeg')} style={{width:"100%",height:200}}/>
               <View style={{paddingHorizontal:10,paddingVertical:5,backgroundColor:"#fff"}}>
                 <Text style={{fontWeight:"bold",fontSize:16}}>Drudge Report</Text>
-                <Text style={{fontWeight:"400",fontSize:14}}>Loreme ipsum dolore Loreme ipsum dolore</Text>
+                <Text style={{fontWeight:"400",fontSize:14}}>Lorem ipsum dolore Loreme ipsum dolore</Text>
               </View>
             </TouchableOpacity>
           </View>
         </View>
- 
 
-        {/* Add more sections or elements as needed */}
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionHeaderTitle}>{twodaysagoDate}</Text>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Featured Content</Text>
+            <TouchableOpacity onPress={handleEllipsisIconPress}>
+              <FontAwesome name="ellipsis-v" size={24} color="#888" />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <TouchableOpacity style={styles.itemContainer} onPress={handleItemClick}>
+          <Image source={require('../../assets/me.jpeg')} style={styles.itemImage} />
+          <Text style={styles.itemName}>Item Name 2</Text>
+          <Text style={styles.itemDescription}>Description for Item 2</Text>
+          <Text style={styles.itemTitle}>Item Title 2</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => {}}>
+          <Text style={styles.moreto}>Today on WikiCulture <FontAwesome name="arrow-right" size={18} color="#4169E1" /> </Text>
+        </TouchableOpacity>
+
+        <View style={styles.sectionContainer}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Top read</Text>
+            <TouchableOpacity onPress={() => { }}>
+              <FontAwesome name="ellipsis-v" size={24} color="#888" />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View style={[styles.sectionContainer, styles.topReadSection]}>
+          <View style={styles.topReadContainer}>{renderVerticalElements()}</View>
+        </View>
+
+        <TouchableOpacity onPress={() => { }}>
+          <Text style={styles.moretop}>More top read <FontAwesome name="arrow-right" size={18} color="#4169E1" /> </Text>
+        </TouchableOpacity>
+
+        <View style={styles.sectionContainer}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Picture of the day</Text>
+            <View style={styles.iconContainer}>
+              <TouchableOpacity onPress={() => { }}>
+                {/* <FontAwesome name="time" size={24} color="#888" /> */}
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => { }}>
+                <FontAwesome name="ellipsis-v" size={24} color="#888" />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+
+
+        <TouchableOpacity style={styles.pictureCon} onPress={() => { }}>
+          <Image source={require('../../assets/me.jpeg')} style={styles.itemImage} />
+          <Text style={styles.picDescription}>
+            Description for Item 2 Description for Item 2 Description for Item 2 Description for Item 2
+          </Text>
+          <View style={styles.buttonContainer}>
+
+            <TouchableOpacity style={styles.button} onPress={() => console.log('Download button pressed')}>
+              <FontAwesome name="download" size={24} color="#4169E1" />
+              <Text style={styles.buttonText}>Download</Text>
+            </TouchableOpacity>
+
+
+            <TouchableOpacity style={styles.button} onPress={() => console.log('Share button pressed')}>
+              <Share2 color="#4169E1" size={18} />
+              <Text style={styles.buttonText}>Share</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+
+        <View style={styles.daysectionContainer}>
+          {/* <Text style={styles.sectionHeaderTitle}>{todayDate}</Text> */}
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>On this day</Text>
+            <TouchableOpacity onPress={() => { }}>
+              <FontAwesome name="ellipsis-v" size={24} color="#888" />
+            </TouchableOpacity>
+          </View>
+
+        </View>
+
+        <View style={{ borderLeftWidth: 1, borderLeftColor: "#ccc", marginBottom: 25, position: "relative", minHeight: 100, marginLeft: 9 }}>
+          <Dot color={"#3a3ae9"} size={64} style={{ position: "absolute", top: -44, left: -32, marginBottom: 100, zIndex: 30 }} />
+          <View style={{ paddingHorizontal: 17 }}>
+            <Text style={{ color: "#3a3ae9", fontSize: 20, fontWeight: "bold",marginTop:-27 }}>1969</Text>
+            <Text style={{fontWeight:"bold",fontSize:18}}>26 years old</Text>
+            <Text>Lorem ipsum</Text>
+            <TouchableOpacity style={{borderRadius:10,backgroundColor:"#fff",shadowColor:"#000",...styles.pictureCon}}>
+              {/* image */}
+              <Image  source={require('../../assets/me.jpeg')} style={{width:"100%",height:200}}/>
+              <View style={{paddingHorizontal:10,paddingVertical:5,backgroundColor:"#fff"}}>
+                <Text style={{fontWeight:"bold",fontSize:16}}>Drudge Report</Text>
+                <Text style={{fontWeight:"400",fontSize:14}}>Lorem ipsum dolore Loreme ipsum dolore</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionHeaderTitle}>{threedaysagoDate}</Text>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Featured Content</Text>
+            <TouchableOpacity onPress={handleEllipsisIconPress}>
+              <FontAwesome name="ellipsis-v" size={24} color="#888" />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <TouchableOpacity style={styles.itemContainer} onPress={handleItemClick}>
+          <Image source={require('../../assets/me.jpeg')} style={styles.itemImage} />
+          <Text style={styles.itemName}>Item Name 2</Text>
+          <Text style={styles.itemDescription}>Description for Item 2</Text>
+          <Text style={styles.itemTitle}>Item Title 2</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => {}}>
+          <Text style={styles.moreto}>Today on WikiCulture <FontAwesome name="arrow-right" size={18} color="#4169E1" /> </Text>
+        </TouchableOpacity>
+
+        <View style={styles.sectionContainer}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Top read</Text>
+            <TouchableOpacity onPress={() => { }}>
+              <FontAwesome name="ellipsis-v" size={24} color="#888" />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View style={[styles.sectionContainer, styles.topReadSection]}>
+          <View style={styles.topReadContainer}>{renderVerticalElements()}</View>
+        </View>
+
+        <TouchableOpacity onPress={() => { }}>
+          <Text style={styles.moretop}>More top read <FontAwesome name="arrow-right" size={18} color="#4169E1" /> </Text>
+        </TouchableOpacity>
+
+        <View style={styles.sectionContainer}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Picture of the day</Text>
+            <View style={styles.iconContainer}>
+              <TouchableOpacity onPress={() => { }}>
+                {/* <FontAwesome name="time" size={24} color="#888" /> */}
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => { }}>
+                <FontAwesome name="ellipsis-v" size={24} color="#888" />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+
+
+        <TouchableOpacity style={styles.pictureCon} onPress={() => { }}>
+          <Image source={require('../../assets/me.jpeg')} style={styles.itemImage} />
+          <Text style={styles.picDescription}>
+            Description for Item 2 Description for Item 2 Description for Item 2 Description for Item 2
+          </Text>
+          <View style={styles.buttonContainer}>
+
+            <TouchableOpacity style={styles.button} onPress={() => console.log('Download button pressed')}>
+              <FontAwesome name="download" size={24} color="#4169E1" />
+              <Text style={styles.buttonText}>Download</Text>
+            </TouchableOpacity>
+
+
+            <TouchableOpacity style={styles.button} onPress={() => console.log('Share button pressed')}>
+              <Share2 color="#4169E1" size={18} />
+              <Text style={styles.buttonText}>Share</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+
+        <View style={styles.daysectionContainer}>
+          {/* <Text style={styles.sectionHeaderTitle}>{todayDate}</Text> */}
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>On this day</Text>
+            <TouchableOpacity onPress={() => { }}>
+              <FontAwesome name="ellipsis-v" size={24} color="#888" />
+            </TouchableOpacity>
+          </View>
+
+        </View>
+
+        <View style={{ borderLeftWidth: 1, borderLeftColor: "#ccc", marginBottom: 25, position: "relative", minHeight: 100, marginLeft: 9 }}>
+          <Dot color={"#3a3ae9"} size={64} style={{ position: "absolute", top: -44, left: -32, marginBottom: 100, zIndex: 30 }} />
+          <View style={{ paddingHorizontal: 17 }}>
+            <Text style={{ color: "#3a3ae9", fontSize: 20, fontWeight: "bold",marginTop:-27 }}>1969</Text>
+            <Text style={{fontWeight:"bold",fontSize:18}}>26 years old</Text>
+            <Text>Lorem ipsum</Text>
+            <TouchableOpacity style={{borderRadius:10,backgroundColor:"#fff",shadowColor:"#000",...styles.pictureCon}}>
+              {/* image */}
+              <Image  source={require('../../assets/me.jpeg')} style={{width:"100%",height:200}}/>
+              <View style={{paddingHorizontal:10,paddingVertical:5,backgroundColor:"#fff"}}>
+                <Text style={{fontWeight:"bold",fontSize:16}}>Drudge Report</Text>
+                <Text style={{fontWeight:"400",fontSize:14}}>Lorem ipsum dolore Loreme ipsum dolore</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -209,13 +515,24 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     backgroundColor:"#ffffff9e"
   },
-  head: {
-    fontSize: 24,
+  headcontainer: {
+    alignItems: 'center',
     flexDirection: 'row',
     textAlign: 'left',
-    marginTop: 86,
+    marginTop: 56,
     marginBottom: 8,
-    // fontFamily:"Time"
+    
+  },
+  boldh1: {
+    fontWeight: 'bold',
+    fontSize: 24,
+  },
+  boldh2: {
+    fontSize: 24,
+  },
+  boldl1: {
+    fontSize: 24,
+    fontWeight: 'bold',
   },
   searchContainer: {
     flexDirection: 'row',
@@ -226,7 +543,7 @@ const styles = StyleSheet.create({
     borderRadius: 28,
   },
   iconContainer: {
-    padding: 6,
+    padding: 8,
     margin: 1,
     flexDirection: 'row',
     alignItems: 'center',
@@ -237,7 +554,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   scrollContainer: {
-    // paddingBottom: 16,
     paddingBottom: 60,
     marginBottom: 100,
 

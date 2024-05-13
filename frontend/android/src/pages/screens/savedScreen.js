@@ -2,9 +2,17 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Card, Button } from 'react-native-elements'; // Import Card and Button from react-native-elements
 import { ListFilter } from 'lucide-react-native';
+import { useNavigation } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons';
 
 const SavedScreen = () => {
+  const navigation = useNavigation();
+  
+  const handleLogin = () => {  
+    // Example navigation to another screen after successful login
+    navigation.navigate('Login');
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.head}>
@@ -27,7 +35,7 @@ const SavedScreen = () => {
 
         {/* Button Section */}
         <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.joinbutton} onPress={() => console.log('Login button pressed')}>
+            <TouchableOpacity style={styles.joinbutton} onPress={handleLogin}>
               <Text style={styles.jbuttonText}>Login/join WikiCulture</Text>
             </TouchableOpacity>
 
@@ -127,128 +135,3 @@ const styles = StyleSheet.create({
 
 export default SavedScreen;
 
-
-
-
-
-
-
-
-
-// import React from 'react';
-// import { View, Text, StyleSheet, Image, TouchableOpacity, Pressable } from 'react-native';
-// import { ListFilter } from 'lucide-react-native';
-// import { FontAwesome } from '@expo/vector-icons';
-
-// const SavedScreen = () => {
-//   return (
-//     <View style={styles.container}>
-//       <View style={styles.head}>
-//         <View style={styles.title}>
-//           <Text style={styles.titleText}>Saved</Text>
-//         </View>
-//         <View style={styles.icons}>
-//           <ListFilter color="#888" size={18} style={styles.listFilterIcon} />
-//           <FontAwesome name="ellipsis-v" size={24} color="#888" style={styles.ellipsisIcon} />
-//         </View>
-//       </View>
-
-//       {/* Custom Card Section */}
-//       <View style={styles.cardContainer}>
-//         <Image source={require('../../assets/me.jpeg')} style={styles.cardImage} />
-//         <Text style={styles.cardTitle}>Card Title</Text>
-//         <Text style={styles.cardDescription}>
-//           This is the description of the card. Add your content here.
-//         </Text>
-
-//         {/* Button Section */}
-//         <View style={styles.buttonContainer}>
-//           <TouchableOpacity style={styles.joinButton}>
-//             <Text style={styles.buttonText}>Login/join WikiCulture</Text>
-//           </TouchableOpacity>
-//           <Pressable style={styles.notNowButton}>
-//             <Text style={styles.buttonText}>Not now</Text>
-//           </Pressable>
-//         </View>
-//       </View>
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     marginTop: 40,
-//   },
-//   head: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     alignItems: 'center',
-//     paddingHorizontal: 16, // Adjust padding as needed
-//   },
-//   title: {},
-//   titleText: {
-//     fontSize: 24,
-//     fontWeight: 'bold',
-//   },
-//   icons: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//   },
-//   listFilterIcon: {
-//     marginRight: 26,
-//   },
-//   ellipsisIcon: {},
-//   cardContainer: {
-//     borderRadius: 10,
-//     shadowColor: '#000',
-//     shadowOffset: {
-//       width: 0,
-//       height: 2,
-//     },
-//     shadowOpacity: 0.25,
-//     shadowRadius: 3.84,
-//     elevation: 5,
-//     overflow: 'hidden', // Clip content to the card's rounded corners
-//   },
-//   cardImage: {
-//     height: 200, // Adjust the height of the image as needed
-//   },
-//   cardTitle: {
-//     fontSize: 18,
-//     fontWeight: 'bold',
-//     marginVertical: 8,
-//   },
-//   cardDescription: {
-//     fontSize: 16,
-//     color: '#555',
-//     marginBottom: 16,
-//   },
-//   buttonContainer: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     marginHorizontal: 16,
-//     marginTop: 12,
-//   },
-//   joinButton: {
-//     flex: 1,
-//     marginRight: 8,
-//     paddingVertical: 12,
-//     alignItems: 'center',
-//     backgroundColor: '#d0cdcd6e',
-//     borderRadius: 29,
-//   },
-//   notNowButton: {
-//     flex: 1,
-//     paddingVertical: 12,
-//     alignItems: 'center',
-//     backgroundColor: 'transparent',
-//   },
-//   buttonText: {
-//     fontSize: 16,
-//     fontWeight: 'bold',
-//     color: '#4169E1', // Adjust the text color as needed
-//   },
-// });
-
-// export default SavedScreen;

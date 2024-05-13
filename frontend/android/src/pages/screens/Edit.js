@@ -3,8 +3,17 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Card, Button } from 'react-native-elements'; // Import Card and Button from react-native-elements
 import { ListFilter } from 'lucide-react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const EditScreen = () => {
+  const navigation = useNavigation();
+  
+  const handleItemClick = () => {
+    // Navigate to the details screen or perform other actions
+    // Replace 'Details' with the actual screen name you want to navigate to
+    navigation.navigate('Login');
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.head}>
@@ -28,10 +37,11 @@ const EditScreen = () => {
 
         {/* Button Section */}
         <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.joinbutton} onPress={() => console.log('Login button pressed')}>
+            <TouchableOpacity style={styles.joinbutton} onPress={handleItemClick}>
               <Text style={styles.jbuttonText}>Login/join WikiCulture</Text>
             </TouchableOpacity>
 
+            {/* onPress={() => console.log('Login button pressed')}  */}
             {/* <TouchableOpacity style={styles.notbutton} onPress={() => console.log('Not now button pressed')}>
               <Text style={styles.nbuttonText}>Not now</Text>
             </TouchableOpacity> */}

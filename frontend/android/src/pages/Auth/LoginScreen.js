@@ -1,39 +1,82 @@
 // LoginScreen.js
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { Dot } from 'lucide-react-native';
 
-const LoginScreen = ({ navigation }) => {
-  const [email, setEmail] = useState('');
+const LoginScreen = () => {
+  const navigation = useNavigation();
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
+  };
 
   const handleLogin = () => {
     // Add your login logic here
-    console.log('Logging in with:', email, password);
+    console.log('Logging in with:', identifier, password);
     // Example navigation to another screen after successful login
-    navigation.navigate('HomeScreen');
+    // navigation.navigate('HomeScreen');
+  };
+
+  const handleCreateAccount = () => {
+    // Navigate to the screen for creating an account
+    navigation.navigate('Register');
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login Screen</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        autoCapitalize="none"
-        keyboardType="email-address"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <FontAwesome name="arrow-left" size={24} color="#4ea0f9" />
+      </TouchableOpacity>
+      <Text style={styles.title}>Welcome Back!</Text>
+      <View style={styles.inputContainer}>
+        <FontAwesome name="user" size={20} color="#4ea0f9" style={styles.icon} />
+        <TextInput
+          style={styles.input}
+          placeholder="Email or Username"
+          value={identifier}
+          onChangeText={setIdentifier}
+          autoCapitalize="none"
+        />
+      </View>
+      <View style={styles.inputContainer}>
+        <FontAwesome name="lock" size={20} color="#4ea0f9" style={styles.icon} />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry={!isPasswordVisible}
+        />
+        <TouchableOpacity style={styles.eyeButton} onPress={togglePasswordVisibility}>
+          <FontAwesome name={isPasswordVisible ? 'eye-slash' : 'eye'} size={20} color="#4ea0f9" />
+        </TouchableOpacity>
+      </View>
+      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
+
+      <Text style={styles.otherOptionsText}>Don't have an account?</Text>
+
+      <TouchableOpacity style={styles.createAccountButton} onPress={handleCreateAccount}>
+        <Text style={styles.buttonText}>Join Wikiculture</Text>
+      </TouchableOpacity>
+      <View style={styles.otherOptionsContainer}>
+      <TouchableOpacity style={styles.forgotPassword} onPress={()=>{}}>
+        <Text style={styles.forgotPasswordText}>Forgot Password? </Text>
+      </TouchableOpacity>
+
+       <Dot color={"#b5b0b0"} size={34} style={{ position: "absolute", right: 5, marginRight: 125, zIndex: 30 }} />
+
+        <TouchableOpacity style={styles.otherOptionLink} onPress={()=>{}}>
+          <Text style={styles.otherOptionLinkText}>  Privacy Policy</Text>
+        </TouchableOpacity>
+      </View>
+
     </View>
   );
 };
@@ -41,219 +84,95 @@ const LoginScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#fff',
+    paddingHorizontal: 20,
+    paddingTop: 35,
+  },
+  backButton: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    zIndex: 1,
+    marginTop: 40,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    color: '#333',
+    textAlign: 'center',
+    marginTop: 40,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
   },
   input: {
-    width: '80%',
+    flex: 1,
     height: 50,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
     paddingHorizontal: 10,
-    marginBottom: 10,
+    backgroundColor: '#f9f9f9',
   },
-  button: {
-    backgroundColor: 'blue',
-    width: '80%',
-    height: 50,
-    borderRadius: 10,
+  icon: {
+    marginRight: 10,
+  },
+  eyeButton: {
+    position: 'absolute',
+    right: 10,
+    zIndex: 1,
+  },
+  loginButton: {
+    backgroundColor: '#4ea0f9e8',
+    height: 40,
+    borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 10,
+  },
+  createAccountButton: {
+    backgroundColor: '#ccc',
+    height: 40,
+    color: '#4ea0f9',
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
   },
   buttonText: {
-    color: 'white',
+    color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  forgotPasswordText: {
+    color: '#4ea0f9',
+    fontSize: 16,
+    // textDecorationLine: 'underline',
+    textAlign: 'center',
+  },
+  otherOptionsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+  },
+  otherOptionsText: {
+    fontSize: 16,
+    color: '#333',
+    marginLeft: 70,
+    marginBottom: 5,
+    marginTop: 25,
+  },
+  otherOptionLink: {
+    marginLeft: 5,
+  },
+  otherOptionLinkText: {
+    fontSize: 16,
+    color: '#4ea0f9',
+    // textDecorationLine: 'underline',
   },
 });
 
 export default LoginScreen;
-
-
-
-
-
-
-// import React, { useState, useEffect } from 'react';
-// import { StyleSheet, ScrollView, View, Image, Text, TextInput, Pressable, Alert } from 'react-native';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-
-// function LoginScreen({ navigation }) {
-//   const [email, setEmail] = useState('');
-//   const [password, setPassword] = useState('');
-//   const [isEmailActive, setIsEmailActive] = useState(false);
-//   const [isPasswordActive, setIsPasswordActive] = useState(false);
-
-//   const inputEmailStyle = isEmailActive ? styles.inputActive : styles.input;
-//   const inputPasswordStyle = isPasswordActive ? styles.inputActive : styles.input;
-
-//   const handleLogin = async () => {
-//     try {
-//       // Fetch user data from local storage
-//       const userDataString = await AsyncStorage.getItem('registeredUsers');
-//       if (!userDataString) {
-//         Alert.alert('Error', 'No registered users found. Please sign up.');
-//         return;
-//       }
-
-//       // Parse user data from JSON
-//       const registeredUsers = JSON.parse(userDataString);
-
-//       // Check if the entered email exists in local storage
-//       const user = registeredUsers.find((user) => user.email === email);
-
-//       if (user && user.password === password) {
-//         // Navigate to the Home screen or perform other actions after successful login
-//         navigation.navigate('Home');
-//       } else {
-//         Alert.alert('Error', 'Invalid email or password. Please try again.');
-//       }
-//     } catch (error) {
-//       console.error('Error during login:', error);
-//     }
-//   };
-
-//   return (
-//     <ScrollView contentInsetAdjustmentBehavior="automatic">
-//       <View style={styles.container}>
-//         <View style={styles.logoContainer}>
-//           {/* <Image
-//             source={require('../../assets/images/Profile.png')}
-//             style={styles.logo}
-//           /> */}
-//           <Text style={styles.title}>Welcome!</Text>
-//           <Text>Log in to your existing account.</Text>
-//         </View>
-
-//         <View style={styles.formContainer}>
-//           <TextInput
-//             style={inputEmailStyle}
-//             onChangeText={setEmail}
-//             onFocus={() => setIsEmailActive(true)}
-//             onBlur={() => setIsEmailActive(false)}
-//             value={email}
-//             placeholder="Email"
-//           />
-//           <TextInput
-//             style={inputPasswordStyle}
-//             onChangeText={setPassword}
-//             onFocus={() => setIsPasswordActive(true)}
-//             onBlur={() => setIsPasswordActive(false)}
-//             value={password}
-//             secureTextEntry={true}
-//             placeholder="Password"
-//           />
-
-//           <View style={styles.buttonContainer}>
-//             <Pressable style={styles.button} onPress={handleLogin}>
-//               <Text style={styles.buttonText}>LOG IN</Text>
-//             </Pressable>
-//           </View>
-
-//           <View style={styles.signUpContainer}>
-//             <Text style={styles.signUpText}>
-//               Don’t have an account?{' '}
-//               <Pressable onPress={() => navigation.navigate('Register')}>
-//                 <Text style={styles.signUpLink}>Sign Up</Text>
-//               </Pressable>
-//             </Text>
-//           </View>
-
-//           <Pressable style={styles.demobutton} onPress={() => navigation.navigate('Home')}>
-//               <Text style={styles.buttonText}>View Demo </Text>
-//             </Pressable>
-//         </View>
-//       </View>
-//     </ScrollView>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     padding: 15,
-//     backgroundColor: 'white',
-//     flex: 1,
-//     justifyContent: 'center',
-//     // marginTop: 40,
-//   },
-//   logoContainer: {
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     paddingTop: 0,
-//   },
-//   logo: {
-//     resizeMode: 'contain',
-//     padding: 20,
-//     margin: 20,
-//     width: 180,
-//     height: 180,
-//     borderRadius: 50,
-//   },
-//   title: {
-//     fontSize: 30,
-//     color: '#6aa84fff',
-//   },
-//   formContainer: {
-//     // paddingTop: 100,
-//     paddingBottom: 200,
-//   },
-//   input: {
-//     height: 50,
-//     margin: 10,
-//     padding: 10,
-//     borderRadius: 10,
-//     backgroundColor: '#eee',
-//   },
-//   inputActive: {
-//     height: 50,
-//     margin: 10,
-//     padding: 10,
-//     borderWidth: 1,
-//     borderRadius: 10,
-//     backgroundColor: '#eee',
-//     borderColor: '#5cb85c', //#EFC81A
-//     color: 'black'
-//   },
-//   buttonContainer: {
-//     margin: 12,
-//   },
-//   button: {
-//     alignItems: 'center',
-//     backgroundColor: '#5cb85c',
-//     borderRadius: 10,
-//     padding: 12,
-//   },
-//   demobutton: {
-//     alignItems: 'center',
-//     backgroundColor: 'gray',
-//     borderRadius: 10,
-//     padding: 7,
-//     marginTop: 20,
-//     marginLeft: 73,
-//     width: "58%",
-//   },
-//   buttonText: {
-//     color: 'white',
-//     fontWeight: 'bold',
-//     fontSize: 20,
-//   },
-//   signUpContainer: {
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     marginTop: 10,
-//   },
-//   signUpText: {
-//     textAlign: 'center',
-//   },
-//   signUpLink: {
-//     color: '#5cb85c',
-//   },
-// });
-
-// export default LoginScreen;

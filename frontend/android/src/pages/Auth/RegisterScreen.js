@@ -1,232 +1,205 @@
+// RegisterScreen.js
 import React, { useState } from 'react';
-import { StyleSheet, ScrollView, View, Text, TextInput, Pressable, Image, Alert } from 'react-native';
-import { CheckBox } from 'react-native-elements/dist/checkbox/CheckBox';
-import SelectDropdown from 'react-native-select-dropdown';
-import RadioButtonRN from 'radio-buttons-react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { Dot } from 'lucide-react-native';
 
-function RegisterScreen({ navigation }) {
-  const [name, setName] = useState('');
+const RegisterScreen = () => {
+  const navigation = useNavigation();
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [isHealthy, setIsHealthy] = useState(false);
-  const [selectedSickness, setSelectedSickness] = useState('');
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
 
-  const toggleHealthStatus = () => {
-    setIsHealthy(!isHealthy);
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
   };
 
-  const sickness = ['HiV', 'Malaria', 'Typhoid', 'Cough'];
+  const toggleConfirmPasswordVisibility = () => {
+    setIsConfirmPasswordVisible(!isConfirmPasswordVisible);
+  };
 
-  const radioButtonsData = [
-    { label: 'Male' },
-    { label: 'Female' },
-    // { label: 'Other' },
-  ];
+  const handleRegister = () => {
+    // Add registration logic here
+    console.log('Registering with:', email, username, password, confirmPassword);
+  };
 
-  const inputNameStyle = styles.input;
-  const inputEmailStyle = styles.input;
-  const inputPhoneStyle = styles.input;
-  const inputPasswordStyle = styles.input;
-  const inputConfirmPasswordStyle = styles.input;
-
-  const handleRegistration = async () => {
-    try {
-      // Fetch existing registered users or initialize an empty array
-      const existingUsersString = await AsyncStorage.getItem('registeredUsers');
-      const existingUsers = existingUsersString ? JSON.parse(existingUsersString) : [];
-
-      // Check if the email is already registered
-      const isEmailRegistered = existingUsers.some((user) => user.email === email);
-
-      if (isEmailRegistered) {
-        Alert.alert('Error', 'This email is already registered. Please use a different email.');
-        return;
-      }
-
-      // Check if passwords match
-      if (password !== confirmPassword) {
-        Alert.alert('Error', 'Passwords do not match. Please enter matching passwords.');
-        return;
-      }
-
-      // Create a new user object
-      const newUser = {
-        name,
-        email,
-        phone,
-        password,
-        isHealthy,
-        selectedSickness,
-      };
-
-      // Add the new user to the array
-      existingUsers.push(newUser);
-
-      // Save the updated array back to local storage
-      await AsyncStorage.setItem('registeredUsers', JSON.stringify(existingUsers));
-
-      // Navigate to the Login screen
-      navigation.navigate('LoginScreen');
-    } catch (error) {
-      console.error('Error during registration:', error);
-    }
+  const handleLogin = () => {
+    navigation.navigate('Login');
   };
 
   return (
-    <ScrollView contentInsetAdjustmentBehavior="automatic">
-      <View style={styles.container}>
-        <View style={styles.logoContainer}>
-          <Image
-            // source={require('../../assets/images/Profile.png')}
-            style={styles.logo}
-          />
-          <Text style={styles.headerTitle}>Let’s Get Started!</Text>
-          <Text>Create a new account to access all features</Text>
-        </View>
-        <View style={styles.formContainer}>
-          <TextInput
-            style={inputNameStyle}
-            onChangeText={setName}
-            value={name}
-            placeholder="Name"
-          />
-          <TextInput
-            style={inputEmailStyle}
-            onChangeText={setEmail}
-            value={email}
-            placeholder="Email"
-          />
-          <TextInput
-            style={inputPhoneStyle}
-            onChangeText={setPhone}
-            value={phone}
-            placeholder="Phone Number"
-          />
-          <TextInput
-            style={inputPasswordStyle}
-            onChangeText={setPassword}
-            value={password}
-            secureTextEntry={true}
-            placeholder="Create New Password"
-          />
-          <TextInput
-            style={inputConfirmPasswordStyle}
-            onChangeText={setConfirmPassword}
-            value={confirmPassword}
-            secureTextEntry={true}
-            placeholder="Confirm New Password"
-          />
-
-          <View style={styles.checkboxContainer}>
-            <CheckBox
-              title="Healthy?"
-              checked={isHealthy}
-              onPress={toggleHealthStatus}
-              containerStyle={styles.checkbox}
-              textStyle={styles.checkboxText}
-            />
-          </View>
-
-          <RadioButtonRN
-            data={radioButtonsData}
-            selectedBtn={(e) => console.log(e)}
-            style={styles.radioButtonContainer}
-          />
-
-          <View style={styles.buttonContainer}>
-            <Pressable style={styles.button} onPress={handleRegistration}>
-              <Text style={styles.buttonText}>CREATE</Text>
-            </Pressable>
-          </View>
-
-          <Text style={styles.loginText}>
-            Already have an account?{' '}
-            <Pressable onPress={() => navigation.navigate('LoginScreen')}>
-              <Text style={styles.loginLink}>Log In Here</Text>
-            </Pressable>
-          </Text>
-        </View>
+    <View style={styles.container}>
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <FontAwesome name="arrow-left" size={24} color="#4ea0f9" />
+      </TouchableOpacity>
+      <Text style={styles.title}>Create an Account</Text>
+      <View style={styles.inputContainer}>
+        <FontAwesome name="envelope" size={20} color="#4ea0f9" style={styles.icon} />
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          autoCapitalize="none"
+          keyboardType="email-address"
+        />
       </View>
-    </ScrollView>
+      <View style={styles.inputContainer}>
+        <FontAwesome name="user" size={20} color="#4ea0f9" style={styles.icon} />
+        <TextInput
+          style={styles.input}
+          placeholder="Username"
+          value={username}
+          onChangeText={setUsername}
+          autoCapitalize="none"
+        />
+      </View>
+      <View style={styles.inputContainer}>
+        <FontAwesome name="lock" size={20} color="#4ea0f9" style={styles.icon} />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry={!isPasswordVisible}
+        />
+        <TouchableOpacity style={styles.eyeButton} onPress={togglePasswordVisibility}>
+          <FontAwesome name={isPasswordVisible ? 'eye-slash' : 'eye'} size={20} color="#4ea0f9" />
+        </TouchableOpacity>
+      </View>
+      <View style={styles.inputContainer}>
+        <FontAwesome name="lock" size={20} color="#4ea0f9" style={styles.icon} />
+        <TextInput
+          style={styles.input}
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+          secureTextEntry={!isConfirmPasswordVisible}
+        />
+        <TouchableOpacity style={styles.eyeButton} onPress={toggleConfirmPasswordVisibility}>
+          <FontAwesome name={isConfirmPasswordVisible ? 'eye-slash' : 'eye'} size={20} color="#4ea0f9" />
+        </TouchableOpacity>
+      </View>
+      <TouchableOpacity style={styles.registerButton} onPress={handleRegister}>
+        <Text style={styles.buttonText}>Register</Text>
+      </TouchableOpacity>
+      <View style={styles.otherOptionsContainer}>
+        <Text style={styles.otherOptionsText}>Already have an account?</Text>
+        <TouchableOpacity style={styles.createAccountButton} onPress={handleLogin}>
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
+      </View> 
+      <View style={styles.forgotPasswordSection}>
+        <TouchableOpacity style={styles.forgotPassword} onPress={()=>{}}>
+          <Text style={styles.forgotPasswordText}>Forgot Password?    </Text>
+        </TouchableOpacity>
+        <Dot color={"#b5b0b0"} size={34} style={{ position: "absolute", right: 5, marginRight: 125, zIndex: 30 }} />
+        <TouchableOpacity style={styles.otherOptionLink} onPress={()=>{}}>
+          <Text style={styles.otherOptionLinkText}>Privacy Policy</Text>
+        </TouchableOpacity> 
+      </View>
+    </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
-    padding: 15,
-    marginTop: -200,
+    flex: 1,
+    backgroundColor: '#fff',
+    paddingHorizontal: 20,
+    paddingTop: 35,
   },
-  logoContainer: {
-    justifyContent: 'center',
+  backButton: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    zIndex: 1,
+    marginTop: 40,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    color: '#333',
+    textAlign: 'center',
+    marginTop: 40,
+  },
+  inputContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 10,
-  },
-  logo: {
-    resizeMode: 'contain',
-    padding: 20,
-    margin: 20,
-    width: 180,
-    height: 180,
-    borderRadius: 50,
-  },
-  headerTitle: {
-    fontSize: 30,
-    color: '#6aa84fff',
-  },
-  formContainer: {
-    paddingBottom: 100,
+    marginBottom: 20,
   },
   input: {
+    flex: 1,
     height: 50,
-    margin: 12,
-    padding: 10,
-    borderRadius: 10,
-    backgroundColor: 'white',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    paddingHorizontal: 10,
+    backgroundColor: '#f9f9f9',
   },
-  buttonContainer: {
-    margin: 12,
+  icon: {
+    marginRight: 10,
   },
-  button: {
+  eyeButton: {
+    position: 'absolute',
+    right: 10,
+    zIndex: 1,
+  },
+  registerButton: {
+    backgroundColor: '#4ea0f9e8',
+    height: 40,
+    borderRadius: 50,
+    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#5cb85c',
-    borderRadius: 10,
-    padding: 12,
+    marginTop: 10,
   },
-  buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 20,
-  },
-  loginText: {
+  forgotPasswordText: {
+    color: '#4ea0f9',
+    fontSize: 16,
     textAlign: 'center',
+    marginLeft: 35,
   },
-  loginLink: {
-    color: '#5cb85c',
+  otherOptionsContainer: {
+    flexDirection: 'column', // Align elements as column
+    alignItems: 'center', // Align items in the center horizontally
   },
-  checkboxContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  checkbox: {
-    backgroundColor: 'transparent',
-    borderWidth: 0,
-    marginLeft: 10,
-  },
-  checkboxText: {
+  otherOptionsText: {
     fontSize: 16,
     color: '#333',
+    textAlign: 'center',
+    marginTop: 20,
   },
-  radioButtonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  createAccountButton: {
+    backgroundColor: '#ccc',
+    height: 40,
+    borderRadius: 50,
+    justifyContent: 'center',
     alignItems: 'center',
-    width: '60%',
-    marginBottom: 20,
-    padding: 20,
+    marginTop: 10,
+    width: 315, // Add width for better visibility
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  otherOptionLink: {
+    marginLeft: 5,
+  },
+  otherOptionLinkText: {
+    fontSize: 16,
+    color: '#4ea0f9',
+    // textDecorationLine: 'underline',
+  },
+  forgotPasswordSection: {
+    flexDirection: 'row',
+    // justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 20,
   },
 });
 
