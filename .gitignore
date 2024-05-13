@@ -8,6 +8,7 @@ __pycache__/
 node_modules
 mediafiles
 rabbitmq_data
+package-lock.json
 .vscode
 
 tests
