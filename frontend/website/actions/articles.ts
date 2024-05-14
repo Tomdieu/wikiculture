@@ -1,7 +1,8 @@
 "use server";
 
 import { getSession } from "@/lib/getSession";
-import { ArticleType, ArticleUpdateType, CategoryType } from "@/types";
+import { CategoryCreateType } from "@/schema/article.schema";
+import { ArticlePagination, ArticleType, ArticleUpdateType, CategoryPagination, CategoryType, TotalArticleCount } from "@/types";
 
 export const createArticle = async () => {
     const session = await getSession();
@@ -39,10 +40,33 @@ export const getArticle = async (articleId: number) => {
     }
 };
 
-
-export const getArticles = async (isMine?: boolean) => {
+export const getTotalArticles = async () => {
     try {
         const session = await getSession();
+        let url = `${process.env.NEXT_PUBLIC_ARTICLE_URL}/api/articles/total/`;
+        
+        const res = await fetch(url, {
+            headers: {
+                Authorization: `token ${session?.user.token}`,
+                "Content-Type": "application/json",
+            },
+        });
+        if (!res.ok) {
+            throw new Error("Failed to fetch article");
+        }
+        const data = (await res.json()) as TotalArticleCount;
+        return data;
+    } catch (error) {
+        console.error("Error fetching article:", error);
+        throw error;
+    }
+};
+
+export const getArticles = async (page:number=1) => {
+    try {
+        const session = await getSession();
+        const isMine = !(["Admin","Moderator"].includes(session?.user?.user_type!)); 
+
         let url = `${process.env.NEXT_PUBLIC_ARTICLE_URL}/api/articles/`;
         url = isMine ? url + "mine/" : url;
         const res = await fetch(url, {
@@ -54,7 +78,7 @@ export const getArticles = async (isMine?: boolean) => {
         if (!res.ok) {
             throw new Error("Failed to fetch article");
         }
-        const data = (await res.json()) as ArticleType[];
+        const data = (await res.json()) as ArticlePagination;
         return data;
     } catch (error) {
         console.error("Error fetching article:", error);
@@ -71,9 +95,25 @@ export const getCategories = async () => {
             "Content-Type": "application/json",
         },
     });
-    const data = (await res.json()) as CategoryType[];
+    const data = (await res.json()) as CategoryPagination;
     return data;
 }
+
+export const addCategories = async (category:CategoryCreateType) => {
+    const session = await getSession();
+    const url = `${process.env.NEXT_PUBLIC_ARTICLE_URL}/api/categories/`;
+    const res = await fetch(url, {
+        method:'POST',
+        body:JSON.stringify(category),
+        headers: {
+            Authorization: `token ${session?.user.token}`,
+            "Content-Type": "application/json",
+        },
+    });
+    const data = (await res.json()) as CategoryPagination;
+    return data;
+}
+
 
 export const updateArticle = async (
     { articleId, data }: {

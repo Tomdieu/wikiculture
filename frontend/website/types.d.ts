@@ -88,3 +88,22 @@ declare interface CategoryType {
     description?:string;
     parent:number
 }
+
+declare interface ArticlePagination {
+    count:number;
+    next?:string;
+    prevoius?:string;
+    results:ArticleType[]
+}
+
+declare interface CategoryPagination {
+    count:number;
+    next?:string;
+    prevoius?:string;
+    results:CategoryType[]
+}
+
+
+declare interface TotalArticleCount {
+    total:number
+}

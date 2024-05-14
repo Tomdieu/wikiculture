@@ -26,8 +26,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             </ResizablePanel>
             <ResizableHandle withHandle className="hidden md:flex"/>
             <ResizablePanel defaultSize={75}>
-                <div className="flex h-full flex-col overflow-y-auto">
-                    <AdminHeader/>
+                <div className="flex h-full flex-col overflow-y-auto w-full">
+                    <AdminHeader className="sticky top-0 z-50 bg-white dark:bg-stone-950 w-full"/>
                     <ArticleVersionModel/>
                     {children}
                 </div>

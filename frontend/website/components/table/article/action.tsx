@@ -28,7 +28,7 @@ const ActiclesAction = ({ article }: Props) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Button size={"icon"} variant={"ghost"}>
+        <Button size={"icon"} variant={"ghost"} className="rounded-full">
           <MoreHorizontalIcon className="text-muted-foreground w-4 h-4" />
         </Button>
       </DropdownMenuTrigger>

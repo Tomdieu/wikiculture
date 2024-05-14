@@ -9,3 +9,11 @@ export const ArticleSchema = z.object({
   categories: z.string().array(),
   status: z.enum(['draft', 'published']),
 });
+
+export const CategorySchema = z.object({
+  name:z.string(),
+  description:z.string(),
+  is_cultural:z.boolean()
+})
+
+export type CategoryCreateType = z.infer<typeof CategorySchema>;

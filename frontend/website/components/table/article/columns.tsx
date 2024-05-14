@@ -10,6 +10,7 @@ import ActiclesAction from "./action";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
+import MediaHover from "./MediaHover";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -74,13 +75,7 @@ export const columns: ColumnDef<ArticleType>[] = [
     cell: ({ row }) => {
       const article = row.original;
       return (
-        <Link
-          className="text-blue-500 text-ellipsis overflow-hidden line-clamp-1"
-          target="_blank"
-          href={article.cover_image || ""}
-        >
-          {article.cover_image}
-        </Link>
+        <MediaHover article={article} />
       );
     },
   },

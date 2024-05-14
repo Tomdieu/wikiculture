@@ -31,7 +31,7 @@ type CategoryInputProps = {
 export default function CategoryInput({
   categories,
   maxTags = 5,
-  onCategoryChange
+  onCategoryChange,
 }: CategoryInputProps) {
   const [_categories, setCategories] = React.useState<CategoryType[]>([]);
   const [open, setOpen] = useState(false);
@@ -47,7 +47,7 @@ export default function CategoryInput({
 
   useEffect(() => {
     if (data) {
-      setCategories(data);
+      setCategories(data?.results);
     }
   }, [data, isSuccess, setCategories]);
 
@@ -64,15 +64,15 @@ export default function CategoryInput({
     if (!exists) {
       setSelectedCategories((previous) => [...previous, category]);
       setSelectedIds([...selectedIds, category.id]);
-      setOpen(false)
+      setOpen(false);
     }
   };
 
-  useEffect(()=>{
-    if(selectedCategories && onCategoryChange){
-      onCategoryChange(selectedCategories)
+  useEffect(() => {
+    if (selectedCategories && onCategoryChange) {
+      onCategoryChange(selectedCategories);
     }
-  },[selectedCategories])
+  }, [selectedCategories]);
 
   const handleDragStart = (
     event: React.DragEvent<HTMLDivElement>,
@@ -96,71 +96,65 @@ export default function CategoryInput({
     setSelectedCategories(newCategory);
   };
 
-  // useEffect(() => {
-  //   if(selectedCategories){
-  //     const _c = _categories.filter((c) => selectedIds.includes(c.id))
-  //     setCategories(_c);
-  //   }
-  // }, [selectedCategories]);
-
   if (isLoading) {
     return <Skeleton className="w-[90%] h-12" />;
   }
 
   if (isError) {
-    return <p>Error : {error.message}</p>
+    return <p>Error : {error.message}</p>;
   }
 
-  return (
-    <div className="grid grid-cols-1 gap-2">
-      <div className="flex items-center gap-2">
-        <Tags />
-        <span className="font-bold">Categories</span>
-      </div>
-      <p className="text-xs text-muted-foreground">
-        You can select more than one category
-      </p>
-      <div className="border rounded-md py-2 px-2 flex gap-x-2 gap-y-2 flex-wrap">
-        {selectedCategories.map((cat, index) => (
-          <div
-            draggable
-            onDragStart={(e) => handleDragStart(e, index)}
-            onDragOver={handleDragOver}
-            onDrop={(e) => handleDrop(e, index)}
-            key={index}
-            className="transition flex items-center space-x-2 border select-none rounded-sm px-2 bg-primary-foreground text-muted-foreground gap-2"
-          >
-            <span className="text-sm">{cat.name}</span>
+  if (data) {
+    return (
+      <div className="grid grid-cols-1 gap-2">
+        <div className="flex items-center gap-2">
+          <Tags />
+          <span className="font-bold">Categories</span>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          You can select more than one category
+        </p>
+        <div className="border rounded-md py-2 px-2 flex gap-x-2 gap-y-2 flex-wrap">
+          {selectedCategories.map((cat, index) => (
             <div
-              onClick={() => handleDelete(cat.id)}
-              className="p-1 rounded-full hover:bg-gray-200 cursor-pointer"
+              draggable
+              onDragStart={(e) => handleDragStart(e, index)}
+              onDragOver={handleDragOver}
+              onDrop={(e) => handleDrop(e, index)}
+              key={index}
+              className="transition flex items-center space-x-2 border select-none rounded-sm px-2 bg-primary-foreground text-muted-foreground gap-2"
             >
-              <X className="w-3 h-3 " />{" "}
+              <span className="text-sm">{cat.name}</span>
+              <div
+                onClick={() => handleDelete(cat.id)}
+                className="p-1 rounded-full hover:bg-gray-200 cursor-pointer"
+              >
+                <X className="w-3 h-3 " />{" "}
+              </div>
             </div>
-          </div>
-        ))}
-        <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              disabled={Boolean(maxTags == _categories.length)}
-              className="text-sm text-muted-foreground"
-              variant={"outline"}
+          ))}
+          <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                disabled={Boolean(maxTags == _categories.length)}
+                className="text-sm text-muted-foreground"
+                variant={"outline"}
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                add category
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent
+              align="start"
+              alignOffset={8}
+              forceMount
+              className="w-[200px] p-0"
             >
-              <Plus className="w-4 h-4 mr-2" />
-              add category
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent
-            align="start"
-            alignOffset={8}
-            forceMount
-            className="w-[200px] p-0"
-          >
-            <Command>
-              <CommandInput placeholder="Search category..." />
-              <CommandEmpty>Category not found.</CommandEmpty>
-              <CommandGroup>
-                {_categories.map((category) => (
+              <Command>
+                <CommandInput placeholder="Search category..." />
+                <CommandEmpty>Category not found.</CommandEmpty>
+                <CommandGroup>
+                  {_categories?.map((category) => (
                   <CommandItem
                     key={category.id}
                     value={category.id.toString()}
@@ -182,27 +176,31 @@ export default function CategoryInput({
                     {category.name}
                   </CommandItem>
                 ))}
-              </CommandGroup>
-            </Command>
-          </PopoverContent>
-        </Popover>
+                </CommandGroup>
+              </Command>
+            </PopoverContent>
+          </Popover>
+        </div>
+        <div className="flex items-center justify-between">
+          <span
+            className={cn(
+              "text-xs text-muted-foreground",
+              maxTags - _categories.length < 3 ? "text-red-400" : "text-primary"
+            )}
+          >
+            {maxTags - _categories.length} categories are remaining
+          </span>
+          <Button
+            onClick={() => setCategories([])}
+            size={"sm"}
+            className="text-sm"
+          >
+            Remove all
+          </Button>
+        </div>
       </div>
-      <div className="flex items-center justify-between">
-        <span
-          className={cn("text-xs text-muted-foreground",
-            maxTags - _categories.length < 3 ? "text-red-400" : "text-primary"
-          )}
-        >
-          {maxTags - _categories.length} categories are remaining
-        </span>
-        <Button
-          onClick={() => setCategories([])}
-          size={"sm"}
-          className="text-sm"
-        >
-          Remove all
-        </Button>
-      </div>
-    </div>
-  );
+    );
+  }
+
+  return null
 }
