@@ -22,10 +22,34 @@ const RegisterScreen = () => {
     setIsConfirmPasswordVisible(!isConfirmPasswordVisible);
   };
 
-  const handleRegister = () => {
-    // Add registration logic here
-    console.log('Registering with:', email, username, password, confirmPassword);
+  const handleRegister = async() => {
+    // console.log('Logging in with:', identifier, password);
+    const body = {
+      username:username,email,
+      password
+    }
+
+    const res = await fetch('http://192.168.173.184:8000/api/register/',{
+      method:'POST',
+      body:JSON.stringify(body),
+      headers:{
+      'Content-Type':'application/json'
+      }
+    })
+
+    const data = await res.json()
+    console.log(data)
+
+    alert('Successfull');
+
+    navigation.navigate('Home');
+ 
   };
+
+  // const handleRegister = () => {
+    
+  //   console.log('Registering with:', email, username, password, confirmPassword);
+  // };
 
   const handleLogin = () => {
     navigation.navigate('Login');
