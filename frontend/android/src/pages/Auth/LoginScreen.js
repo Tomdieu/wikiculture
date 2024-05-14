@@ -15,15 +15,29 @@ const LoginScreen = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
 
-  const handleLogin = () => {
-    // Add your login logic here
-    console.log('Logging in with:', identifier, password);
-    // Example navigation to another screen after successful login
-    // navigation.navigate('HomeScreen');
+  const handleLogin = async() => {
+    // console.log('Logging in with:', identifier, password);
+    const body = {
+      username:identifier,
+      password
+    }
+
+    const res = await fetch('http://192.168.100.91:8000/api/login/',{
+      method:'POST',
+      body:JSON.stringify(body),
+      headers:{
+      'Content-Type':'application/json'
+      }
+    })
+
+    const data = await res.json()
+    console.log(data)
+
+    navigation.navigate('Home');
+ 
   };
 
   const handleCreateAccount = () => {
-    // Navigate to the screen for creating an account
     navigation.navigate('Register');
   };
 
