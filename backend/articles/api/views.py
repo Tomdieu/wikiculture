@@ -12,6 +12,7 @@ from .authentication import TokenAuthentication
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.decorators import action
+from rest_framework.pagination import PageNumberPagination
 
 
 # Create your views here.
@@ -20,7 +21,7 @@ class ArticleViewSet(GenericViewSet, CreateModelMixin, RetrieveModelMixin, ListM
                      UpdateModelMixin):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
-
+    pagination_class = PageNumberPagination
     authentication_classes = [TokenAuthentication]
 
     def get_permissions(self):
@@ -29,7 +30,7 @@ class ArticleViewSet(GenericViewSet, CreateModelMixin, RetrieveModelMixin, ListM
         return [IsAuthenticated()]  # For other actions, use IsAuthenticated permission
 
     def get_serializer_class(self):
-        if self.action in ['list', 'retrieve']:
+        if self.action in ['list', 'retrieve','mine']:
             return ArticleListSerializer
         return ArticleSerializer
 
@@ -41,6 +42,9 @@ class ArticleViewSet(GenericViewSet, CreateModelMixin, RetrieveModelMixin, ListM
                                                type=openapi.TYPE_STRING)
                          ])
     def list(self, request, *args, **kwargs):
+        # Apply pagination class here
+        self.pagination_class = PageNumberPagination
+
         # Get the tag and category from the query params
         tag = request.query_params.get('tag', None)
         category = request.query_params.get('category', None)
@@ -52,6 +56,12 @@ class ArticleViewSet(GenericViewSet, CreateModelMixin, RetrieveModelMixin, ListM
         if category:
             queryset = queryset.filter(categories__name=category)
 
+        # Paginate the queryset
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
     
@@ -62,14 +72,25 @@ class ArticleViewSet(GenericViewSet, CreateModelMixin, RetrieveModelMixin, ListM
         headers = self.get_success_headers(serializer.data)
         return Response(ArticleListSerializer(instance).data, status=status.HTTP_201_CREATED, headers=headers)
     
+    @action(detail=False)
+    def total(self,request,*args,**kwargs):
+        user = request.user
+        articles = Article.objects.filter(author_id=user.id)
+        return Response({"total":len(articles)})
     
     @action(methods=['get'],detail=False)
     def mine(self,request,*args, **kwargs):
         
         user = request.user
         print("User : ",user, " id : ",user.id)
-        articles = Article.objects.filter(author_id=user.id)
-        serializer = ArticleListSerializer(articles,many=True)
+        queryset = Article.objects.filter(author_id=user.id)
+        # Paginate the queryset
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
     
 
