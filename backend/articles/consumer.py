@@ -103,10 +103,10 @@ def callback(ch, method, properties, body):
     # handles events from the moderator service
 
     if event_type == events.ARTICLE_APPROVED:
-        article = body["article"]["article_id"]
+        article_id = body["article"]["id"]
         feedback = body["feedback"]
 
-        articles = Article.objects.filter(id=article)
+        articles = Article.objects.filter(id=article_id)
 
         if articles.exists():
             article = articles.first()
@@ -131,11 +131,13 @@ def callback(ch, method, properties, body):
                 routing_key="article-approved",
             )
 
+            ch.basic_ack(delivery_tag=method.delivery_tag)
+
     if event_type == events.ARTICLE_REJECTED:
-        article = body["article"]["article_id"]
+        article_id = body["article"]["id"]
         feedback = body["feedback"]
 
-        articles = Article.objects.filter(id=article)
+        articles = Article.objects.filter(id=article_id)
 
         if articles.exists():
             article = articles.first()
@@ -157,6 +159,8 @@ def callback(ch, method, properties, body):
                 exchange_type="direct",
                 routing_key="article-rejected",
             )
+
+            ch.basic_ack(delivery_tag=method.delivery_tag)
 
     print(" [x] Received %r" % data)
     print(" [x] Done")
