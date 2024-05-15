@@ -12,6 +12,22 @@ class User(AbstractUser):
     bio = models.TextField(max_length=255, blank=True, null=True)
     user_type = models.CharField(max_length=10, choices=USER_TYPE, default="User")
 
+    def save(self, *args,**kwargs) -> None:
+        if not self.pk and self.is_superuser:
+            self.user_type = "Admin"
+
+        return super().save(*args,**kwargs)
+
+class Moderator(User):
+
+    class Meta:
+        proxy = True
+
+    def save(self,*args,**kwargs):
+        self.user_type = "Moderator"
+        return super().save(*args,**kwargs)
+    
+    objects = User.objects.filter(user_type="Moderator")
 
 class Event(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

@@ -40,6 +40,25 @@ class UserSerializer(serializers.ModelSerializer):
             user.save()
         return user
 
+class ModeratorSerializer(UserSerializer):
+
+    class Meta(UserSerializer.Meta):
+
+        fields = (
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "email",
+            "image",
+            "bio",
+            "date_joined",
+            "password",
+        )
+        extra_kwargs = {
+            "password": {"write_only": True},
+            "date_joined": {"read_only": True},
+        }
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)

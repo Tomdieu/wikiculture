@@ -10,12 +10,13 @@ from rest_framework.mixins import (
 )
 from rest_framework.views import APIView
 from rest_framework.decorators import action
-from .serializers import UserSerializer, LoginSerializer, UserImageSerializer, PasswordResetConfirmSerializer, PasswordResetSerializer, ChangePasswordSerializer
+from .serializers import UserSerializer,ModeratorSerializer, LoginSerializer, UserImageSerializer, PasswordResetConfirmSerializer, PasswordResetSerializer, ChangePasswordSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.parsers import MultiPartParser, JSONParser
 from rest_framework import status
+from rest_framework.pagination import PageNumberPagination
 
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -23,7 +24,7 @@ from drf_yasg import openapi
 from django.core.mail import send_mail
 from django.conf import settings
 
-from .models import UserPasswordResetToken
+from .models import UserPasswordResetToken,Moderator
 import datetime
 from django.utils import timezone
 
@@ -92,6 +93,15 @@ class RegisterViewSet(CreateModelMixin, GenericViewSet):
     permission_classes = [AllowAny]
 
 
+class ModeratorViewSet(CreateModelMixin,UpdateModelMixin,RetrieveModelMixin,ListModelMixin,GenericViewSet):
+
+    queryset = Moderator.objects.all()
+    serializer_class = ModeratorSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    pagination_class = PageNumberPagination
+
+
 class UserViewSet(
     CreateModelMixin,
     UpdateModelMixin,
@@ -102,6 +112,7 @@ class UserViewSet(
     queryset = User.objects.all()
     permission_classes = [AllowAny]
     authentication_classes = [TokenAuthentication]
+    pagination_class = PageNumberPagination
 
     def get_serializer_class(self):
 
