@@ -1,0 +1,230 @@
+{
+  
+  "users": [
+    {
+      "name": "guest",
+      "password": "guest",
+      "tags": [
+        "administrator"
+      ],
+      "limits": {}
+    }
+  ],
+  "vhosts": [
+    {
+      "name": "/"
+    }
+  ],
+  "permissions": [
+    {
+      "user": "guest",
+      "vhost": "/",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    }
+  ],
+  "parameters": [],
+  
+  "policies": [],
+  "queues": [
+    
+    {
+      "name": "articles_queue",
+      "durable": true,
+      "auto_delete": false,
+      "vhost": "/",
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "comments_queue",
+      "durable": true,
+      "auto_delete": false,
+      "vhost": "/",
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "search_queue",
+      "durable": true,
+      "auto_delete": false,
+      "vhost": "/",
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "notification_queue",
+      "durable": true,
+      "auto_delete": false,
+      "vhost": "/",
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "moderator_queue",
+      "durable": true,
+      "auto_delete": false,
+      "vhost": "/",
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "media_queue",
+      "durable": true,
+      "auto_delete": false,
+      "vhost": "/",
+      "internal": false,
+      "arguments": {}
+    }
+  ],
+  "exchanges": [
+    {
+      "name": "account",
+      "type": "topic",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "article",
+      "type": "topic",
+      "durable": true,
+      "vhost": "/",
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "article-event",
+      "type": "direct",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "moderation",
+      "type": "direct",
+      "durable": true,
+      "vhost": "/",
+      "auto_delete": false,
+      "arguments": {}
+    }
+  ],
+  "bindings": [
+    
+    {
+      "source": "account",
+      "destination": "articles_queue",
+      "routing_key": "account.*",
+      "destination_type": "queue",
+      "vhost": "/",
+      "arguments": {}
+    },
+    {
+      "source": "account",
+      "destination": "comments_queue",
+      "routing_key": "account.*",
+      "destination_type": "queue",
+      "vhost": "/",
+      "arguments": {}
+    },
+    {
+      "source": "article",
+      "destination": "comments_queue",
+      "routing_key": "article.*",
+      "destination_type": "queue",
+      "vhost": "/",
+      "arguments": {}
+    },
+    {
+      "source": "account",
+      "destination": "search_queue",
+      "routing_key": "account.*",
+      "destination_type": "queue",
+      "vhost": "/",
+      "arguments": {}
+    },
+    {
+      "source": "account",
+      "destination": "notification_queue",
+      "routing_key": "account.*",
+      "destination_type": "queue",
+      "vhost": "/",
+      "arguments": {}
+    },
+    {
+      "source": "account",
+      "destination": "moderator_queue",
+      "routing_key": "account.*",
+      "destination_type": "queue",
+      "vhost": "/",
+      "arguments": {}
+    },
+    {
+      "source": "article",
+      "destination": "moderator_queue",
+      "routing_key": "article.*",
+      "destination_type": "queue",
+      "vhost": "/",
+      "arguments": {}
+    },
+    {
+      "source": "article-event",
+      "destination": "notification_queue",
+      "routing_key": "article-approved",
+      "destination_type": "queue",
+      "vhost": "/",
+      "arguments": {}
+    },
+    {
+      "source": "article-event",
+      "destination": "notification_queue",
+      "routing_key": "article-rejected",
+      "destination_type": "queue",
+      "vhost": "/",
+      "arguments": {}
+    },
+    {
+      "source": "account",
+      "destination": "media_queue",
+      "routing_key": "account.*",
+      "destination_type": "queue",
+      "vhost": "/",
+      "arguments": {}
+    },
+    {
+      "source": "account",
+      "destination": "search_queue",
+      "routing_key": "account.*",
+      "destination_type": "queue",
+      "vhost": "/",
+      "arguments": {}
+    },
+    {
+      "source": "article",
+      "destination": "search_queue",
+      "routing_key": "article.*",
+      "destination_type": "queue",
+      "vhost": "/",
+      "arguments": {}
+    },
+    {
+      "source": "moderation",
+      "destination": "articles_queue",
+      "routing_key": "article-approved",
+      "destination_type": "queue",
+      "vhost": "/",
+      "arguments": {}
+    },
+    {
+      "source": "moderation",
+      "destination": "articles_queue",
+      "routing_key": "article-rejected",
+      "destination_type": "queue",
+      "vhost": "/",
+      "arguments": {}
+    }
+  ]
+}
