@@ -9,6 +9,8 @@ from api.models import User
 
 from api import events
 
+from logs import logger
+
 # Set the timeout to 3 hours (in seconds)
 timeout_seconds = 3 * 60 * 60
 
@@ -63,6 +65,7 @@ for binding in article_bindings:
 
 def callback(ch, method, properties, body):
     print(" [x] Received %r" % body)
+    logger.info(" [x] Received %r" % body)
     data = json.loads(body)
     event_type = data["event_type"]
     body = data["body"]
@@ -81,6 +84,7 @@ def callback(ch, method, properties, body):
     elif event_type == events.USER_UPDATED:
         print(" [x] User updated event received")
         print(" [x] Done")
+        logger.info("[x] User Created event received body : %r" % body)
         User.objects.get_or_create(id=body["id"])
         user = User.objects.filter(id=body["id"]).update(**body)
         ch.basic_ack(delivery_tag=method.delivery_tag)
@@ -88,14 +92,37 @@ def callback(ch, method, properties, body):
     elif event_type == events.USER_DELETED:
         print(" [x] User deleted event received")
         print(" [x] Done")
+        logger.info("[x] User updated event received body : %r" % body)
         User.objects.filter(id=body["id"]).delete()
         ch.basic_ack(delivery_tag=method.delivery_tag)
 
     elif event_type == events.ARTICLE_APPROVED:
-        pass
+        notification_type = "article_approved"
+        message = body["message"]
+        _data = body["article"]
+        user_id = body["user_id"]
+
+        Notification.objects.create(
+            message=message,
+            type=notification_type,
+            user_id=user_id,
+            data=json.dumps(_data, separators=4),
+        )
+        ch.basic_ack(delivery_tag=method.delivery_tag)
 
     elif event_type == events.ARTICLE_REJECTED:
-        pass
+        notification_type = "article_rejected"
+        message = body["message"]
+        _data = body["article"]
+        user_id = body["user_id"]
+
+        Notification.objects.create(
+            message=message,
+            type=notification_type,
+            user_id=user_id,
+            data=json.dumps(_data, separators=4),
+        )
+        ch.basic_ack(delivery_tag=method.delivery_tag)
 
     print(" [x] Received %r" % data)
     print(" [x] Done")

@@ -7,13 +7,15 @@ from .serializers import NotificationSerializer
 
 
 @receiver(post_save, sender=Notification)
-def send_notifications_to_user(sender, instance: Notification, created, *args, **kwargs):
+def send_notifications_to_user(
+    sender, instance: Notification, created, *args, **kwargs
+):
     if created:
         serializer = NotificationSerializer(instance)
         serializer_data = serializer.data
 
         # Get the user's notification channel group name
-        user_channel_group_name = f"notifications_{instance.user.user_id}"
+        user_channel_group_name = f"notifications_{instance.user.id}"
 
         # Get the channel layer
         channel_layer = get_channel_layer()
@@ -21,8 +23,5 @@ def send_notifications_to_user(sender, instance: Notification, created, *args, *
         # Send the notification data to the user's channel group
         async_to_sync(channel_layer.group_send)(
             user_channel_group_name,
-            {
-                "type": "send_notification",
-                "notification": serializer_data
-            }
+            {"type": "send_message", "message": serializer_data},
         )
