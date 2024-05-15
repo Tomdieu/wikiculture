@@ -22,7 +22,7 @@ const LoginScreen = () => {
       password
     }
 
-    const res = await fetch('http://192.168.100.91:8000/api/login/',{
+    const res = await fetch('http://192.168.173.184:8000/api/login/',{
       method:'POST',
       body:JSON.stringify(body),
       headers:{
