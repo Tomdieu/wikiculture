@@ -218,6 +218,15 @@ class MediaViewSet(
     def my_files(self, request, pk=None):
         user = request.user
 
-        media_files = File.objects.filter(user=user)
-        serializer = self.get_serializer(media_files, many=True)
+        queryset = File.objects.filter(user=user)
+        # serializer = self.get_serializer(media_files, many=True)
+        # return Response(serializer.data)
+
+        # Paginate the queryset
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
