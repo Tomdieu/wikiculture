@@ -1,18 +1,17 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ArticleType, CategoryType } from "@/types";
+import { ArticleToModerate } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
-import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
-import { Check, CheckCheck, CheckCircle, CheckSquare, MoreHorizontalIcon } from "lucide-react";
+import { CheckSquare, MoreHorizontalIcon } from "lucide-react";
+import parse from 'html-react-parser';
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
-export const categoryColumns: ColumnDef<CategoryType>[] = [
+export const categoryColumns: ColumnDef<ArticleToModerate>[] = [
   {
     id: "select",
     header({ table }) {
@@ -50,47 +49,38 @@ export const categoryColumns: ColumnDef<CategoryType>[] = [
     },
   },
   {
-    accessorKey: "name",
-    header: "Name",
+    accessorKey: "title",
+    header: "Title",
     cell({ row }) {
       const article = row.original;
       return (
         <span className="font-medium text-ellipsis overflow-hidden line-clamp-1">
-          {article.name}
+          {article.title}
         </span>
       );
     },
   },
   {
-    accessorKey: "description",
-    header: "Description",
+    accessorKey: "content",
+    header: "Content",
     cell: ({ row }) => {
-      const category = row.original;
-      return <p>{category.description}</p>;
+      const article = row.original;
+      return <p>{parse(article.content)}</p>;
     },
   },
   {
-    enableHiding:true,
-    accessorKey: "parent",
-    header: "Parent",
+    accessorKey: "approved",
+    header: "Approved",
     cell: ({ row }) => {
-      const category = row.original;
-      return <p>{category.parent}</p>;
-    },
-  },
-  {
-    accessorKey: "is_cultural",
-    header: "Cultural",
-    cell: ({ row }) => {
-      const category = row.original;
-      return <CheckSquare className={cn("w-4 h-4",category.is_cultural && "text-green-600")}/>;
+      const article = row.original;
+      return <CheckSquare className={cn("w-4 h-4",article.approved && "text-green-600")}/>;
     },
   },
   {
     id: "more",
     enableResizing:true,
     cell: ({ row }) => {
-      const category = row.original;
+      const article = row.original;
       return (
         <Button size={"icon"} variant={"ghost"}>
           <MoreHorizontalIcon className="w-4 h-4 text-muted-foreground" />

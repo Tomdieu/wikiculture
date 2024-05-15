@@ -26,7 +26,7 @@ const Version = ({ version }: VersionProps) => {
       <CardContent>
         {/* <Toolbar preview article={version as ArticleType} /> */}
         <article className="prose">
-            {parse(version.content!)}
+            {parse(version.content! || "")}
         </article>
       </CardContent>
       <CardFooter>

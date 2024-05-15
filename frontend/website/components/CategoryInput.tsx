@@ -23,21 +23,20 @@ import { CategoryType } from "@/types";
 import { Skeleton } from "./ui/skeleton";
 
 type CategoryInputProps = {
-  categories?: CategoryType[];
+  categories: CategoryType[];
   onCategoryChange?: (categories: CategoryType[]) => void;
   maxTags?: number;
 };
 
 export default function CategoryInput({
   categories,
-  maxTags = 5,
   onCategoryChange,
+  maxTags = 5,
 }: CategoryInputProps) {
   const [_categories, setCategories] = React.useState<CategoryType[]>([]);
   const [open, setOpen] = useState(false);
-  const [selectedCategories, setSelectedCategories] = useState<CategoryType[]>(
-    categories || []
-  );
+  const [selectedCategories, setSelectedCategories] =
+    useState<CategoryType[]>(categories);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   const { data, isSuccess, isLoading, isError, error } = useQuery({
@@ -50,6 +49,14 @@ export default function CategoryInput({
       setCategories(data?.results);
     }
   }, [data, isSuccess, setCategories]);
+
+  useEffect(()=>{
+    if(categories){
+      setSelectedCategories(categories)
+    }
+  },[categories])
+
+  console.log({ categories });
 
   const handleDelete = (id: number) => {
     setSelectedCategories(selectedCategories.filter((_, index) => id !== _.id));
@@ -115,7 +122,7 @@ export default function CategoryInput({
           You can select more than one category
         </p>
         <div className="border rounded-md py-2 px-2 flex gap-x-2 gap-y-2 flex-wrap">
-          {selectedCategories.map((cat, index) => (
+          {categories.map((cat, index) => (
             <div
               draggable
               onDragStart={(e) => handleDragStart(e, index)}
@@ -155,27 +162,29 @@ export default function CategoryInput({
                 <CommandEmpty>Category not found.</CommandEmpty>
                 <CommandGroup>
                   {_categories?.map((category) => (
-                  <CommandItem
-                    key={category.id}
-                    value={category.id.toString()}
-                    disabled={Boolean(selectedIds.includes(category.id))}
-                    className={cn(selectedIds.includes(category.id) && "text-muted-foreground")}
-                    onSelect={(id) => {
-                      // setValue(currentValue === value ? "" : currentValue);
-                      const c = getCategoryFromId(parseInt(id));
-                      if (c) {
-                        handleAddition(c);
-                      }
-                      setOpen(false);
-                    }}
-                  >
-                    {selectedIds.includes(category.id) && (
-                      <Check className="w-5 h-5 mr-2 text-green-400"/>
-
-                    )}
-                    {category.name}
-                  </CommandItem>
-                ))}
+                    <CommandItem
+                      key={category.id}
+                      value={category.id.toString()}
+                      disabled={Boolean(selectedIds.includes(category.id))}
+                      className={cn(
+                        selectedIds.includes(category.id) &&
+                          "text-muted-foreground"
+                      )}
+                      onSelect={(id) => {
+                        // setValue(currentValue === value ? "" : currentValue);
+                        const c = getCategoryFromId(parseInt(id));
+                        if (c) {
+                          handleAddition(c);
+                        }
+                        setOpen(false);
+                      }}
+                    >
+                      {selectedIds.includes(category.id) && (
+                        <Check className="w-5 h-5 mr-2 text-green-400" />
+                      )}
+                      {category.name}
+                    </CommandItem>
+                  ))}
                 </CommandGroup>
               </Command>
             </PopoverContent>
@@ -185,10 +194,12 @@ export default function CategoryInput({
           <span
             className={cn(
               "text-xs text-muted-foreground",
-              maxTags - _categories.length < 3 ? "text-red-400" : "text-primary"
+              maxTags - selectedCategories.length < 3
+                ? "text-red-400"
+                : "text-primary"
             )}
           >
-            {maxTags - _categories.length} categories are remaining
+            {maxTags - selectedCategories.length} categories are remaining
           </span>
           <Button
             onClick={() => setCategories([])}
@@ -202,5 +213,5 @@ export default function CategoryInput({
     );
   }
 
-  return null
+  return null;
 }

@@ -18,9 +18,11 @@ const sidebarData = [
             {
                 text: "Moderators",
                 icon: UserCog,
-                link: "/dashboard/moderators"
+                link: "/dashboard/users/moderators",
+                viewOnlyBy:["Admin"]
             }
-        ]
+        ],
+        viewOnlyBy:["Admin","Moderator"]
     },
     {
         text: "Articles",
@@ -39,12 +41,13 @@ const sidebarData = [
             {
                 text:"Categories",
                 icon:Tags,
-                link:"/dashboard/articles/categories/"
+                link:"/dashboard/articles/categories"
             },
             {
                 text:"Moderate Articles",
                 icon:Pen,
-                link:"/dashboard/articles/moderate/"
+                link:"/dashboard/articles/moderate",
+                viewOnlyBy:["Admin","Moderator"]
             }
         ]
     },

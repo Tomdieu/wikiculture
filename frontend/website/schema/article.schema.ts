@@ -11,7 +11,7 @@ export const ArticleSchema = z.object({
 });
 
 export const CategorySchema = z.object({
-  name:z.string(),
+  name:z.string().min(3,"The Category name should atleast be 3 characters"),
   description:z.string(),
   is_cultural:z.boolean()
 })

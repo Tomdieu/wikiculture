@@ -1,7 +1,31 @@
 "use server";
 
 import { getSession } from "@/lib/getSession";
-import { FileType } from "@/types";
+import { FilePaginatorType, FileType } from "@/types";
+
+export const getMedia = async (page?:string) =>{
+    try {
+    const session = await getSession();
+        let url = `${process.env.NEXT_PUBLIC_MEDIA_URL}/api/media/`
+        const isMine = !(["Admin","Moderator"].includes(session?.user?.user_type!)); 
+        url = isMine ? url + "my_files/" : url;
+        url = page ? url + `?page=${page}`  : url;
+        const res = await fetch(url, {
+            headers: {
+                Authorization: `token ${session?.user.token}`,
+                "Content-Type": "application/json",
+            },
+        });
+        if (!res.ok) {
+            throw new Error("Failed to fetch article");
+        }
+        const data = (await res.json()) as FilePaginatorType;
+        return data;
+    } catch (error) {
+        console.error("Error fetching article:", error);
+        throw error;
+    }
+}
 
 export const uploadImage = async (formData:FormData) => {
     const session = await getSession();

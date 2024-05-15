@@ -1,17 +1,20 @@
 "use client";
 import React from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getCategories } from "@/actions/articles";
+import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DataTable } from "@/components/table/article/data-table";
-import { categoryColumns } from "./columns";
+import { mediaColumns } from "./columns";
+import { getMedia } from "@/actions/media";
+import { useSearchParams } from "next/navigation";
 
 type Props = {};
 
-const CategoryTable = (props: Props) => {
+const MediaTable = (props: Props) => {
+  const searchParams = useSearchParams();
+  const page = searchParams.get("page") || undefined;
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["categories"],
-    queryFn: () => getCategories(),
+    queryKey: ["medias"],
+    queryFn: () => getMedia(page),
   });
   if (isLoading) {
     return (
@@ -30,11 +33,17 @@ const CategoryTable = (props: Props) => {
     );
   }
 
-  return (
-    <div>
-      <DataTable columns={categoryColumns} data={data?.results!} />
-    </div>
-  );
+
+  if (data) {
+    return (
+      <div>
+        <DataTable columns={mediaColumns} data={data?.results!} />
+
+      </div>
+    );
+  }
+
+  return null;
 };
 
-export default CategoryTable;
+export default MediaTable;

@@ -7,6 +7,7 @@ import { Button } from "./ui/button";
 import { ModeToggle } from "./theme-toggle";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import MenuSheet from "./menu-sheet";
 
 type Props = {
   className?: string;
@@ -23,9 +24,10 @@ const AdminHeader = ({ className }: Props) => {
         )}
       >
         <div className="flex md:hidden">
-          <Button size={"icon"} variant={"ghost"}>
+          {/* <Button size={"icon"} variant={"ghost"}>
             <Menu className="text-muted-foreground" />
-          </Button>
+          </Button> */}
+          <MenuSheet/>
         </div>
         {pathName == "/dashboard" && (
           <div className="flex-1 border rounded-lg px-2 flex items-center">

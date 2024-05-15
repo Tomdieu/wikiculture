@@ -1,18 +1,18 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ArticleType, CategoryType } from "@/types";
+import { ArticleType, CategoryType, UserType } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
-import { Check, CheckCheck, CheckCircle, CheckSquare, MoreHorizontalIcon } from "lucide-react";
+import { formatTimeSince } from "@/lib/timeSince";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
-export const categoryColumns: ColumnDef<CategoryType>[] = [
+export const userColumns: ColumnDef<UserType>[] = [
   {
     id: "select",
     header({ table }) {
@@ -28,15 +28,13 @@ export const categoryColumns: ColumnDef<CategoryType>[] = [
       );
     },
     cell: ({ row }) => (
-      <div>
-        {" "}
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-          className="w-4 h-4"
-        />
-      </div>
+     <div> <Checkbox
+     checked={row.getIsSelected()}
+     onCheckedChange={(value) => row.toggleSelected(!!value)}
+     aria-label="Select row"
+     className="w-4 h-4"
+   /></div>
+
     ),
     enableSorting: false,
     enableHiding: false,
@@ -46,55 +44,65 @@ export const categoryColumns: ColumnDef<CategoryType>[] = [
     header: "Id",
     cell: ({ row }) => {
       const id = row.original.id;
-      return <span>{id}</span>;
+      return (
+        <Link
+          href={`/dashboard/articles/${id}/`}
+          className="font-bold text-sky-400 hover:underline"
+        >
+          {id}
+        </Link>
+      );
     },
   },
   {
-    accessorKey: "name",
-    header: "Name",
+    accessorKey: "username",
+    header: "Username",
     cell({ row }) {
-      const article = row.original;
+      const user = row.original;
       return (
         <span className="font-medium text-ellipsis overflow-hidden line-clamp-1">
-          {article.name}
+          {user.username}
         </span>
       );
     },
   },
   {
-    accessorKey: "description",
-    header: "Description",
+    accessorKey: "first_name",
+    header: "First Name",
     cell: ({ row }) => {
-      const category = row.original;
-      return <p>{category.description}</p>;
-    },
-  },
-  {
-    enableHiding:true,
-    accessorKey: "parent",
-    header: "Parent",
-    cell: ({ row }) => {
-      const category = row.original;
-      return <p>{category.parent}</p>;
-    },
-  },
-  {
-    accessorKey: "is_cultural",
-    header: "Cultural",
-    cell: ({ row }) => {
-      const category = row.original;
-      return <CheckSquare className={cn("w-4 h-4",category.is_cultural && "text-green-600")}/>;
-    },
-  },
-  {
-    id: "more",
-    enableResizing:true,
-    cell: ({ row }) => {
-      const category = row.original;
+      const user = row.original;
       return (
-        <Button size={"icon"} variant={"ghost"}>
-          <MoreHorizontalIcon className="w-4 h-4 text-muted-foreground" />
-        </Button>
+        <span>{user.first_name}</span>
+      );
+    },
+  },
+  {
+    accessorKey: "last_name",
+    header: "Last name",
+    cell: ({ row }) => {
+      const user = row.original;
+      return (
+        <span>{user.last_name}</span>
+      );
+    },
+  },
+  {
+    accessorKey: "email",
+    header: "Email",
+    cell: ({ row }) => {
+      const user = row.original;
+      return (
+        <a href={`mailto:${user.email}`}>{user.email}</a>
+      );
+    },
+  },
+  {
+    accessorKey: "date_joined",
+    header: "Date Joined",
+    cell: ({ row }) => {
+      const user = row.original;
+      return (
+        <p className="line-clamp-1 text-ellipsis">{formatTimeSince(user.date_joined)}</p>
       );
     },
   },

@@ -9,7 +9,7 @@ const CategoriesPage = (props: Props) => {
     <div className="w-full h-full container mx-auto">
       <div className="flex items-center justify-between py-3 space-y-2">
         <h1 className="text-2xl font-bold">Categories</h1>
-        <AddCategory/>
+        <AddCategory />
       </div>
       <CategoryTable />
     </div>

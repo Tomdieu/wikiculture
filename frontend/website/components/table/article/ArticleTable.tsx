@@ -16,19 +16,22 @@ const page = 1;
 
 const ArticleTable = (props: Props) => {
   const searchParams = useSearchParams();
-  const page = searchParams.get('page')
+  const page = searchParams.get("page") || 1;
+  console.log("Page : ", page);
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["articles"],
-    queryFn: () => getArticles(),
+    queryKey: ["articles", "page", page],
+    queryFn: () => getArticles(parseInt(page.toString())),
   });
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 space-x-2 gap-2 p-3">
-        <Skeleton className="w-full h-16" />
-        <Skeleton className="w-[80%] h-14" />
-        <Skeleton className="w-[60%] h-12" />
-        <Skeleton className="w-[40%] h-10" />
-        <Skeleton className="w-[20%] h-18" />
+      <div className="grid  grid-cols-1 lg:grid-cols-2  xl:grid-cols-3 gap-4 mb-5">
+        {Array.from({ length: 10 }).map((_,index) => (
+          <div key={index} className="flex flex-col space-y-1">
+            <Skeleton className="w-full h-52" />
+            <Skeleton className="w-full h-10" />
+            <Skeleton className="w-full h-5" />
+          </div>
+        ))}
       </div>
     );
   }
@@ -40,7 +43,6 @@ const ArticleTable = (props: Props) => {
     );
   }
 
-  console.log(data);
 
   // return <DataTable columns={columns} data={data!} />;
 
@@ -53,7 +55,7 @@ const ArticleTable = (props: Props) => {
           </Link>
         ))}
       </div>
-      <Pagination articlePagination={data!}/>
+      <Pagination articlePagination={data!} />
     </div>
   );
 };

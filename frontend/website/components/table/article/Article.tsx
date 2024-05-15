@@ -14,7 +14,7 @@ import { Globe, MoreHorizontalIcon, VerifiedIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { formatTimeSincePost } from "@/lib/timeSince";
+import { formatTimeSince } from "@/lib/timeSince";
 import { Separator } from "@/components/ui/separator";
 import ActiclesAction from "./action";
 
@@ -43,7 +43,7 @@ const Article = ({ article }: Props) => {
             {article.author.username}
           </h1>
           <p className="text-gray-500 text-xs">
-            {formatTimeSincePost(article.created_at)}
+            {formatTimeSince(article.created_at)}
           </p>
         </div>
       </div>

@@ -165,7 +165,7 @@ const RegisterPage = (props: Props) => {
                                 <FormItem>
                                     <FormLabel>Password</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="*****************" {...field} />
+                                        <Input type='password' placeholder="*****************" {...field} />
                                     </FormControl>
                                     <FormDescription>
                                         Password should be atleast 8 character(s) long
@@ -180,7 +180,7 @@ const RegisterPage = (props: Props) => {
                                 <FormItem>
                                     <FormLabel>Confirm Password</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="*****************" {...field} />
+                                        <Input type='password' placeholder="*****************" {...field} />
                                     </FormControl>
                                     <FormDescription>
 

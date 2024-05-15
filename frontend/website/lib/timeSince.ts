@@ -1,4 +1,4 @@
-export const formatTimeSincePost = (postCreatedAt: string): string => {
+export const formatTimeSince = (postCreatedAt: string): string => {
     const now: Date = new Date();
     const createdAt: Date = new Date(postCreatedAt);
     const diffInSeconds: number = Math.floor((now.getTime() - createdAt.getTime()) / 1000);

@@ -2,7 +2,7 @@
 
 import { getSession } from "@/lib/getSession";
 import { CategoryCreateType } from "@/schema/article.schema";
-import { ArticlePagination, ArticleType, ArticleUpdateType, CategoryPagination, CategoryType, TotalArticleCount } from "@/types";
+import {  ArticlePaginationType, ArticleType, ArticleUpdateType, CategoryPaginationType, CategoryType, TotalArticleCountType } from "@/types";
 
 export const createArticle = async () => {
     const session = await getSession();
@@ -54,7 +54,7 @@ export const getTotalArticles = async () => {
         if (!res.ok) {
             throw new Error("Failed to fetch article");
         }
-        const data = (await res.json()) as TotalArticleCount;
+        const data = (await res.json()) as TotalArticleCountType;
         return data;
     } catch (error) {
         console.error("Error fetching article:", error);
@@ -62,13 +62,14 @@ export const getTotalArticles = async () => {
     }
 };
 
-export const getArticles = async (page:number=1) => {
+export const getArticles = async (page?:number) => {
     try {
         const session = await getSession();
         const isMine = !(["Admin","Moderator"].includes(session?.user?.user_type!)); 
 
         let url = `${process.env.NEXT_PUBLIC_ARTICLE_URL}/api/articles/`;
         url = isMine ? url + "mine/" : url;
+        url = page ? url + `?page=${page}`  : url;
         const res = await fetch(url, {
             headers: {
                 Authorization: `token ${session?.user.token}`,
@@ -78,7 +79,7 @@ export const getArticles = async (page:number=1) => {
         if (!res.ok) {
             throw new Error("Failed to fetch article");
         }
-        const data = (await res.json()) as ArticlePagination;
+        const data = (await res.json()) as ArticlePaginationType;
         return data;
     } catch (error) {
         console.error("Error fetching article:", error);
@@ -95,7 +96,7 @@ export const getCategories = async () => {
             "Content-Type": "application/json",
         },
     });
-    const data = (await res.json()) as CategoryPagination;
+    const data = (await res.json()) as CategoryPaginationType;
     return data;
 }
 
@@ -110,7 +111,7 @@ export const addCategories = async (category:CategoryCreateType) => {
             "Content-Type": "application/json",
         },
     });
-    const data = (await res.json()) as CategoryPagination;
+    const data = (await res.json()) as CategoryType;
     return data;
 }
 

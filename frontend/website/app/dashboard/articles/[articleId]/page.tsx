@@ -115,57 +115,63 @@ export default function ArticlePage({
     );
   }
 
-  return (
-    <div className="rounded-sm w-full h-full grid grid-cols-1 gap-y-3 space-y-3 mx-auto container mb-10">
-      <div className="flex flex-col lg:flex-row items-start lg:items-start lg:justify-between">
-        <div className="grid grid-cols-1">
-          <h1 className="text-2xl font-bold tracking-tight md:text-3xl lg:text-4xl">
-            Edit Article
-          </h1>
-          {/* <p className="mt-3 text-gray-500 dark:text-gray-400 md:text-xl">
-                            Share your thoughts and ideas with the world.
-                        </p> */}
+  if(data && article){
+    console.log(data.categories)
+    return (
+      <div className="rounded-sm w-full h-full grid grid-cols-1 gap-y-3 space-y-3 mx-auto container mb-10">
+        <div className="flex flex-col lg:flex-row items-start lg:items-start lg:justify-between">
+          <div className="grid grid-cols-1">
+            <h1 className="text-2xl font-bold tracking-tight md:text-3xl lg:text-4xl">
+              Edit Article
+            </h1>
+            {/* <p className="mt-3 text-gray-500 dark:text-gray-400 md:text-xl">
+                              Share your thoughts and ideas with the world.
+                          </p> */}
+          </div>
+          <div className="flex items-center space-x-2">
+            <Publish article={data!} />
+            <More article={data!} />
+          </div>
         </div>
-        <div className="flex items-center space-x-2">
-          <Publish article={data!} />
-          <More article={data!} />
-        </div>
+  
+        <Cover url={article.cover_image} />
+        <div className="w-full  md:max-w-3xl lg:max-w-4xl mx-auto"></div>
+  
+        <Toolbar article={(article as ArticleType)!} preview={false} />
+        {/* <Editor /> */}
+  
+        <JoditEditor
+          ref={editor}
+          // value={content}
+          value={article.content!}
+          onBlur={(newContent) => {
+            mutateArticle({ content: newContent });
+          }}
+          // onBlur={(newContent) => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
+          onChange={(newContent) => {}}
+        />
+        <CategoryInput
+          onCategoryChange={(categories) => {
+            mutateArticle({ categories });
+          }}
+          categories={article.categories!}
+        />
+  
+        <TagInput
+          onTagChange={(tags) => {
+            mutateArticle({ tags });
+          }}
+          tags={article.tags}
+        />
+        <Button size={"lg"} onClick={saveArticle}>
+          <Save className="w-5 h-5 mr-2" />
+          Save Article
+        </Button>
+        <div className="mb-50 h-24"></div>
       </div>
+    );
+  }
 
-      <Cover url={article?.cover_image} />
-      <div className="w-full  md:max-w-3xl lg:max-w-4xl mx-auto"></div>
-
-      <Toolbar article={(article as ArticleType)!} preview={false} />
-      {/* <Editor /> */}
-
-      <JoditEditor
-        ref={editor}
-        // value={content}
-        value={article?.content!}
-        onBlur={(newContent) => {
-          mutateArticle({ content: newContent });
-        }}
-        // onBlur={(newContent) => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
-        onChange={(newContent) => {}}
-      />
-      <CategoryInput
-        onCategoryChange={(categories) => {
-          mutateArticle({ categories });
-        }}
-        categories={article?.categories!}
-      />
-
-      <TagInput
-        onTagChange={(tags) => {
-          mutateArticle({ tags });
-        }}
-        tags={article?.tags}
-      />
-      <Button size={"lg"} onClick={saveArticle}>
-        <Save className="w-5 h-5 mr-2" />
-        Save Article
-      </Button>
-      <div className="mb-50 h-24"></div>
-    </div>
-  );
+  return null;
+  
 }

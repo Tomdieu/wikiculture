@@ -5,14 +5,16 @@ import { getCategories } from "@/actions/articles";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DataTable } from "@/components/table/article/data-table";
 import { categoryColumns } from "./columns";
+import { getArticleToModerate } from "@/actions/moderators";
 
 type Props = {};
 
-const CategoryTable = (props: Props) => {
+const ArticleTOModerateTable = (props: Props) => {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["categories"],
-    queryFn: () => getCategories(),
+    queryKey: ["articles-to-moderate"],
+    queryFn: () => getArticleToModerate(),
   });
+  
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 space-y-1">
@@ -30,11 +32,14 @@ const CategoryTable = (props: Props) => {
     );
   }
 
-  return (
-    <div>
-      <DataTable columns={categoryColumns} data={data?.results!} />
-    </div>
-  );
+  if(data){
+    return (
+        <div>
+          <DataTable columns={categoryColumns} data={data?.results!} />
+        </div>
+      );
+  }
+  return null;
 };
 
-export default CategoryTable;
+export default ArticleTOModerateTable;
