@@ -130,17 +130,17 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-RABBITMQ_HOST = env('RABBITMQ_HOST',default='localhost')
-RABBITMQ_PORT = env('RABBITMQ_PORT',default=5672)
-RABBITMQ_USERNAME = env('RABBITMQ_USERNAME',default='guest')
-RABBITMQ_PASSWORD = env('RABBITMQ_PASSWORD',default='guest')
+RABBITMQ_HOST = env("RABBITMQ_HOST", default="localhost")
+RABBITMQ_PORT = env("RABBITMQ_PORT", default=5672)
+RABBITMQ_USERNAME = env("RABBITMQ_USERNAME", default="guest")
+RABBITMQ_PASSWORD = env("RABBITMQ_PASSWORD", default="guest")
 
 # Cors Configuration
 CORS_ORIGIN_ALLOW_ALL = True
@@ -148,5 +148,27 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = ("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
 
 # User Service
-USER_SERVICE_HOST = env("USER_SERVICE_HOST",default="localhost")
-USER_SERVICE_PORT = env("USER_SERVICE_PORT",default="8000")
+USER_SERVICE_HOST = env("USER_SERVICE_HOST", default="localhost")
+USER_SERVICE_PORT = env("USER_SERVICE_PORT", default="8000")
+
+# Rest framework
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": ("api.authentication.TokenAuthentication",),
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.AllowAny",),
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 20,
+}
+
+# SWAGGER
+
+SWAGGER_SETTINGS = {
+    "SECURITY_DEFINITIONS": {
+        "TokenAuth": {
+            "type": "apiKey",
+            "in": "header",
+            "name": "Authorization",
+            "description": "Use the format 'token <token>' where <token> is your authentication token.",
+        },
+    }
+}

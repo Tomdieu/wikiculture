@@ -91,14 +91,17 @@ def callback(ch, method, properties, body):
             ch.basic_ack(delivery_tag=method.delivery_tag)
         else:
             Article.objects.create(
-                id=body["id"], title=body["title"], content=body["content"]
+                id=body["id"],
+                title=body["title"],
+                content=body["content"],
+                approved=body["approved"],
             )
             ch.basic_ack(delivery_tag=method.delivery_tag)
         print(" [x] Done")
     if event_type == events.ARTICLE_UPDATED:
         print(" [x] Article updated event received")
         Article.objects.filter(id=body["id"]).update(
-            title=body["title"], content=body["content"]
+            title=body["title"], content=body["content"], approved=body["approved"]
         )
         print(" [x] Done")
 

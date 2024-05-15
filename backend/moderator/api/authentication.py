@@ -17,6 +17,8 @@ class TokenAuthentication(BaseAuthentication):
 
         headers = {"Authorization": token}
 
+        print("Token : ", token)
+
         try:
             response = requests.get(USER_INFO, headers=headers)
             response.raise_for_status()
@@ -26,11 +28,10 @@ class TokenAuthentication(BaseAuthentication):
                 "Failed to authenticate. Error: {}".format(str(e))
             )
 
-        # Check if the authenticated data exists in the service if not create it
-        exists = User.objects.filter(id=user_data["id"]).exists()
-        if not exists:
-            User.objects.create(**user_data)
-        # Get the user base on the user id
-        user = User.objects.get(id=user_data["id"])
+        # Check if the authenticated data exists in the service, if not create it
+        user, _ = User.objects.get_or_create(id=user_data["id"], defaults=user_data)
 
-        return (user, None)
+        # Manually set is_authenticated to True
+        user.is_authenticated = True
+
+        return user, None
