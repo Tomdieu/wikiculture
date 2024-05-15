@@ -33,7 +33,7 @@ spec:
     spec:
       containers:
         - name: rabbitmq
-          image: rabbitmq:3.10-management-alpine
+          image: ghcr.io/tomdieu/wikiculture/wikiculture-rabbitmq:latest
           ports:
             - containerPort: 5672
             - containerPort: 15672
