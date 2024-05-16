@@ -43,7 +43,7 @@ export function AddCategory() {
     shouldFocusError:true,
   });
 
-  const ref = useRef<HTMLButtonElement>()
+  const ref = useRef<HTMLButtonElement>(null)
 
   const queryClient = useQueryClient();
 

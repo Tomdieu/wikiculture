@@ -18,3 +18,5 @@ tests
 *.sqlite3
 db.*
 db.sqlite3
+
+.trunk
