@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
 const WebSocketComponent = () => {
-    let socket;
+    let socket:WebSocket;
 
     useEffect(() => {
         // Create WebSocket instance
@@ -39,6 +39,7 @@ const WebSocketComponent = () => {
     return (
         <div>
             {/* Your component JSX */}
+            Websocket
         </div>
     );
 };
