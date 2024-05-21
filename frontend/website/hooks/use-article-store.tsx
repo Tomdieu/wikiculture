@@ -1,6 +1,9 @@
 import { updateArticle } from "@/actions/articles";
 import { ArticleType, ArticleUpdateType } from "@/types";
 import { useQueryClient } from "@tanstack/react-query";
+import { revalidatePath } from "next/cache";
+import { useRouter } from "next/router";
+// import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
@@ -31,12 +34,14 @@ export const useArticleStore = create(
         const article = get().article;
         if (article) {
           try {
+            const village_id = article.village?.id;
             const categories_id = article.categories?.map((cat) => cat.id);
             delete article.history
             delete article.author
             const _article: ArticleUpdateType = {
               ...article,
               categories: categories_id,
+              village:village_id
             };
 
             const newData = await updateArticle({
@@ -45,6 +50,7 @@ export const useArticleStore = create(
             });
             set({ article: newData }); // Update store's state with new data
             toast.success("Updated Article");
+
           } catch (error) {
             toast.error("Could not save article");
           }

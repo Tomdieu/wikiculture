@@ -55,7 +55,7 @@ export const categoryColumns: ColumnDef<CategoryType>[] = [
     cell({ row }) {
       const article = row.original;
       return (
-        <span className="font-medium text-ellipsis overflow-hidden line-clamp-1">
+        <span className="font-medium text-xs text-ellipsis overflow-hidden line-clamp-1">
           {article.name}
         </span>
       );
@@ -66,7 +66,7 @@ export const categoryColumns: ColumnDef<CategoryType>[] = [
     header: "Description",
     cell: ({ row }) => {
       const category = row.original;
-      return <p>{category.description}</p>;
+      return <p className="line-clamp-1 text-ellipsis text-xs overflow-hidden">{category.description}</p>;
     },
   },
   {

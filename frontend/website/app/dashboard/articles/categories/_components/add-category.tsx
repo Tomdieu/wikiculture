@@ -60,9 +60,6 @@ export function AddCategory() {
     description,
     is_cultural,
   }: z.infer<typeof CategorySchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    // console.log(values);
 
     // const data = await addCategories({name,description,is_cultural});
     mutate({ name, description, is_cultural },{onSettled(data, error, variables, context) {

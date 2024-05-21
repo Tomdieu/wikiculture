@@ -23,7 +23,7 @@ import { CategoryType } from "@/types";
 import { Skeleton } from "./ui/skeleton";
 
 type CategoryInputProps = {
-  categories: CategoryType[];
+  categories?: CategoryType[];
   onCategoryChange?: (categories: CategoryType[]) => void;
   maxTags?: number;
 };
@@ -55,8 +55,6 @@ export default function CategoryInput({
       setSelectedCategories(categories)
     }
   },[categories])
-
-  console.log({ categories });
 
   const handleDelete = (id: number) => {
     setSelectedCategories(selectedCategories.filter((_, index) => id !== _.id));
@@ -122,7 +120,7 @@ export default function CategoryInput({
           You can select more than one category
         </p>
         <div className="border rounded-md py-2 px-2 flex gap-x-2 gap-y-2 flex-wrap">
-          {categories.map((cat, index) => (
+          {categories?.map((cat, index) => (
             <div
               draggable
               onDragStart={(e) => handleDragStart(e, index)}
@@ -131,7 +129,7 @@ export default function CategoryInput({
               key={index}
               className="transition flex items-center space-x-2 border select-none rounded-sm px-2 bg-primary-foreground text-muted-foreground gap-2"
             >
-              <span className="text-sm">{cat.name}</span>
+              <span className="text-xs">{cat.name}</span>
               <div
                 onClick={() => handleDelete(cat.id)}
                 className="p-1 rounded-full hover:bg-gray-200 cursor-pointer"
@@ -143,7 +141,8 @@ export default function CategoryInput({
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <Button
-                disabled={Boolean(maxTags == _categories.length)}
+                hidden={Boolean(maxTags === selectedCategories.length)}
+                disabled={Boolean(maxTags == selectedCategories.length)}
                 className="text-sm text-muted-foreground"
                 variant={"outline"}
               >
@@ -169,7 +168,7 @@ export default function CategoryInput({
                       className={cn(
                         selectedIds.includes(category.id) &&
                           "text-muted-foreground"
-                      )}
+                      ,"text-xs")}
                       onSelect={(id) => {
                         // setValue(currentValue === value ? "" : currentValue);
                         const c = getCategoryFromId(parseInt(id));

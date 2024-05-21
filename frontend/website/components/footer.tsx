@@ -1,23 +1,22 @@
 import Logo from "@/components/logo";
-import {Button} from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import Img from "@/components/Img";
 import Link from "next/link";
 
-
 export default function Footer() {
-    return (
-        <div className={"flex items-center w-full p-6 bg-background z-50"}>
-            {/*<Logo/>*/}
-            <Link href={"/"}>
-                <Img  width={32} height={32} className={"cursor-pointer hidden md:inline-block"}/>
-            </Link>
-            <a href="https://storyset.com/home">Home illustrations by Storyset</a>
-            <div
-                className={"w-full justify-between md:justify-end flex items-center gap-x-2 text-muted-foreground md:ml-auto"}>
-                <Button variant={"ghost"} size={"sm"}>Privacy Policy</Button>
-                <Button variant={"ghost"} size={"sm"}>Terms & Conditions</Button>
-
-            </div>
-        </div>
-    );
+  return (
+    <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
+      <p className="text-xs text-gray-500 dark:text-gray-400">
+        © 2024 WikiCulture. All rights reserved.
+      </p>
+      <nav className="sm:ml-auto flex gap-4 sm:gap-6">
+        <Link className="text-xs hover:underline underline-offset-4" href="#">
+          Terms of Service
+        </Link>
+        <Link className="text-xs hover:underline underline-offset-4" href="#">
+          Privacy
+        </Link>
+      </nav>
+    </footer>
+  );
 }

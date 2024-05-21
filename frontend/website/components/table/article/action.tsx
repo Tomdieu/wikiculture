@@ -37,7 +37,10 @@ const ActiclesAction = ({ article }: Props) => {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem
-            onClick={onCopy}
+            onClick={(e)=>{
+              e.preventDefault()
+              onCopy()
+            }}
             className="text-muted-foreground cursor-pointer text-xs"
           >
             <Copy className="w-4 h-5 mr-2" />

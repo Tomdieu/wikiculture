@@ -19,7 +19,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             direction="horizontal"
             className="min-h-screen max-h-screen w-screen rounded-lg border"
         >
-            <ResizablePanel defaultSize={25} maxSize={28} minSize={18} className="hidden md:block">
+            <ResizablePanel defaultSize={25} maxSize={28} minSize={15} className="hidden md:block">
                 <div className="flex h-full flex-col">
                     <Sidebar />
                 </div>

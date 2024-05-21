@@ -26,13 +26,18 @@ const ArticleVersionModel = (props: Props) => {
           <Carousel
             opts={{
               align: "start",
-              loop:false
+              loop: false,
             }}
             className="w-full max-w-4xl"
           >
             <CarouselContent>
-              {article?.history?.map((history,index) => (
-                <CarouselItem key={index} className={cn(history.history_change_reason!=="" && "md:basis-1/2")}>
+              {article?.history?.map((history, index) => (
+                <CarouselItem
+                  key={index}
+                  className={cn(
+                    history.history_change_reason !== "" && "2xl:basis-1/2"
+                  )}
+                >
                   <Version version={history} />
                 </CarouselItem>
               ))}

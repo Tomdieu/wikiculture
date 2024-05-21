@@ -10,8 +10,6 @@ type Props = {}
 const Dashboard = async (props: Props) => {
   const session = await getSession()
 
-  console.log(session)
-
   return (
     <div className='container mx-auto flex-1 flex flex-col space-y-5'>
       <div>

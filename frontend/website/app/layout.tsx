@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import { Toaster } from "@/components/ui/toaster"
-import { Toaster as ReactHotToaster } from "react-hot-toast"
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as ReactHotToaster } from "react-hot-toast";
 import React from "react";
-import { Analytics } from "@vercel/analytics/react"
+import { Analytics } from "@vercel/analytics/react";
 import NextAuthProvider from "@/providers/NextAuthProvider";
 import NextTopLoader from "nextjs-toploader";
 import ModelProvider from "@/providers/model-provider";
@@ -35,17 +35,17 @@ const poppins = localFont({
     },
     {
       path: "../public/fonts/poppins/Poppins-ExtraBold.ttf",
-      weight: "900"
+      weight: "900",
     },
   ],
   variable: "--font-poppins",
-  display: "swap"
+  display: "swap",
 });
 
 export const metadata: Metadata = {
   title: {
     default: "WikiCulture - The Free Culture Encyclopedia",
-    template: `%s | WikiCulture`
+    template: `%s | WikiCulture`,
   },
   description:
     "WikiCulture is a free culture encyclopedia that anyone can edit. It is a collaborative creation by people all over the world. It is a free content project with the goal of creating a free culture encyclopedia to the highest possible quality. We welcome everyone to contribute to it and help it grow.",
@@ -88,15 +88,15 @@ export const metadata: Metadata = {
       {
         media: "(prefers-color-scheme:light)",
         url: "/dark.svg",
-        href: "/dark.svg"
+        href: "/dark.svg",
       },
       {
         media: "(prefers-color-scheme:dark)",
         url: "/white.svg",
-        href: "/white.svg"
-      }
-    ]
-  }
+        href: "/white.svg",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
@@ -107,10 +107,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <NextAuthProvider>
-        <ReactQueryProvider>
-
-          <body className={`${poppins.variable} w-full h-full font-poppins`}>
-
+        <body
+          suppressHydrationWarning={true}
+          className={`${poppins.variable} w-screen h-screen p-0 font-poppins`}
+        >
+          <ReactQueryProvider>
             <ThemeProvider
               attribute="class"
               defaultTheme="system"
@@ -123,11 +124,9 @@ export default function RootLayout({
               <ReactHotToaster position="top-center" />
               <ModelProvider />
               {children}
-
-
             </ThemeProvider>
-          </body>
-        </ReactQueryProvider>
+          </ReactQueryProvider>
+        </body>
       </NextAuthProvider>
     </html>
   );

@@ -1,7 +1,7 @@
 "use client";
-import JoditEditor from "jodit-react";
-import React, { useState, useRef, useEffect } from "react";
-// import dynamic from "next/dynamic";
+// import JoditEditor, { Jodit } from "jodit-react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
+import dynamic from "next/dynamic";
 import Toolbar from "@/components/Toolbar";
 import Cover from "@/components/Cover";
 import Publish from "@/components/Publish";
@@ -14,13 +14,16 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import TagInput from "@/components/TagInput";
 import CategoryInput from "@/components/CategoryInput";
-import { ArticleType } from "@/types";
+import { ArticleType, FileType, VillageType } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Save } from "lucide-react";
 import toast from "react-hot-toast";
 import PageNotFound from "./404";
+import { getSession } from "@/lib/getSession";
+import JoditEditor from "@/components/editor/JoditEditor";
+import VillageInput from "@/components/VillageInput";
 
-// const Editor = dynamic(() => import("@/components/Editor"), { ssr: false });
+const Editor = dynamic(() => import("@/components/Editor"), { ssr: false });
 
 type ArticlePageParams = {
   params: {
@@ -32,10 +35,34 @@ export default function ArticlePage({
   params: { articleId },
 }: ArticlePageParams) {
   const [mounted, setMounted] = useState(false);
-
-  const editor = useRef(null);
+  
   const { article, setArticle, saveArticle, mutateArticle } = useArticleStore();
   const [content, setContent] = useState(article?.content || "");
+
+  const url = process.env.NEXT_PUBLIC_MEDIA_URL;
+
+  function getImageUrlParts(imageUrl: string) {
+    // Create an anchor element to parse the URL
+    const url = document.createElement("a");
+    url.href = imageUrl;
+
+    // Extract base URL
+    const baseUrl =
+      url.origin + url.pathname.slice(0, url.pathname.lastIndexOf("/") + 1);
+
+    // Check if it's a relative path
+    const isRelativePath = !url.protocol || url.protocol === location.protocol;
+
+    // Extract real relative path if it's a relative path
+    const relativePath = isRelativePath
+      ? url.pathname.slice(baseUrl.length)
+      : "";
+
+    return {
+      baseUrl,
+      relativePath,
+    };
+  }
 
   const [unsavedChanges, setUnsavedChanges] = useState(true);
 
@@ -101,6 +128,10 @@ export default function ArticlePage({
         <Skeleton className="w-[60%] h-10" />
         <Skeleton className="w-[40%] h-7" />
         <Skeleton className="w-[20%] h-2" />
+        <Skeleton className="w-[40%] h-7" />
+        <Skeleton className="w-[60%] h-10" />
+
+        <Skeleton className="w-[80%] h-11" />
       </div>
     );
   }
@@ -115,8 +146,7 @@ export default function ArticlePage({
     );
   }
 
-  if(data && article){
-    console.log(data.categories)
+  if (data && article?.id) {
     return (
       <div className="rounded-sm w-full h-full grid grid-cols-1 gap-y-3 space-y-3 mx-auto container mb-10">
         <div className="flex flex-col lg:flex-row items-start lg:items-start lg:justify-between">
@@ -124,44 +154,50 @@ export default function ArticlePage({
             <h1 className="text-2xl font-bold tracking-tight md:text-3xl lg:text-4xl">
               Edit Article
             </h1>
-            {/* <p className="mt-3 text-gray-500 dark:text-gray-400 md:text-xl">
-                              Share your thoughts and ideas with the world.
-                          </p> */}
           </div>
           <div className="flex items-center space-x-2">
             <Publish article={data!} />
             <More article={data!} />
           </div>
         </div>
-  
+        <VillageInput
+          village={article.village}
+          onChange={(village) => {
+            if(village){
+              mutateArticle({ village: village });
+            }
+          }}
+        />
+
         <Cover url={article.cover_image} />
         <div className="w-full  md:max-w-3xl lg:max-w-4xl mx-auto"></div>
-  
+
         <Toolbar article={(article as ArticleType)!} preview={false} />
-        {/* <Editor /> */}
-  
+        {/* <Editor value={article.content!} onChange={(newConte        <VillageInput/>
+nt) => {
+          mutateArticle({ content: newContent })
+        }} /> */}
+
         <JoditEditor
-          ref={editor}
-          // value={content}
           value={article.content!}
           onBlur={(newContent) => {
             mutateArticle({ content: newContent });
           }}
-          // onBlur={(newContent) => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
           onChange={(newContent) => {}}
         />
         <CategoryInput
           onCategoryChange={(categories) => {
             mutateArticle({ categories });
           }}
-          categories={article.categories!}
+          categories={article.categories}
         />
-  
+
+        
         <TagInput
           onTagChange={(tags) => {
             mutateArticle({ tags });
           }}
-          tags={article.tags}
+          tags={article.tags || []}
         />
         <Button size={"lg"} onClick={saveArticle}>
           <Save className="w-5 h-5 mr-2" />
@@ -173,5 +209,4 @@ export default function ArticlePage({
   }
 
   return null;
-  
 }

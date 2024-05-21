@@ -12,7 +12,7 @@ const KeyCodes = {
 };
 
 type TagInputProps = {
-  tags?: string[];
+  tags: string[];
   onTagChange?: (tags: string[]) => void;
   maxTags?:number
 };
@@ -20,8 +20,10 @@ type TagInputProps = {
 const delimiters = [KeyCodes.comma, KeyCodes.enter, KeyCodes.space];
 
 export default function TagInput({ tags, onTagChange,maxTags=10 }: TagInputProps) {
-  const [_tags, setTags] = React.useState<string[]>(tags || []);
+  const [_tags, setTags] = React.useState<string[]>(tags);
   const [value, setValue] = useState("");
+
+  console.log({tags})
 
   useEffect(()=>{
     if(_tags && onTagChange){
@@ -68,7 +70,6 @@ export default function TagInput({ tags, onTagChange,maxTags=10 }: TagInputProps
   };
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    console.log(event);
     if (delimiters.includes(event.keyCode)) {
       if (value.length >= 1) {
         handleAddition(value);
@@ -107,7 +108,7 @@ export default function TagInput({ tags, onTagChange,maxTags=10 }: TagInputProps
             key={index}
             className="flex items-center space-x-2 border select-none rounded-sm px-2 bg-primary-foreground text-muted-foreground gap-2"
           >
-            <span className="text-sm">{tag}</span>
+            <span className="text-xs">{tag}</span>
             <div
               onClick={() => handleDelete(index)}
               className="p-1 rounded-full hover:bg-gray-200 cursor-pointer"

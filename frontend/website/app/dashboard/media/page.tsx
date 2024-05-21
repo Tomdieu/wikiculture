@@ -13,6 +13,7 @@ const MediaPage = (props: Props) => {
       </div>
 
       <MediaTable />
+      <div className="h-24"></div>
     </div>
   );
 };

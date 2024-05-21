@@ -24,9 +24,7 @@ const AdminHeader = ({ className }: Props) => {
         )}
       >
         <div className="flex md:hidden">
-          {/* <Button size={"icon"} variant={"ghost"}>
-            <Menu className="text-muted-foreground" />
-          </Button> */}
+          
           <MenuSheet/>
         </div>
         {pathName == "/dashboard" && (

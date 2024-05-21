@@ -1,6 +1,5 @@
 "use client"
 import React from 'react'
-import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
@@ -19,7 +18,6 @@ import {
 } from "@/components/ui/form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { z } from "zod"
 import { signUpSchema, signUpSchemaType } from '@/schema/register.schema'
 import { useToast } from "@/components/ui/use-toast"
 import { signIn } from "next-auth/react";
@@ -106,9 +104,6 @@ const RegisterPage = (props: Props) => {
                                         <FormControl>
                                             <Input placeholder="Navi" {...field} />
                                         </FormControl>
-                                        {/* <FormDescription>
-                                        This is your public display name.
-                                    </FormDescription> */}
                                         <FormMessage />
                                     </FormItem>
                                 )} />
@@ -121,9 +116,6 @@ const RegisterPage = (props: Props) => {
                                         <FormControl>
                                             <Input placeholder="Corp" {...field} />
                                         </FormControl>
-                                        {/* <FormDescription>
-                                        This is your public display name.
-                                    </FormDescription> */}
                                         <FormMessage />
                                     </FormItem>
                                 )} />

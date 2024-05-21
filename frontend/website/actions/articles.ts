@@ -2,7 +2,7 @@
 
 import { getSession } from "@/lib/getSession";
 import { CategoryCreateType } from "@/schema/article.schema";
-import {  ArticlePaginationType, ArticleType, ArticleUpdateType, CategoryPaginationType, CategoryType, TotalArticleCountType } from "@/types";
+import {  ArticlePaginationType, ArticleType, ArticleUpdateType, ArticleWithRecommendationType, CategoryPaginationType, CategoryType, TotalArticleCountType } from "@/types";
 
 export const createArticle = async () => {
     const session = await getSession();
@@ -86,6 +86,47 @@ export const getArticles = async (page?:number) => {
         throw error;
     }
 };
+
+export const getLatestArticles = async () => {
+    try {
+
+        const url = `${process.env.NEXT_PUBLIC_ARTICLE_URL}/api/articles/latest`;
+        const res = await fetch(url, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            cache:"no-cache"
+        });
+        if (!res.ok) {
+            throw new Error("Failed to fetch article");
+        }
+        const data = (await res.json()) as ArticleType[];
+        return data;
+    } catch (error) {
+        console.error("Error fetching article:", error);
+        throw error;
+    }
+};
+
+export const getArticleWithRecommendation = async (articleId:number) => {
+    try {
+        const url = `${process.env.NEXT_PUBLIC_ARTICLE_URL}/api/articles/${articleId}/with_recommendations/`;
+        const res = await fetch(url, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            cache:"no-cache"
+        });
+        if (!res.ok) {
+            throw new Error("Failed to fetch article");
+        }
+        const data = await res.json();
+        return data as ArticleWithRecommendationType;
+    } catch (error) {
+        console.error("Error fetching article:", error);
+        throw error; // Rethrow the error to handle it at the caller level if needed
+    }
+}
 
 export const getCategories = async () => {
     const session = await getSession();

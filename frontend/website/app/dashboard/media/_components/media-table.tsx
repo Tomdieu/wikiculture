@@ -1,11 +1,13 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DataTable } from "@/components/table/article/data-table";
 import { mediaColumns } from "./columns";
 import { getMedia } from "@/actions/media";
 import { useSearchParams } from "next/navigation";
+import { FileType } from "@/types";
+import MediaPagination from "./pagination";
 
 type Props = {};
 
@@ -16,6 +18,15 @@ const MediaTable = (props: Props) => {
     queryKey: ["medias"],
     queryFn: () => getMedia(page),
   });
+
+  const [files, setFiles] = useState<FileType[]>([]);
+
+  useEffect(() => {
+    if (data?.results) {
+      setFiles(data.results);
+    }
+  }, [data?.results]);
+
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 space-y-1">
@@ -33,12 +44,15 @@ const MediaTable = (props: Props) => {
     );
   }
 
-
   if (data) {
     return (
-      <div>
-        <DataTable columns={mediaColumns} data={data?.results!} />
-
+      <div className="w-full h-full space-y-2">
+        <DataTable
+          columns={mediaColumns}
+          data={data?.results!}
+          showInput={false}
+        />
+        <MediaPagination filePagination={data} />
       </div>
     );
   }

@@ -18,11 +18,10 @@ export const getArticleToModerate = async (page?:string) => {
                 "Content-Type": "application/json",
             },
         });
-        console.log(res.headers)
-        console.log(res.bodyUsed)
-        // if (!res.ok) {
-        //     throw new Error("Failed to fetch articles to moderate",{cause:res.text});
-        // }
+        if (!res.ok) {
+            const errorText = await res.json() as {detail:string}
+            throw new Error(JSON.stringify(errorText),{cause:res.text});
+        }
         const data = (await res.json()) as ArticleToModeratePagination;
         return data;
 

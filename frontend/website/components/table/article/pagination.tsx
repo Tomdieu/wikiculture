@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/pagination";
 import { cn } from "@/lib/utils";
 import { ArticlePaginationType } from "@/types";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronLeftIcon, ChevronRight, ChevronRightIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -51,14 +51,19 @@ const ArticlePagination = ({
     <Pagination>
       <PaginationContent>
         <PaginationItem className="cursor-pointer">
-          <PaginationPrevious onClick={handlePrevPage} />
+          <Button
+            aria-label="Go to previous page"
+            disabled={!Boolean(articlePagination.prevoius)} onClick={handlePrevPage} variant={"ghost"} size={"default"} className={cn("gap-1 pl-2.5")}>
+            <ChevronLeftIcon className="h-4 w-4" />
+            <span>Previous</span>
+          </Button>
         </PaginationItem>
 
         {pages.map((page, idx) => (
           <PaginationItem
             key={idx}
             className={cn(
-              currentPage === page && "bg-neutral-100 rounded-md",
+              currentPage === page && "bg-neutral-100 rounded-md dark:bg-primary-foreground",
               "cursor-pointer"
             )}
           >
@@ -69,7 +74,16 @@ const ArticlePagination = ({
         ))}
 
         <PaginationItem className="cursor-pointer">
-          <PaginationNext onClick={handleNextPage} />
+        <Button
+            aria-label="Go to next page"
+            size="default"
+            disabled={!Boolean(articlePagination.next)}
+            className={cn("gap-1 pr-2.5")}
+            variant={"ghost"}
+          >
+            <span>Next</span>
+            <ChevronRightIcon className="h-4 w-4" />
+          </Button>
         </PaginationItem>
       </PaginationContent>
     </Pagination>

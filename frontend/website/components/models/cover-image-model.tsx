@@ -42,11 +42,9 @@ export const CoverImageModel = () => {
         if (file) {
             setIsSubmiting(true)
             setFile(file)
-            console.log("FIle : ", file)
 
             if (coverImage.url) {
                 // replace the coverImage url
-                console.log("ine one :")
                 const formData = new FormData()
 
                 formData.append("file", file)
@@ -70,7 +68,6 @@ export const CoverImageModel = () => {
                 // })
 
             } else {
-                console.log("ine two :")
                 const formData = new FormData()
 
                 formData.append("file", file)

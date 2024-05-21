@@ -6,33 +6,36 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { DataTable } from "@/components/table/article/data-table";
 import { categoryColumns } from "./columns";
 import { getArticleToModerate } from "@/actions/moderators";
+import toast from "react-hot-toast";
 
 type Props = {};
 
 const ArticleTOModerateTable = (props: Props) => {
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError,error } = useQuery({
     queryKey: ["articles-to-moderate"],
     queryFn: () => getArticleToModerate(),
   });
   
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 space-y-1">
+      <div className="grid grid-cols-1 space-y-0.5">
         {Array.from({ length: 10 }).map((_, i) => (
           <Skeleton className="w-full h-12" key={i} />
         ))}
       </div>
     );
   }
-  if (isError) {
+  if (isError && error) {
+    const _error = JSON.parse(error.message)
+    toast.error(_error.detail)
     return (
-      <div className="w-full h-full ">
-        <h1 className="text-4xl">Error</h1>
+      <div className="w-full h-full flex items-center justify-center">
+        <h1 className="text-lg md:text-2xl xl:text-4xl font-bold flex-wrap text-red-400">Error : {_error.detail}</h1>
       </div>
     );
   }
 
-  if(data){
+  if(!isError && data?.results){
     return (
         <div>
           <DataTable columns={categoryColumns} data={data?.results!} />
