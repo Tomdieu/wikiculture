@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from taggit.serializers import TagListSerializerField, TaggitSerializer
-from .models import Article, Category, User, ReadingTime
+from .models import Article, Category, User, ReadingTime,Village,Region,CulturalArea,ArticleVistors
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -14,6 +14,55 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = "__all__"
         # exclude = ('parent',)
+
+class CulturalAreaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CulturalArea
+        fields = '__all__'
+
+
+class RegionSerializer(serializers.ModelSerializer):
+    cultural_area = CulturalAreaSerializer()
+
+    class Meta:
+        model = Region
+        fields = '__all__'
+
+class VillageSerializer(serializers.ModelSerializer):
+    region = RegionSerializer()
+    class Meta:
+        model = Village
+        fields = '__all__'
+
+class VillageDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Village
+        fields = '__all__'
+
+class RegionListSerializer(serializers.ModelSerializer):
+    villages = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Region
+        fields = '__all__'
+
+    def get_villages(self,obj:Region):
+
+        villages = Village.objects.filter(region=obj)
+        serializers = VillageDetailSerializer(villages,many=True)
+        return serializers.data
+
+class CulturalListSerializer(serializers.ModelSerializer):
+    regions = serializers.SerializerMethodField()
+    class Meta:
+        model = CulturalArea
+        fields = '__all__'
+
+    def get_regions(self,obj:CulturalArea):
+
+        regions = Region.objects.filter(cultural_area=obj)
+        serializer = RegionListSerializer(regions,many=True)
+        return serializer.data
 
 
 class ArticleSerializer(TaggitSerializer, serializers.ModelSerializer):
@@ -77,6 +126,8 @@ class ArticleListSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
     history = ArticleHistorySerializer(many=True)
     author = UserSerializer()
+    village = VillageSerializer()
+
 
     class Meta:
         model = Article
@@ -102,6 +153,10 @@ class ArticleListPublishSerializer(TaggitSerializer, serializers.ModelSerializer
 
         return _categories
 
+class ArticleListWithRecommendationSerializer(serializers.Serializer):
+
+    data = ArticleListSerializer()
+    recommendations = serializers.ListField(child=ArticleListSerializer())
 
 class ArticleDetailSerializer(serializers.ModelSerializer):
     class Meta:

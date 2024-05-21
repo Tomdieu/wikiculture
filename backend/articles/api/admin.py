@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from import_export.admin import ImportExportModelAdmin
 from simple_history.admin import SimpleHistoryAdmin
-from .models import User, Article, Category, Event,ReadingTime
+from .models import User, Article, Category, Event,ReadingTime,ArticleVistors,CulturalArea,Region,Village
 
 
 # Register your models here.
@@ -17,6 +17,29 @@ class ReadOnlyAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         return False
+    
+@admin.register(CulturalArea)
+class CulturalAreaAdmin(admin.ModelAdmin):
+
+    list_display = ['id','name','description']
+    search_fields = ['name','description']
+
+@admin.register(Region)
+class RegionAdmin(admin.ModelAdmin):
+
+    list_display = ['id','name','description','cultural_area']
+    search_fields = ['name','description']
+
+@admin.register(Village)
+class VillageAdmin(admin.ModelAdmin):
+    list_display = ['id','name','description','region','cultural_area']
+    search_fields = ['name','description']
+    
+    list_filter = ['region','region__cultural_area']
+
+    @admin.display
+    def cultural_area(self,obj:Village):
+        return obj.region.cultural_area
 
 
 @admin.register(Event)

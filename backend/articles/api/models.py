@@ -39,6 +39,31 @@ class Category(models.Model):
 
     def __str__(self) -> str:
         return f"{self.name}"
+    
+
+class CulturalArea(models.Model):
+
+    name = models.CharField(max_length=255,unique=True)
+    description = models.TextField(blank=True,null=True)
+
+    def __str__(self) -> str:
+        return self.name
+    
+class Region(models.Model):
+    name = models.CharField(max_length=255,unique=True)
+    description = models.TextField(blank=True)
+    cultural_area = models.ForeignKey(CulturalArea, on_delete=models.CASCADE,related_name='regions')
+
+    def __str__(self):
+        return self.name
+    
+class Village(models.Model):
+    name = models.CharField(max_length=255,unique=True)
+    description = models.TextField(blank=True)
+    region = models.ForeignKey(Region, on_delete=models.CASCADE,related_name='villages')
+
+    def __str__(self):
+        return self.name
 
 class Article(models.Model):
 
@@ -48,7 +73,7 @@ class Article(models.Model):
     cover_image = models.CharField(max_length=1000,blank=True,null=True)
     content = RichTextField(blank=True,null=True)
     tags = TaggableManager(blank=True,related_name="tags")
-    
+    village = models.ForeignKey(Village,on_delete=models.CASCADE,null=True,blank=True)
     approved = models.BooleanField(default=False)
     categories = models.ManyToManyField(Category, blank=True, related_name="categories")
     is_published = models.BooleanField(default=False)
@@ -114,6 +139,7 @@ class ArticleVistors(models.Model):
 
     article = models.ForeignKey(Article,on_delete=models.CASCADE,related_name="visitors")
     date = models.DateField(default=timezone.now)
+    ip_address = models.CharField(max_length=45, blank=True)
     count = models.PositiveIntegerField(default=0)
 
     class Meta:

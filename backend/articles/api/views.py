@@ -4,8 +4,8 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, ListModelMixin, DestroyModelMixin, \
     UpdateModelMixin
 from rest_framework.response import Response
-from .models import Article, Category,ReadingTime
-from .serializers import ArticleSerializer, CategorySerializer, ArticleListSerializer,ReadingTimeSerializer,ArticleHistorySerializer,ArticleHistoryDeleteSerializer
+from .models import Article, Category,ReadingTime,CulturalArea,Region,Village,ArticleVistors,ArticleRevision,ArticleLike
+from .serializers import CulturalListSerializer,ArticleListWithRecommendationSerializer,ArticleSerializer, CategorySerializer, ArticleListSerializer,ReadingTimeSerializer,ArticleHistorySerializer,ArticleHistoryDeleteSerializer,CulturalAreaSerializer,RegionSerializer,VillageSerializer
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from .authentication import TokenAuthentication
@@ -13,7 +13,7 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
-
+from api.lib.recommend_articles import recommend_articles
 
 # Create your views here.
 
@@ -25,13 +25,15 @@ class ArticleViewSet(GenericViewSet, CreateModelMixin, RetrieveModelMixin, ListM
     authentication_classes = [TokenAuthentication]
 
     def get_permissions(self):
-        if self.action in ['list','retrieve']:  # AllowAny for 'list' action
+        if self.action in ['list','retrieve','latest','with_recommendations']:  # AllowAny for 'list' action
             return [AllowAny()]
         return [IsAuthenticated()]  # For other actions, use IsAuthenticated permission
 
     def get_serializer_class(self):
-        if self.action in ['list', 'retrieve','mine']:
+        if self.action in ['list', 'retrieve','mine','latest']:
             return ArticleListSerializer
+        elif self.action in ['with_recommendations']:
+            return ArticleListWithRecommendationSerializer
         return ArticleSerializer
 
     @swagger_auto_schema(operation_description="List of articles with optional query params",
@@ -39,7 +41,11 @@ class ArticleViewSet(GenericViewSet, CreateModelMixin, RetrieveModelMixin, ListM
                              openapi.Parameter('tag', openapi.IN_QUERY, description="Tag name",
                                                type=openapi.TYPE_STRING),
                              openapi.Parameter('category', openapi.IN_QUERY, description="Category name",
-                                               type=openapi.TYPE_STRING)
+                                               type=openapi.TYPE_STRING),
+                                               openapi.Parameter('village',openapi.IN_QUERY,description="Village name",type=openapi.TYPE_STRING),
+                                               openapi.Parameter('region',openapi.IN_QUERY,description="Region name",type=openapi.TYPE_STRING),
+                                               openapi.Parameter('cultural_area',openapi.IN_QUERY,description="Cultural Area name",type=openapi.TYPE_STRING),
+
                          ])
     def list(self, request, *args, **kwargs):
         # Apply pagination class here
@@ -78,9 +84,26 @@ class ArticleViewSet(GenericViewSet, CreateModelMixin, RetrieveModelMixin, ListM
         articles = Article.objects.filter(author_id=user.id)
         return Response({"total":len(articles)})
     
+    @action(detail=True)
+    def with_recommendations(self,request,*args, **kwargs):
+        instance = self.get_object()
+        article_id = instance.id
+        print("User Ip : ",request.user_ip)
+        serializer = ArticleListSerializer(instance,context={'request':request})
+
+        # Get related articles base on the village
+
+        related_articles = Article.objects.filter(village=instance.village).exclude(pk=instance.id)[:5]  # Exclude the current article
+        related_articles_serializer = ArticleListSerializer(related_articles,many=True) 
+        recommendations = recommend_articles(article_id)
+        recommendation_serializer = ArticleListSerializer(recommendations,many=True)
+        print("Recommended : ",recommendations)
+        print("Related : ",related_articles)
+        return Response({"data":serializer.data,"recommendations":recommendation_serializer.data,"related_articles":related_articles_serializer.data},status=status.HTTP_200_OK)
+    
     @action(methods=['get'],detail=False)
     def mine(self,request,*args, **kwargs):
-        
+
         user = request.user
         print("User : ",user, " id : ",user.id)
         queryset = Article.objects.filter(author_id=user.id)
@@ -93,6 +116,12 @@ class ArticleViewSet(GenericViewSet, CreateModelMixin, RetrieveModelMixin, ListM
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
     
+
+    @action(methods=['get'],detail=False)
+    def latest(self,request,*args,**kwargs):
+        queryset = Article.objects.all()[:5]
+        serializer = ArticleListSerializer(queryset,many=True)
+        return Response(serializer.data,status=status.HTTP_200_OK)
 
     @action(detail=True)
     def versions(self,request,*args,**kwargs):
@@ -123,8 +152,7 @@ class ArticleViewSet(GenericViewSet, CreateModelMixin, RetrieveModelMixin, ListM
             return Response({"message":"History Deleted Successfully"},status=status.HTTP_204_NO_CONTENT)
         return Response({"message":"Permission deny"},status=status.HTTP_401_UNAUTHORIZED)
 
-
-
+# class 
 
 
 class CategoryViewSet(GenericViewSet, CreateModelMixin, RetrieveModelMixin, ListModelMixin, DestroyModelMixin,
@@ -132,6 +160,26 @@ class CategoryViewSet(GenericViewSet, CreateModelMixin, RetrieveModelMixin, List
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
+class CulturalAreaViewSet(GenericViewSet,ListModelMixin,RetrieveModelMixin):
+    queryset = CulturalArea.objects.all()
+    serializer_class = CulturalAreaSerializer
+    permission_classes = [AllowAny]
+
+    @action(detail=False)
+    def all(self,requests,*args,**kwargs):
+        queryset = CulturalArea.objects.all()
+        serializer = CulturalListSerializer(queryset,many=True)
+        return Response(serializer.data)
+
+class RegionViewSet(GenericViewSet,ListModelMixin,RetrieveModelMixin):
+    queryset = Region.objects.all()
+    serializer_class = RegionSerializer
+    permission_classes = [AllowAny]
+
+class VillageViewSet(GenericViewSet,ListModelMixin,RetrieveModelMixin):
+    queryset = Village.objects.all()
+    serializer_class = VillageSerializer
+    permission_classes = [AllowAny]
 
 class ReadingTimeView(APIView):
     permission_classes = [IsAuthenticated,AllowAny]

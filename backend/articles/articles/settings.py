@@ -68,6 +68,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "simple_history.middleware.HistoryRequestMiddleware",
+    "api.middleware.UserIpMiddleware"
 ]
 
 ROOT_URLCONF = "articles.urls"
