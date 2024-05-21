@@ -144,8 +144,6 @@ def callback(ch, method, properties, body):
         body["categories"] = categories
         body["author"] = author_obj
 
-        # if author_obj:
-
         Article.objects.filter(id=body["id"]).update(**body)
         ch.basic_ack(delivery_tag=method.delivery_tag)
         print(" [x] Done")

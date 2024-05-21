@@ -12,57 +12,56 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"  # Optional: Set JVM memory limits
     volumes:
       - esdata:/usr/share/elasticsearch/data  # Create a volume for persistent data
-    networks:
-      - bridge
+    network_mode: bridge
     mem_limit: 1073741824
     ulimits:
       memlock:
         soft: -1
         hard: -1
-  kibana:
-    image: kibana:7.17.16
-    container_name: kibana
-    restart: always
-    ports:
-      - "5601:5601"
-    environment:
-      - "ELASTICSEARCH_HOSTS=http://elasticsearch:9200"
+  # kibana:
+  #   image: kibana:7.17.16
+  #   container_name: kibana
+  #   restart: always
+  #   ports:
+  #     - "5601:5601"
+  #   environment:
+  #     - "ELASTICSEARCH_HOSTS=http://elasticsearch:9200"
 
-  search_service:
-    image: search
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8004:8004"
-    command: ["python", "manage.py", "runserver", "0.0.0.0:8004"]
-    container_name: search_service
-    restart: unless-stopped
-    environment:        # Add environment variables here
-      - RABBITMQ_USERNAME=guest
-      - RABBITMQ_PASSWORD=guest
-      - RABBITMQ_HOST=rabbitmq
-      - RABBITMQ_PORT=5672
-      - ELASTICSEARCH_HOST=elasticsearch
-      - USER_SERVICE=user_service
-    depends_on:
-      - elasticsearch
-    volumes:
-      - .:/search
+  # search_service:
+  #   image: search
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8004:8004"
+  #   command: ["python", "manage.py", "runserver", "0.0.0.0:8004"]
+  #   container_name: search_service
+  #   restart: unless-stopped
+  #   environment:        # Add environment variables here
+  #     - RABBITMQ_USERNAME=guest
+  #     - RABBITMQ_PASSWORD=guest
+  #     - RABBITMQ_HOST=rabbitmq
+  #     - RABBITMQ_PORT=5672
+  #     - ELASTICSEARCH_HOST=elasticsearch
+  #     - USER_SERVICE=user_service
+  #   depends_on:
+  #     - elasticsearch
+  #   volumes:
+  #     - .:/search
 
-  consumer:
-    image: search
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: ["python","consumer.py"]
-    restart: unless-stopped
-    environment:        # Add environment variables here
-      - RABBITMQ_USERNAME=guest
-      - RABBITMQ_PASSWORD=guest
-      - RABBITMQ_HOST=rabbitmq
-      - RABBITMQ_PORT=5672
-    depends_on:
-      - search_service
+  # consumer:
+  #   image: search
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   command: ["python","consumer.py"]
+  #   restart: unless-stopped
+  #   environment:        # Add environment variables here
+  #     - RABBITMQ_USERNAME=guest
+  #     - RABBITMQ_PASSWORD=guest
+  #     - RABBITMQ_HOST=rabbitmq
+  #     - RABBITMQ_PORT=5672
+  #   depends_on:
+  #     - search_service
 volumes:
   esdata:  # Define the named volume for data persistence
