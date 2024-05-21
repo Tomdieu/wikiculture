@@ -2,31 +2,12 @@ version: '3.8'
 
 services:
   
-  rabbitmq:
-    image: wikiculture-rabbitmq:3.10-management-alpine
-    container_name: rabbitmq
-    build:
-      context: .
-      dockerfile: Dockerfile
-    hostname: rabbitmq
-    restart: unless-stopped
-    environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
-    ports:
-      # AMQ protocol port
-      - "5672:5672"
-      # Http Managent UI
-      - "15672:15672"
-    # volumes:
-    #   - ./rabbitmq_data:/etc/rabbitmq
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    network_mode: bridge
-
   # rabbitmq:
-  #   image: rabbitmq:3.10-management-alpine
+  #   image: wikiculture-rabbitmq:3.10-management-alpine
   #   container_name: rabbitmq
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
   #   hostname: rabbitmq
   #   restart: unless-stopped
   #   environment:
@@ -37,10 +18,29 @@ services:
   #     - "5672:5672"
   #     # Http Managent UI
   #     - "15672:15672"
-  #   volumes:
-  #     - ./rabbitmq_data:/etc/rabbitmq
+  #   # volumes:
+  #   #   - ./rabbitmq_data:/etc/rabbitmq
   #   extra_hosts:
   #     - "host.docker.internal:host-gateway"
   #   network_mode: bridge
 
-      # - ./rabbitmq_data:/var/lib/rabbitmq
+  rabbitmq:
+    image: rabbitmq:3.10-management-alpine
+    container_name: rabbitmq
+    hostname: rabbitmq
+    restart: unless-stopped
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      # AMQ protocol port
+      - "5672:5672"
+      # Http Managent UI
+      - "15672:15672"
+    volumes:
+      - ./rabbitmq_data:/var/lib/rabbitmq
+      - ./conf/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - ./conf/definitions.json:/etc/rabbitmq/definitions.json
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    network_mode: bridge
