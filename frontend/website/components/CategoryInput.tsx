@@ -23,7 +23,7 @@ import { CategoryType } from "@/types";
 import { Skeleton } from "./ui/skeleton";
 
 type CategoryInputProps = {
-  categories?: CategoryType[];
+  categories: CategoryType[];
   onCategoryChange?: (categories: CategoryType[]) => void;
   maxTags?: number;
 };

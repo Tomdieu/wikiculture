@@ -189,7 +189,7 @@ nt) => {
           onCategoryChange={(categories) => {
             mutateArticle({ categories });
           }}
-          categories={article.categories}
+          categories={article.categories || []}
         />
 
         

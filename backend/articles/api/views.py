@@ -89,8 +89,12 @@ class ArticleViewSet(GenericViewSet, CreateModelMixin, RetrieveModelMixin, ListM
         instance = self.get_object()
         article_id = instance.id
         print("User Ip : ",request.user_ip)
-        serializer = ArticleListSerializer(instance,context={'request':request})
+        serializer = ArticleListSerializer(instance,context={'request':request.user_ip})
 
+        try:
+            ArticleVistors.objects.create(article=instance,ip_address=request)
+        except:
+            pass
         # Get related articles base on the village
 
         related_articles = Article.objects.filter(village=instance.village).exclude(pk=instance.id)[:5]  # Exclude the current article
