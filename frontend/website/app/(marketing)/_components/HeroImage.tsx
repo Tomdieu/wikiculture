@@ -6,7 +6,7 @@ import {cn} from "@/lib/utils"
 type Props = {}
 
 const HeroImage = (props: Props) => {
-    const { theme, setTheme } = useTheme();
+    const { theme } = useTheme();
   return (
     <img
     alt="Hero"

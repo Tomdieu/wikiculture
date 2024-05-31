@@ -179,6 +179,7 @@ nt) => {
         }} /> */}
 
         <JoditEditor
+          
           value={article.content!}
           onBlur={(newContent) => {
             mutateArticle({ content: newContent });
