@@ -44,13 +44,15 @@ const RejectForm = ({article,onSuccess}:Props) => {
 
     const [isSubmitting,setIsSubmitting] = useState(false)
 
-    async function onSubmit(values: FeedbackSchemaType) { 
+    async function onSubmit({feedback}: FeedbackSchemaType) { 
         setIsSubmitting(true)
         
-        const res = await moderateArticle({article:article.id,feedback:"",decision:"approved"})
+        const res = await moderateArticle({article:article.id,feedback:feedback,decision:"approved"})
         if(res.message){
             toast.success('Article reject successfully')
-            onSuccess()
+            if(onSuccess){
+                onSuccess()
+            }
         }
         else{
             toast.error("Something went wrong")
@@ -104,13 +106,13 @@ const Approve = ({ article }: Props) => {
         <Popover>
             <PopoverTrigger asChild>
                 <Button variant="ghost">
-                    Approve <VerifiedIcon className={cn("w-4 h-4 ml-2", { "text-sky-blue": article.approved })} />
+                    Approve <VerifiedIcon className={cn("w-4 h-4 ml-2", { "text-orange-500": article.approved })} />
                 </Button>
             </PopoverTrigger>
             <PopoverContent align="end">
                 {!article.approved && (
                     <div className="flex flex-col items-center space-y-4 w-full">
-                        <VerifiedIcon className={cn("w-10 h-10", { "text-sky-blue": article.approved })} />
+                        <VerifiedIcon className={cn("w-10 h-10", { "text-orange-500": article.approved })} />
                         <p className="text-sm text-muted-foreground">Approve this aticle</p>
                         <div className="flex space-x-3 items-center justify-between w-full">
                             <Button size="sm" className="w-full" onClick={handleApprove}>Approve</Button>
@@ -134,7 +136,21 @@ const Approve = ({ article }: Props) => {
                 )}
 
                 {article.approved && (<div className='flex flex-col items-center space-y-4 w-full'>
+                <VerifiedIcon className={cn("w-10 h-10", { "text-orange-500": article.approved })} />
+                <p className="text-sm text-muted-foreground">Reject this aticle</p>
+                <Dialog>
+                                <DialogTrigger asChild>
+                                    <Button size="sm" className="w-full">Reject</Button>
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        Reject Article : {article.title}
+                                    </DialogHeader>
+                                    <RejectForm onSuccess={()=>{closeRef.current?.click()}} article={article}/>
+                                    <DialogClose ref={closeRef}/>
+                                </DialogContent>
 
+                            </Dialog>
                 </div>)}
 
             </PopoverContent>
