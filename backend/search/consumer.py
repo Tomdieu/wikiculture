@@ -91,29 +91,22 @@ def callback(ch, method, properties, body):
 
             tags = ", ".join(body["tags"])
             categories = ", ".join(body["categories"])
+            village = body.get("village","")
 
             author = body["author"]
-            author_obj = None
 
-            if author is not None:
-                user = User.objects.filter(id=author["id"])
-
-                if not user.exists():
-                    author_obj = User.objects.create(**author)
-                author_obj = User.objects.get(id=author["id"])
-
-            else:
-                author_obj = User.objects.get(id=author["id"])
-
+            author_obj,_ = User.objects.get_or_create(id=author["id"],defaults=author)
+            print("User Object : ",author_obj)
+    
             print("Author : ", author)
 
             body["tags"] = tags
             body["categories"] = categories
             body["author"] = author_obj
+            body["village"] = village
+            
 
             print("Body : ", body)
-
-            # if author_obj:
 
             Article.objects.create(**body)
 
@@ -128,21 +121,16 @@ def callback(ch, method, properties, body):
 
         tags = ", ".join(body["tags"])
         categories = ", ".join(body["categories"])
+        village = body.get("village","")
+
 
         author = body["author"]
-        author_obj = None
-
-        if author is not None:
-            user = User.objects.filter(id=author["id"])
-
-            if not user.exists():
-                author_obj = User.objects.create(**author)
-        else:
-            author_obj = User.objects.get(id=author["id"])
+        author_obj,_ = User.objects.get_or_create(id=author["id"],defaults=author)
 
         body["tags"] = tags
         body["categories"] = categories
         body["author"] = author_obj
+        body["village"] = village
 
         Article.objects.filter(id=body["id"]).update(**body)
         ch.basic_ack(delivery_tag=method.delivery_tag)

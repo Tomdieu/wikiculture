@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from taggit.serializers import TagListSerializerField, TaggitSerializer
 from .models import Article, Category, User, ReadingTime,Village,Region,CulturalArea,ArticleVistors
-
+from api.lib.recommend_articles import get_village_detail
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -139,6 +139,7 @@ class ArticleListPublishSerializer(TaggitSerializer, serializers.ModelSerializer
     tags = TagListSerializerField()
     history = ArticleHistorySerializer(many=True)
     author = UserSerializer()
+    village = serializers.SerializerMethodField()
 
     class Meta:
         model = Article
@@ -152,6 +153,10 @@ class ArticleListPublishSerializer(TaggitSerializer, serializers.ModelSerializer
             _categories.append(category.name)
 
         return _categories
+
+    def get_village(self,obj:Article):
+        
+        return get_village_detail(obj)
 
 class ArticleListWithRecommendationSerializer(serializers.Serializer):
 

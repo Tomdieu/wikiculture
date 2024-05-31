@@ -31,6 +31,7 @@ class Article(models.Model):
     tags = models.CharField(max_length=255)
     approved = models.BooleanField(default=False)
     categories = models.CharField(max_length=255)
+    village = models.CharField(max_length=255,default="",null=True,blank=True)
     is_published = models.BooleanField(default=False)
     status = models.CharField(max_length=20, choices=STATUS, default="draft")
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="articles")
