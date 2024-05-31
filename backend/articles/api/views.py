@@ -14,6 +14,7 @@ from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from api.lib.recommend_articles import recommend_articles
+from django.db.models import Q
 
 # Create your views here.
 
@@ -184,6 +185,33 @@ class VillageViewSet(GenericViewSet,ListModelMixin,RetrieveModelMixin):
     queryset = Village.objects.all()
     serializer_class = VillageSerializer
     permission_classes = [AllowAny]
+
+    @swagger_auto_schema(operation_description="List of articles with optional query params",
+                         manual_parameters=[
+                             openapi.Parameter('query', openapi.IN_QUERY, description="Search either village name,description ,region or cultural area",
+                                               type=openapi.TYPE_STRING,required=True,),
+                         ])
+    @action(methods=['get'],detail=False)
+    def search(self,requests,*args,**kwargs):
+
+        # Apply pagination class here
+        self.pagination_class = PageNumberPagination
+
+        query = requests.query_params.get('query', None)
+
+        queryset = Village.objects.filter(Q(name__icontains=query) | Q(description__icontains=query) | Q(region__name__icontains=query) | Q(region__cultural_area__name__icontains=query))
+
+        # Paginate the queryset
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+
 
 class ReadingTimeView(APIView):
     permission_classes = [IsAuthenticated,AllowAny]

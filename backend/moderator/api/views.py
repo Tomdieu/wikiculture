@@ -57,7 +57,7 @@ class ModerationViewSet(
         feedback = serializer.validated_data["feedback"]
 
         data = {
-            "user": user,
+            "moderator": user,
             "article": article,
             "decision": decision,
             "feedback": feedback,

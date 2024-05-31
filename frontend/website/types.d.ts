@@ -196,6 +196,6 @@ declare interface RegionPaginationType extends PaginationType {
   results:RegionType[]
 }
 
-declare interface VillagesPagination extends PaginationType {
+declare interface VillagesPaginationType extends PaginationType {
 results:VillageType[]
 }

@@ -52,7 +52,7 @@ class CulturalArea(models.Model):
 class Region(models.Model):
     name = models.CharField(max_length=255,unique=True)
     description = models.TextField(blank=True)
-    cultural_area = models.ForeignKey(CulturalArea, on_delete=models.CASCADE,related_name='regions')
+    cultural_area = models.ForeignKey(CulturalArea, on_delete=models.CASCADE,related_name='cultural_area')
 
     def __str__(self):
         return self.name
@@ -60,7 +60,7 @@ class Region(models.Model):
 class Village(models.Model):
     name = models.CharField(max_length=255,unique=True)
     description = models.TextField(blank=True)
-    region = models.ForeignKey(Region, on_delete=models.CASCADE,related_name='villages')
+    region = models.ForeignKey(Region, on_delete=models.CASCADE,related_name='region')
 
     def __str__(self):
         return self.name
