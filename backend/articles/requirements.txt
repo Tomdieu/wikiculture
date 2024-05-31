@@ -1,4 +1,5 @@
 asgiref==3.7.2
+beautifulsoup4==4.12.3
 certifi==2023.11.17
 charset-normalizer==3.3.2
 defusedxml==0.7.1
@@ -36,6 +37,7 @@ requests==2.31.0
 scikit-learn==1.4.2
 scipy==1.13.0
 six==1.16.0
+soupsieve==2.5
 sqlparse==0.4.4
 tablib==3.5.0
 threadpoolctl==3.5.0

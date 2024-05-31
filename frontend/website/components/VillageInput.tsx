@@ -68,7 +68,7 @@ const VillageInput = ({
   useEffect(() => {
     if (culturalArea) {
       setRegionList(culturalArea.regions);
-      if (culturalArea.id !== articleVillage?.region.cultural_area.id) {
+      if (culturalArea.id !== articleVillage?.region?.cultural_area.id) {
         setVillage(undefined);
         setRegion(undefined);
       }
@@ -78,7 +78,7 @@ const VillageInput = ({
   useEffect(() => {
     if (region) {
       setVillageList(region.villages);
-      if (region.id !== articleVillage?.region.id) {
+      if (region.id !== articleVillage?.region?.id) {
         setVillage(undefined);
       }
     }
