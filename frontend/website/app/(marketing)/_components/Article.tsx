@@ -13,7 +13,7 @@ const Article = ({ article }: Props) => {
   return (
     <article className="flex max-w-xl flex-col items-start justify-between border p-5 rounded-sm">
       <div className="flex items-center gap-x-4 text-xs w-full">
-        <time dateTime={article.created_at} className="text-gray-500">
+        <time dateTime={article.created_at} className="text-stone-800 dark:text-stone-50">
           {formatDate(article.created_at)}
         </time>
 
@@ -41,7 +41,7 @@ const Article = ({ article }: Props) => {
             {article.title}
           </a>
         </h3>
-        <p className="mt-5 line-clamp-4 text-sm leading-6 text-gray-600">
+        <p className="mt-5 line-clamp-4 text-sm leading-6 text-stone-800 dark:text-stone-50">
           {DOMPurify.sanitize(article.content, { ALLOWED_TAGS: ["b"] })}
         </p>
       </div>
@@ -61,13 +61,13 @@ const Article = ({ article }: Props) => {
           </AvatarFallback>
         </Avatar>
         <div className="text-sm leading-6">
-          <p className="font-semibold text-gray-900">
+          <p className="font-semibold text-stone-800 dark:text-stone-50">
             <a href="#">
               <span className=""></span>
               {article.author.username}
             </a>
           </p>
-          <p className="text-gray-600">{article.author.bio || "Writer"}</p>
+          <p className="text-stone-800 dark:text-stone-200">{article.author.bio || "Writer"}</p>
         </div>
       </div>
     </article>
