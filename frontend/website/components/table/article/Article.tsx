@@ -60,7 +60,7 @@ const Article = ({ article }: Props) => {
         <CardTitle className="text-lg font-semibold">{article.title}</CardTitle>
         <CardDescription>
           <div className="space-y-2">
-            <p className="mb-3 line-clamp-3">{cleanHtml(article.content)}</p>
+            <p className="mb-3 line-clamp-3">{cleanHtml(article.content||"")}</p>
             {article.tags.map((tag) => (
               <span onClick={(e)=>e.preventDefault()} className="mr-2 py-1.5 px-3 text-xs text-slate-700 bg-slate-50 rounded-full">{tag}</span>
             ))}

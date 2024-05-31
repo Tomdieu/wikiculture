@@ -79,6 +79,7 @@ const ArticlePagination = ({
             size="default"
             disabled={!Boolean(articlePagination.next)}
             className={cn("gap-1 pr-2.5")}
+            onClick={handleNextPage}
             variant={"ghost"}
           >
             <span>Next</span>

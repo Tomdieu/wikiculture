@@ -1,5 +1,6 @@
 "use client";
 import { getArticles, getTotalArticles } from "@/actions/articles";
+import CountUp from 'react-countup';
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -19,7 +20,7 @@ const TotalArticle = ({className}: Props) => {
     return <Skeleton className="w-6 h-4" />;
   }
 
-  return <span className={cn("text-xl",className)}>{data?.total}</span>;
+  return <span className={cn("text-xl",className)}><CountUp end={data?.total} /> </span>;
 };
 
 export default TotalArticle;

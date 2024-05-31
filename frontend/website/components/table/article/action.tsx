@@ -21,7 +21,7 @@ type Props = {
 const ActiclesAction = ({ article }: Props) => {
   const origin = useOrigin();
   const onCopy = () => {
-    const url = `${origin}/${article.id}`;
+    const url = `${origin}/articles/${article.id}`;
     navigator.clipboard.writeText(url);
     toast.success("Url copied");
   };
