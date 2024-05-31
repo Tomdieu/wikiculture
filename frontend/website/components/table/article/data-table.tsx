@@ -30,15 +30,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Input,InputProps } from "@/components/ui/input";
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData, TValue>{
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   onChange?: (value: string) => void;
   onRowSelect?: (rows: {}) => void;
   showInput?: Boolean;
-}
+  query?:string,
+  inputProps?:InputProps
+} 
 
 export function DataTable<TData, TValue>({
   columns,
@@ -46,6 +48,8 @@ export function DataTable<TData, TValue>({
   onChange,
   onRowSelect,
   showInput = true,
+  query='',
+  inputProps
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -61,7 +65,7 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
-    getPaginationRowModel: getPaginationRowModel(),
+    // getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
@@ -80,7 +84,7 @@ export function DataTable<TData, TValue>({
     }
   }, [rowSelection]);
 
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(query);
 
   return (
     <div className="rounded-md border p-3">
@@ -89,6 +93,7 @@ export function DataTable<TData, TValue>({
           <Input
             placeholder="Filter all"
             value={value}
+            type="search"
             onChange={(event) => {
               setValue(event.target.value.toLocaleLowerCase());
               if (onChange) {
@@ -96,6 +101,8 @@ export function DataTable<TData, TValue>({
               }
             }}
             className="max-w-sm"
+            {...inputProps}
+            
           />
         )}
 

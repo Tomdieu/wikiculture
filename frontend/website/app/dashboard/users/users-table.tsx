@@ -18,14 +18,16 @@ const UserTable = (props: Props) => {
     queryFn: () => getUsers(page),
   });
 
+  
   const [users, setUsers] = useState<UserType[]>([]);
-
+  
   useEffect(() => {
     if (data?.results) {
       setUsers(data.results);
     }
   }, [data?.results]);
-
+  console.log(data)
+  
   if (isLoading) {
     return <p>Loading...</p>;
   }
@@ -33,7 +35,7 @@ const UserTable = (props: Props) => {
   if (isError) {
     return <p>Error</p>;
   }
-
+  
   const handleFilter = (value: string) => {
     if (value) {
       const _usersToDisplay = data?.results.filter(

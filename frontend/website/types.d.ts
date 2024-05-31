@@ -187,3 +187,15 @@ declare interface ArticleWithRecommendationType {
   recommendations: ArticleType[];
   related_articles:ArticleType[];
 }
+
+declare interface CulturalAreaPaginationType extends PaginationType {
+  results:CulturalAreaType[]
+}
+
+declare interface RegionPaginationType extends PaginationType {
+  results:RegionType[]
+}
+
+declare interface VillagesPagination extends PaginationType {
+results:VillageType[]
+}

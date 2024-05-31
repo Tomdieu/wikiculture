@@ -14,6 +14,12 @@ import {
   Users,
   Tags,
   Pen,
+  Map,
+  Pin,
+  LocateIcon,
+  Locate,
+  LocateFixed,
+  MapPin,
 } from "lucide-react";
 
 const sidebarData = [
@@ -69,6 +75,31 @@ const sidebarData = [
         icon: Pen,
         link: "/dashboard/articles/moderate",
         viewOnlyBy: ["Admin", "Moderator"],
+      },
+    ],
+    viewOnlyBy: ["Admin", "Moderator", "User"],
+  },
+  {
+    text: "Cultural Areas",
+    icon: Map,
+    sublinks: [
+      {
+        text: "Cultural areas",
+        icon: Locate,
+        link: "/dashboard/cultural-areas",
+        viewOnlyBy: ["Admin", "Moderator", "User"],
+      },
+      {
+        text: "Regions",
+        icon: LocateFixed,
+        link: "/dashboard/regions",
+        viewOnlyBy: ["Admin", "Moderator", "User"],
+      },
+      {
+        text: "Villages",
+        icon: MapPin,
+        link: "/dashboard/villages",
+        viewOnlyBy: ["Admin", "Moderator", "User"],
       },
     ],
     viewOnlyBy: ["Admin", "Moderator", "User"],

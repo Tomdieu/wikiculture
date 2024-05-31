@@ -16,7 +16,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useQuery } from "@tanstack/react-query";
-import { getCulturalAreas } from "@/actions/cultural_areas";
+import { getAllCulturalAreas } from "@/actions/cultural_areas";
 import { Skeleton } from "./ui/skeleton";
 import {
   CulturalAreaListType,
@@ -56,7 +56,7 @@ const VillageInput = ({
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["cultural-areas"],
-    queryFn: () => getCulturalAreas(),
+    queryFn: () => getAllCulturalAreas(),
   });
 
   useEffect(() => {

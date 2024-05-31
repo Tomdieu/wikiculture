@@ -22,6 +22,7 @@ import PageNotFound from "./404";
 import { getSession } from "@/lib/getSession";
 import JoditEditor from "@/components/editor/JoditEditor";
 import VillageInput from "@/components/VillageInput";
+import Approve from "@/components/Approve";
 
 const Editor = dynamic(() => import("@/components/Editor"), { ssr: false });
 
@@ -156,6 +157,7 @@ export default function ArticlePage({
             </h1>
           </div>
           <div className="flex items-center space-x-2">
+            <Approve article={data!} />
             <Publish article={data!} />
             <More article={data!} />
           </div>

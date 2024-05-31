@@ -19,8 +19,8 @@ const Articles = async (props: Props) => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {latestArticles.map((article)=>{
           return (
-           <Link href={`/articles/${article.id}`}>
-            <Article  article={article}/>
+           <Link key={article.id} href={`/articles/${article.id}`}>
+            <Article key={article.id}  article={article}/>
            </Link>
           )
         })}
