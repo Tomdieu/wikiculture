@@ -23,11 +23,12 @@ export declare interface CreateArticleType {
   is_published?: boolean;
 }
 
-export declare interface _A_TYPE extends Omit<ArticleType, "categories"|"village"> {}
+export declare interface _A_TYPE
+  extends Omit<ArticleType, "categories" | "village"> {}
 
 export declare interface ArticleUpdateType extends Partial<_A_TYPE> {
   categories?: number[];
-  village?:number;
+  village?: number;
 }
 
 declare interface CulturalAreaType {
@@ -58,9 +59,9 @@ declare interface VillageListType {
 
 declare interface RegionListType {
   id: number;
-    name: string;
-    description: string;
-    villages: VillageListType[];
+  name: string;
+  description: string;
+  villages: VillageListType[];
 }
 
 declare interface CulturalAreaListType {
@@ -185,17 +186,29 @@ declare interface ArticleToModeratePagination extends PaginationType {
 declare interface ArticleWithRecommendationType {
   data: ArticleType;
   recommendations: ArticleType[];
-  related_articles:ArticleType[];
+  related_articles: ArticleType[];
 }
 
 declare interface CulturalAreaPaginationType extends PaginationType {
-  results:CulturalAreaType[]
+  results: CulturalAreaType[];
 }
 
 declare interface RegionPaginationType extends PaginationType {
-  results:RegionType[]
+  results: RegionType[];
 }
 
 declare interface VillagesPaginationType extends PaginationType {
-results:VillageType[]
+  results: VillageType[];
+}
+
+declare interface NotificationType {
+  user: UserType;
+  message: string;
+  type: "default" | "article_approved" | "article_rejected";
+  data: string;
+  timestamp: string;
+}
+
+declare interface NotificationPaginationType extends PaginationType {
+results:NotificationType[]
 }

@@ -102,7 +102,7 @@ def callback(ch, method, properties, body):
 
     # handles events from the moderator service
 
-    if event_type == events.ARTICLE_APPROVED:
+    elif event_type == events.ARTICLE_APPROVED:
         article_id = body["article"]["id"]
         feedback = body["feedback"]
 
@@ -133,16 +133,17 @@ def callback(ch, method, properties, body):
 
             ch.basic_ack(delivery_tag=method.delivery_tag)
 
-    if event_type == events.ARTICLE_REJECTED:
+    elif event_type == events.ARTICLE_REJECTED:
         article_id = body["article"]["id"]
         feedback = body["feedback"]
 
         articles = Article.objects.filter(id=article_id)
+        articles.update(approved=False)
 
-        if articles.exists():
-            article = articles.first()
-            article.approved = False
-            article.save()
+        for article in articles:
+
+            print("Article Rejected")
+            print(article)
 
             notification_data = {
                 "article": ArticleDetailSerializer(article).data,

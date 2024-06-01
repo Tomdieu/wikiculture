@@ -1,6 +1,7 @@
 "use client";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useRef, useState } from "react";
+import Notifications from "./_components/Notifications";
 
 type Props = {};
 
@@ -17,8 +18,11 @@ const NotificationsPage = (props: Props) => {
     }
   }, [data]);
   return (
-    <div className="w-full h-full container mx-auto space-y-2">
-      <h1 className="text-2xl font-bold">Notifications</h1>
+    <div className="w-full h-full container mx-auto space-y-3">
+      <div className="flex items-center justify-between">
+        <h1 className="font-bold text-2xl">Notifications</h1>
+      </div>
+        <Notifications/>
     </div>
   );
 };

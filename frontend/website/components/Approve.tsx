@@ -25,14 +25,16 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import toast from 'react-hot-toast';
 import { moderateArticle } from '@/actions/moderators';
 import { useQueryClient } from '@tanstack/react-query';
+import { revalidatePath } from 'next/cache';
 
 type Props = {
     article: ArticleType
-    onSuccess?:()=>void;
+    onSuccess?: () => void;
 }
 
-const RejectForm = ({article,onSuccess}:Props) => {
+const RejectForm = ({ article, onSuccess }: Props) => {
 
+    const router = useRouter()
     const queryClient = useQueryClient();
 
     const form = useForm<FeedbackSchemaType>({
@@ -42,24 +44,28 @@ const RejectForm = ({article,onSuccess}:Props) => {
         }
     })
 
-    const [isSubmitting,setIsSubmitting] = useState(false)
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
-    async function onSubmit({feedback}: FeedbackSchemaType) { 
+    async function onSubmit({ feedback }: FeedbackSchemaType) {
         setIsSubmitting(true)
-        
-        const res = await moderateArticle({article:article.id,feedback:feedback,decision:"approved"})
-        if(res.message){
+
+        const res = await moderateArticle({ article: article.id, feedback: feedback, decision: "rejected" })
+        if (res.message) {
             toast.success('Article reject successfully')
-            if(onSuccess){
+            if (onSuccess) {
+                queryClient.invalidateQueries({ queryKey: ["article", article.id] });
+                router.refresh()
+    
+
                 onSuccess()
+
             }
         }
-        else{
+        else {
             toast.error("Something went wrong")
         }
         setIsSubmitting(false)
-        queryClient.invalidateQueries({ queryKey: ["article", article?.id] });
-        
+
     }
 
 
@@ -73,15 +79,15 @@ const RejectForm = ({article,onSuccess}:Props) => {
                         <FormItem>
                             <FormLabel>Feedback</FormLabel>
                             <FormControl>
-                                <Textarea placeholder="shadcn" {...field} />
+                                <Textarea placeholder="feedback message" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )} />
-                    <Button disabled={isSubmitting} className='w-full'>
-                    {isSubmitting && <Loader className='w-4 h-4 animate-spin'/>}
-                        Submit
-                    </Button>
+                <Button disabled={isSubmitting} className='w-full'>
+                    {isSubmitting && <Loader className='w-4 h-4 animate-spin' />}
+                    Submit
+                </Button>
             </form>
         </Form>
     )
@@ -89,17 +95,20 @@ const RejectForm = ({article,onSuccess}:Props) => {
 
 const Approve = ({ article }: Props) => {
     const queryClient = useQueryClient();
+    const router = useRouter()
+
     const closeRef = useRef<HTMLButtonElement>(null)
 
     const handleApprove = async () => {
-        const res = await moderateArticle({article:article.id,feedback:"",decision:"approved"})
-        if(res.message){
+        const res = await moderateArticle({ article: article.id, feedback: "", decision: "approved" })
+        if (res.message) {
             toast.success("Article approve successfully")
         }
-        else{
+        else {
             toast.error("Something went wrong")
         }
-        queryClient.invalidateQueries({ queryKey: ["article", article?.id] });
+        queryClient.invalidateQueries({ queryKey: ["article", article.id] });
+        router.refresh()
 
     }
     return (
@@ -124,8 +133,8 @@ const Approve = ({ article }: Props) => {
                                     <DialogHeader>
                                         Reject Article : {article.title}
                                     </DialogHeader>
-                                    <RejectForm onSuccess={()=>{closeRef.current?.click()}} article={article}/>
-                                    <DialogClose ref={closeRef}/>
+                                    <RejectForm onSuccess={() => { closeRef.current?.click() }} article={article} />
+                                    <DialogClose ref={closeRef} />
                                 </DialogContent>
 
                             </Dialog>
@@ -136,21 +145,21 @@ const Approve = ({ article }: Props) => {
                 )}
 
                 {article.approved && (<div className='flex flex-col items-center space-y-4 w-full'>
-                <VerifiedIcon className={cn("w-10 h-10", { "text-orange-500": article.approved })} />
-                <p className="text-sm text-muted-foreground">Reject this aticle</p>
-                <Dialog>
-                                <DialogTrigger asChild>
-                                    <Button size="sm" className="w-full">Reject</Button>
-                                </DialogTrigger>
-                                <DialogContent>
-                                    <DialogHeader>
-                                        Reject Article : {article.title}
-                                    </DialogHeader>
-                                    <RejectForm onSuccess={()=>{closeRef.current?.click()}} article={article}/>
-                                    <DialogClose ref={closeRef}/>
-                                </DialogContent>
+                    <VerifiedIcon className={cn("w-10 h-10", { "text-orange-500": article.approved })} />
+                    <p className="text-sm text-muted-foreground">Reject this aticle</p>
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button size="sm" className="w-full">Reject</Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                                Reject Article : {article.title}
+                            </DialogHeader>
+                            <RejectForm onSuccess={() => { closeRef.current?.click() }} article={article} />
+                            <DialogClose ref={closeRef} />
+                        </DialogContent>
 
-                            </Dialog>
+                    </Dialog>
                 </div>)}
 
             </PopoverContent>

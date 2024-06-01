@@ -5,7 +5,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "notifications.settings")
 django.setup()
 
 from django.conf import settings
-from api.models import User
+from api.models import User,Notification
 
 from api import events
 
@@ -106,7 +106,7 @@ def callback(ch, method, properties, body):
             message=message,
             type=notification_type,
             user_id=user_id,
-            data=json.dumps(_data, separators=4),
+            data=json.dumps(_data, indent=4),
         )
         ch.basic_ack(delivery_tag=method.delivery_tag)
 
@@ -120,14 +120,12 @@ def callback(ch, method, properties, body):
             message=message,
             type=notification_type,
             user_id=user_id,
-            data=json.dumps(_data, separators=4),
+            data=json.dumps(_data, indent=4),
         )
         ch.basic_ack(delivery_tag=method.delivery_tag)
 
     print(" [x] Received %r" % data)
     print(" [x] Done")
-    # ch.basic_ack(delivery_tag=method.delivery_tag)
-
 
 channel.basic_consume(queue=queue_name, on_message_callback=callback, auto_ack=False)
 

@@ -13,6 +13,7 @@ import { Check, Copy, Globe } from "lucide-react";
 import toast from "react-hot-toast";
 import { useArticleStore } from "@/hooks/use-article-store";
 import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 type Props = {
   article: ArticleType;
@@ -21,12 +22,13 @@ type Props = {
 const Publish = ({ article }: Props) => {
   const origin = useOrigin();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [copied, setCopied] = useState(false);
   const [isSubmiting, setIsSubmiting] = useState(false);
 
   const { mutateArticle } = useArticleStore();
 
-  const url = `${origin}/${article.slug}`;
+  const url = `${origin}/articles/${article.id}`;
 
   const onPublish = async () => {
     setIsSubmiting(true);
@@ -46,7 +48,9 @@ const Publish = ({ article }: Props) => {
       error: "Failed to publish article",
     });
 
+    
     promise.finally(() => {
+      queryClient.invalidateQueries({ queryKey: ["article", article?.id] });
       setIsSubmiting(false);
     });
     router.refresh();
@@ -68,7 +72,11 @@ const Publish = ({ article }: Props) => {
       error: "Failed to unpublish article",
     });
 
+    
+    
+
     promise.finally(() => {
+      queryClient.invalidateQueries({ queryKey: ["article", article?.id] });
       setIsSubmiting(false);
     });
 

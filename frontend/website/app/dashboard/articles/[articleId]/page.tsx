@@ -40,34 +40,14 @@ export default function ArticlePage({
   const { article, setArticle, saveArticle, mutateArticle } = useArticleStore();
   const [content, setContent] = useState(article?.content || "");
 
-  const url = process.env.NEXT_PUBLIC_MEDIA_URL;
-
-  function getImageUrlParts(imageUrl: string) {
-    // Create an anchor element to parse the URL
-    const url = document.createElement("a");
-    url.href = imageUrl;
-
-    // Extract base URL
-    const baseUrl =
-      url.origin + url.pathname.slice(0, url.pathname.lastIndexOf("/") + 1);
-
-    // Check if it's a relative path
-    const isRelativePath = !url.protocol || url.protocol === location.protocol;
-
-    // Extract real relative path if it's a relative path
-    const relativePath = isRelativePath
-      ? url.pathname.slice(baseUrl.length)
-      : "";
-
-    return {
-      baseUrl,
-      relativePath,
-    };
-  }
 
   const [unsavedChanges, setUnsavedChanges] = useState(true);
 
-  const queryClient = useQueryClient();
+  const {data:userSession} = useQuery({
+    queryKey:["user"],
+    queryFn:()=>getSession()
+  })
+
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["article", articleId],
@@ -87,14 +67,6 @@ export default function ArticlePage({
       setContent(data.content);
     }
   }, [data, setArticle]);
-
-  const { mutate } = useMutation({
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["article", article?.id] });
-      toast.success("Article Saved");
-    },
-    mutationFn: updateArticle,
-  });
 
   // Effect to attach and remove event listener
   useEffect(() => {
@@ -128,7 +100,7 @@ export default function ArticlePage({
         <Skeleton className="w-[80%] h-14" />
         <Skeleton className="w-[60%] h-10" />
         <Skeleton className="w-[40%] h-7" />
-        <Skeleton className="w-[20%] h-2" />
+        <Skeleton className="w-[20%] h-7" />
         <Skeleton className="w-[40%] h-7" />
         <Skeleton className="w-[60%] h-10" />
 
@@ -157,7 +129,9 @@ export default function ArticlePage({
             </h1>
           </div>
           <div className="flex items-center space-x-2">
-            <Approve article={data!} />
+            {["Admin","Moderator"].includes(userSession?.user.user_type!) && <Approve article={data!} />}
+            
+
             <Publish article={data!} />
             <More article={data!} />
           </div>

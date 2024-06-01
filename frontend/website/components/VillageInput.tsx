@@ -93,7 +93,7 @@ const VillageInput = ({
   useEffect(() => {
     if (articleVillage) {
       const selectedCulturalArea = culturalAreaList.find(
-        (_cultureArea) => articleVillage.region.cultural_area.id === _cultureArea.id
+        (_cultureArea) => articleVillage.region?.cultural_area?.id === _cultureArea.id
       );
       const selectedRegion = selectedCulturalArea?.regions.find(
         (_region) => articleVillage.region.id === _region.id
