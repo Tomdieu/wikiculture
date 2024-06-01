@@ -53,7 +53,8 @@ INSTALLED_APPS = [
     "ckeditor",
     "import_export",
     "simple_history",
-    'django_user_agents'
+    'django_user_agents',
+     'django_filters',
     # 'categories',
     # 'categories.editor',
 ]

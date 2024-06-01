@@ -84,7 +84,7 @@ const ShowArticle = ({ articleData }: Props) => {
     }, [throttledHandleScroll]);
 
     return (
-        <div className="w-full h-full min-h-lvh container mx-auto py-8 space-y-4">
+        <div className="w-full h-full container mx-auto py-8 space-y-4">
             <div className="flex flex-col md:flex-row w-full md:space-x-3">
                 <div className="w-full md:w-3/4">
                     <article className="space-y-3">
