@@ -8,7 +8,7 @@ type Props = {
 
 const layout = ({ children }: Props) => {
   return (
-    <div className="w-screen h-screen scroll-smooth">
+    <div className="w-full h-screen scroll-smooth">
       <Header />
       <main>
 

@@ -109,7 +109,7 @@ export default function RootLayout({
       <NextAuthProvider>
         <body
           suppressHydrationWarning={true}
-          className={`${poppins.variable} w-screen h-screen p-0 font-poppins`}
+          className={`${poppins.variable} w-full h-screen p-0 font-poppins`}
         >
           <ReactQueryProvider>
             <ThemeProvider
