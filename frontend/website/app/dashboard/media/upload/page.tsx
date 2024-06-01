@@ -41,7 +41,7 @@ const UploadMediaPage = (props: Props) => {
               <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">Upload a file or drag and drop.</p>
               <p className="text-xs text-gray-500 dark:text-gray-400">PNG, JPG, GIF up to 10MB</p>
             </div>
-            <input disabled={isSubmiting} accept="image/*" onChange={(e) => { e.preventDefault(); onChange(e.target.files?.[0]) }} className="absolute inset-0 h-full w-full cursor-pointer opacity-0" id="image" type="file" />
+            <input disabled={isSubmiting} accept="image/*" onChange={(e) => { e.preventDefault(); onChange(e.target.files?.[0]!) }} className="absolute inset-0 h-full w-full cursor-pointer opacity-0" id="image" type="file" />
           </div>
         </div>
       </div>
