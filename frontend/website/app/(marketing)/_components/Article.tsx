@@ -11,13 +11,13 @@ type Props = {
 
 const Article = ({ article }: Props) => {
   return (
-    <article className="flex max-w-xl flex-col items-start justify-between border p-5 rounded-sm">
+    <article className="flex h-full max-w-xl flex-col items-start justify-between border p-5 rounded-sm">
       <div className="flex items-center gap-x-4 text-xs w-full">
         <time dateTime={article.created_at} className="text-stone-800 dark:text-stone-50">
           {formatDate(article.created_at)}
         </time>
 
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-hidden  ">
           <div className="flex items-center space-x-2 overflow-hidden whitespace-nowrap">
             {article.categories.map((cat) => (
               <div className="rounded-full bg-gray-50 px-3 py-1.5 ">
@@ -34,7 +34,7 @@ const Article = ({ article }: Props) => {
           </div>
         </div>
       </div>
-      <div className="group">
+      <div className="group flex-1">
         <h3 className="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
           <a href="#">
             <span className=""></span>
@@ -46,11 +46,7 @@ const Article = ({ article }: Props) => {
         </p>
       </div>
       <div className="mt-8 flex items-center gap-x-4">
-        {/* <img
-          src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-          alt=""
-          className="h-10 w-10 rounded-full bg-gray-50"
-        /> */}
+        
         <Avatar className="rounded-full p-0.5 w-10 h-10">
           <AvatarImage
             className="h-10 w-10 rounded-full bg-gray-50"

@@ -25,28 +25,31 @@ const Header = async (props: Props) => {
         <nav className="hidden ml-auto sm:flex gap-4 sm:gap-6 items-center">
           <Link
             className="text-sm font-medium hover:underline underline-offset-4"
-            href="#"
+            href="/explore"
           >
             Explore
           </Link>
           <Link
             className="text-sm font-medium hover:underline underline-offset-4"
-            href="#"
+            href="/articles"
           >
             Articles
           </Link>
           <Link
             className="text-sm font-medium hover:underline underline-offset-4"
-            href="#"
+            href="/about"
           >
             About
           </Link>
-          <Link
-            className="text-sm border rounded-full p-2 border-primary-foreground  shadow font-medium hover:bg-primary hover:text-primary-foreground underline-offset-4"
-            href="/dashboard/articles/new"
-          >
-            Create an article
-          </Link>
+          {session?.user && (
+<Link
+className="text-sm border rounded-full p-2 border-primary-foreground  shadow font-medium hover:bg-primary hover:text-primary-foreground underline-offset-4"
+href="/dashboard/articles/new"
+>
+Create an article
+</Link>
+          )}
+          
         </nav>
         <ModeToggle />
         {session?.user && <UserInfo />}
