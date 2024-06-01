@@ -52,7 +52,7 @@ class SearchArticleView(APIView, LimitOffsetPagination):
                     "author.last_name",
                     "slug",
                 ],
-                # fuzziness='auto'
+                fuzziness='auto'
             )
             # & Q(
             #     'bool',
