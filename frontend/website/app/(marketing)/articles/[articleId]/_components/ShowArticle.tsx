@@ -2,7 +2,7 @@ import { ArticleWithRecommendationType } from '@/types'
 import { getArticleWithRecommendation } from "@/actions/articles";
 import { formatDate } from "@/lib/formatDate";
 import Link from "next/link";
-import React from "react";
+import React, { useMemo } from "react";
 import parseHtml from "html-react-parser";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
@@ -10,6 +10,7 @@ import { Heart } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import Article from '@/app/(marketing)/_components/Article';
 import { useState, useEffect } from "react"
+import _ from "lodash"
 
 
 type Props = {
@@ -23,7 +24,7 @@ const ShowArticle = ({ articleData }: Props) => {
         related_articles,
     } = articleData;
     const [timeSpent, setTimeSpent] = useState(0);
-    const [intervalId, setIntervalId] = useState<number|null>(null);
+    const [intervalId, setIntervalId] = useState<number | null|NodeJS.Timeout>(null);
     const [hasReachedEnd, setHasReachedEnd] = useState(false);
     useEffect(() => {
         // Start the timer when the component mounts
@@ -52,6 +53,7 @@ const ShowArticle = ({ articleData }: Props) => {
 
                     clearInterval(intervalId);
                 }
+                alert("Scroll to end")
                 setHasReachedEnd(true);
             }
         }
@@ -73,13 +75,17 @@ const ShowArticle = ({ articleData }: Props) => {
         }
     };
 
+
+
+    const throttledHandleScroll = useMemo(() => _.throttle(handleScroll, 200), [hasReachedEnd]);
+
     useEffect(() => {
-        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('scroll', throttledHandleScroll);
 
         return () => {
-            window.removeEventListener('scroll', handleScroll);
+            window.removeEventListener('scroll', throttledHandleScroll);
         };
-    }, [hasReachedEnd]);
+    }, [throttledHandleScroll]);
 
     return (
         <div className="w-full h-full min-h-lvh container mx-auto py-8 space-y-4">

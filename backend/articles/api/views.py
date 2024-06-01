@@ -5,7 +5,7 @@ from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, ListMode
     UpdateModelMixin
 from rest_framework.response import Response
 from .models import Article, Category,ReadingTime,CulturalArea,Region,Village,ArticleVistors,ArticleRevision,ArticleLike
-from .serializers import CulturalListSerializer,ArticleListWithRecommendationSerializer,ArticleSerializer, CategorySerializer, ArticleListSerializer,ReadingTimeSerializer,ArticleHistorySerializer,ArticleHistoryDeleteSerializer,CulturalAreaSerializer,RegionSerializer,VillageSerializer
+from .serializers import CulturalListSerializer,ReadingTimeCreateSerializer,ArticleListWithRecommendationSerializer,ArticleSerializer, CategorySerializer, ArticleListSerializer,ReadingTimeSerializer,ArticleHistorySerializer,ArticleHistoryDeleteSerializer,CulturalAreaSerializer,RegionSerializer,VillageSerializer
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from .authentication import TokenAuthentication
@@ -216,21 +216,38 @@ class VillageViewSet(GenericViewSet,ListModelMixin,RetrieveModelMixin):
 class ReadingTimeView(APIView):
     permission_classes = [IsAuthenticated,AllowAny]
     authentication_classes = [TokenAuthentication]
+
+    @swagger_auto_schema(
+        request_body=ReadingTimeCreateSerializer,
+        responses={201: ReadingTimeSerializer, 400: 'Bad Request'}
+    )
     def post(self, request, format=None):
         user = request.user
         
         ip_address = request.META.get('REMOTE_ADDR')
         user_agent = request.META.get('HTTP_USER_AGENT')
         
-        article_id = request.data.get('article_id')
-        time_spent = request.data.get('time_spent')
+        # Validate input data using the serializer
+        serializer = ReadingTimeCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            article_id = serializer.validated_data.get('article_id')
+            time_spent = serializer.validated_data.get('time_spent')
 
-        # Retrieve or create ReadingTime object
-        reading_time, created = ReadingTime.objects.get_or_create(user=user, article_id=article_id,ip_address=ip_address,user_agent=user_agent)
-        
-        # Update total time spent
-        reading_time.total_time_spent += int(time_spent)
-        reading_time.save()
+            # Retrieve or create ReadingTime object
+            reading_time, created = ReadingTime.objects.get_or_create(
+                user=user,
+                article_id=article_id,
+                ip_address=ip_address,
+                user_agent=user_agent
+            )
+            
+            # Update total time spent
+            reading_time.total_time_spent += int(time_spent)
+            reading_time.save()
 
-        serializer = ReadingTimeSerializer(reading_time)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+            # Serialize the updated reading_time instance
+            response_serializer = ReadingTimeSerializer(reading_time)
+            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            # Return errors if the input data is invalid
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

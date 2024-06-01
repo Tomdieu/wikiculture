@@ -172,4 +172,19 @@ class ArticleDetailSerializer(serializers.ModelSerializer):
 class ReadingTimeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReadingTime
-        fields = ["user", "article", "time_spent"]
+        fields = ["user", "article", "ip_address","user_agent","total_time_spent"]
+
+class ReadingTimeCreateSerializer(serializers.Serializer):
+
+    article = serializers.IntegerField(help_text="Article id")
+    time_spent = serializers.IntegerField()
+
+    def validate_article(self, value):
+        """
+        Custom validation for the article field to ensure the article ID exists.
+        """
+        try:
+            article = Article.objects.get(id=value)
+        except Article.DoesNotExist:
+            raise serializers.ValidationError("Article with this ID does not exist.")
+        return article
