@@ -19,6 +19,9 @@ from django.db.models import Q
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
+from django_filters.rest_framework import DjangoFilterBackend
+from .filters import ArticleFilter
+
 
 # Create your views here.
 
@@ -28,6 +31,9 @@ class ArticleViewSet(GenericViewSet, CreateModelMixin, RetrieveModelMixin, ListM
     serializer_class = ArticleSerializer
     pagination_class = PageNumberPagination
     authentication_classes = [TokenAuthentication]
+
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = ArticleFilter
 
     def get_permissions(self):
         if self.action in ['list','retrieve','latest','with_recommendations']:  # AllowAny for 'list' action
