@@ -1,12 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ArticleType, CategoryType, UserType } from "@/types";
+import {  UserType } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useSession } from "next-auth/react";
-import { cn } from "@/lib/utils";
 import { formatTimeSince } from "@/lib/timeSince";
 import {
   Popover,
@@ -23,6 +21,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useUserStore } from "@/hooks/use-user";
 import UserModal from "./user-modal";
+import toast from "react-hot-toast";
+import { updateUser } from "@/actions/users";
+import { useQueryClient } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -140,6 +142,19 @@ export const userColumns: ColumnDef<UserType>[] = [
     cell: ({ row }) => {
       const user = row.original;
       const { setUser, onOpen } = useUserStore();
+      const queryClient = useQueryClient()
+      const searchParams = useSearchParams();
+  const page = searchParams.get("page") || "1";
+
+      const promoteTo = async (role:"User"|"Admin"|"Moderator") =>{
+        const res = await updateUser(user.id,{user_type:role})
+        if(res.id){
+          toast.success("Role updated successfully")
+          queryClient.invalidateQueries({queryKey: ["users", "page", page]})
+        }else{
+          toast.error("Something went wrong")
+        }
+      }
 
       return (
         <DropdownMenu>
@@ -156,10 +171,10 @@ export const userColumns: ColumnDef<UserType>[] = [
               <RefreshCw className="w-4 h-4 mr-2" /> <span>Update</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Set Moderator</DropdownMenuItem>
-            <DropdownMenuItem>Set Admin</DropdownMenuItem>
+            <DropdownMenuItem onClick={()=>promoteTo("Moderator")}>Set Moderator</DropdownMenuItem>
+            <DropdownMenuItem onClick={()=>promoteTo("Admin")}>Set Admin</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem className="text-red-500">
               <Trash className="w-4 h-4 mr-2" /> Delete
             </DropdownMenuItem>
           </DropdownMenuContent>

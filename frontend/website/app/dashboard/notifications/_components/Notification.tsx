@@ -14,9 +14,9 @@ type Props = {
 
 const Notification = ({ notification, index }: Props) => {
     const router = useRouter()
-    const article =  JSON.parse(notification.data) as ArticleType;
-    const gotToArticle = ()=>{
-        
+    const article = JSON.parse(notification.data) as ArticleType;
+    const gotToArticle = () => {
+
         router.push(`/dashboard/articles/${article.id}/`)
     }
     return (
@@ -33,17 +33,17 @@ const Notification = ({ notification, index }: Props) => {
             }
         }} animate={{ opacity: 1 }} className='border p-2 rounded-sm space-y-2 w-full'>
             <div className='flex items-center justify-between'>
-                <p className='text-sm'>{notification.type == "article_approved" ? `Your article ${article.title} was approved`:notification.message}</p>
+                <p className='text-sm'>{notification.type == "article_approved" ? `Your article ${article.title} was approved` : notification.message}</p>
                 <span className='text-xs text-muted-foreground'>{formatTimeSince(notification.timestamp)}</span>
             </div>
             {["article_approved", "article_rejected"].includes(notification.type) && (
 
                 <div className="w-full">
-                    <Button asChild  variant={"default"}  size="sm" className="text-xs">
+                    <Button asChild variant={"default"} size="sm" className="text-xs">
                         <Link href={`/dashboard/articles/${article.id}/`}>
-                        View Article
+                            View Article
                         </Link>
-                        </Button>
+                    </Button>
                 </div>
             )}
         </motion.div>

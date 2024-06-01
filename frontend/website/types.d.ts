@@ -10,6 +10,16 @@ export declare interface UserType {
   date_joined: string;
 }
 
+export declare interface UpdateUserType {
+  username?: string;
+  first_name?: string;
+  last_name?: string;
+  email?: string;
+  bio?: string;
+  image?: string;
+  user_type?: "User" | "Moderator" | "Admin";
+}
+
 export declare interface NextAuthUserType extends UserType {
   token: string;
 }

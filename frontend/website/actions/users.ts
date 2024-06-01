@@ -1,7 +1,7 @@
 "use server"
 
 import { getSession } from "@/lib/getSession";
-import { UserPaginationType, UserType } from "@/types";
+import { UserPaginationType, UserType,UpdateUserType } from "@/types";
 
 
 export const getUsers = async (page?:string) => {
@@ -54,6 +54,28 @@ export const getUser = async (userId: number) => {
 
         const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/${userId}/`;
         const res = await fetch(url, {
+            headers: {
+                Authorization: `token ${session?.user.token}`,
+                "Content-Type": "application/json",
+            },
+        }
+        )
+        const data = (await res.json()) as UserType;
+        return data;
+    } catch (error) {
+        console.log("Error fetching user.")
+        throw error;
+    }
+}
+
+export const updateUser = async (userId:number,body:UpdateUserType) => {
+    try {
+        const session = await getSession();
+
+        const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/${userId}/`;
+        const res = await fetch(url, {
+            method:"PATCH",
+            body:JSON.stringify(body),
             headers: {
                 Authorization: `token ${session?.user.token}`,
                 "Content-Type": "application/json",

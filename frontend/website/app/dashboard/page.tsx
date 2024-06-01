@@ -26,7 +26,7 @@ const Dashboard = async (props: Props) => {
           <div className=' rounded-md flex flex-1 space-y-10 flex-col'>
             <div>
               <h2 className="text-3xl text-muted-foreground">{session?.user?.username}</h2>
-              <p className='text-muted-foreground text-xs'>{session?.user?.bio}</p>
+              <p className='text-muted-foreground text-xs'>{session?.user?.user_type !== "User" ? session?.user?.user_type : session?.user?.bio}</p>
             </div>
             <div className="flex items-center space-x-0.5">
               <TotalArticle/> <span className="text-xs text-muted-foreground">Total Articles</span>
