@@ -12,6 +12,7 @@ from elasticsearch_dsl.query import Q
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
+
 class SearchArticleView(APIView):
     search_serializer = ArticleSerializer
     search_document = ArticleDocument
@@ -44,13 +45,13 @@ class SearchArticleView(APIView):
                     "author.last_name",
                     "slug",
                 ],
-                fuzziness='auto'
+                fuzziness="auto",
             ) & Q(
-                'bool',
+                "bool",
                 should=[
-                    Q('match', approved=True),
-                    Q('match', is_published=True),
-                ]
+                    Q("match", approved=True),
+                    Q("match", is_published=True),
+                ],
             )
 
             search = self.search_document.search()
@@ -58,7 +59,9 @@ class SearchArticleView(APIView):
             response = search.execute()
 
             paginator = self.pagination_class()
-            paginated_response = paginator.paginate_queryset(response, request, view=self)
+            paginated_response = paginator.paginate_queryset(
+                response, request, view=self
+            )
 
             if paginated_response is not None:
                 serializer = self.search_serializer(paginated_response, many=True)
@@ -68,4 +71,6 @@ class SearchArticleView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         except Exception as e:
-            return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return JsonResponse(
+                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
