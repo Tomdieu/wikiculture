@@ -1,55 +1,40 @@
-from django.http import HttpResponse
+from django.http import JsonResponse
 from rest_framework.views import APIView
-from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework import status
 
-from .serializers import ArticleSerializer,ArticleDocumentSerializer
+from .serializers import ArticleSerializer
 from .documents import ArticleDocument
 
 from elasticsearch_dsl.query import Q
-from elasticsearch_dsl import Search
 
-from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
-from django_elasticsearch_dsl_drf.pagination import PageNumberPagination
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
-# Create your views here.
-
-
-class SearchDocumentViewSet(DocumentViewSet):
-    document = ArticleDocument
-    serializer_class = ArticleDocumentSerializer
-    pagination_class = PageNumberPagination
-
-class SearchArticleView(APIView, LimitOffsetPagination):
+class SearchArticleView(APIView):
     search_serializer = ArticleSerializer
     search_document = ArticleDocument
+    pagination_class = PageNumberPagination
 
     @swagger_auto_schema(
         operation_description="Search articles",
         manual_parameters=[
             openapi.Parameter(
-                name="query",
-                in_=openapi.IN_PATH,
-                type=openapi.TYPE_STRING,
-                required=True,
-                description="Search query",
-            )
+                name="page",
+                in_=openapi.IN_QUERY,
+                type=openapi.TYPE_INTEGER,
+                required=False,
+                description="Page number for pagination",
+            ),
         ],
     )
     def get(self, request, query):
-
         try:
-
-            # query = query  or request.query_params.get('query', '')
-
             q = Q(
                 "query_string",
                 query="*" + query + "*",
                 fields=[
-                    # "id",
                     "title",
                     "content",
                     "tags",
@@ -60,23 +45,27 @@ class SearchArticleView(APIView, LimitOffsetPagination):
                     "slug",
                 ],
                 fuzziness='auto'
+            ) & Q(
+                'bool',
+                should=[
+                    Q('match', approved=True),
+                    Q('match', is_published=True),
+                ]
             )
-            # & Q(
-            #     'bool',
-            #     should=[
-            #         Q('match',approved=True)
-            #     ]
-            # )
 
             search = self.search_document.search()
-            search.query = q
+            search = search.query(q)
             response = search.execute()
 
-            results = self.paginate_queryset(response, request, view=self)
+            paginator = self.pagination_class()
+            paginated_response = paginator.paginate_queryset(response, request, view=self)
 
-            serializer = self.search_serializer(results, many=True)
+            if paginated_response is not None:
+                serializer = self.search_serializer(paginated_response, many=True)
+                return paginator.get_paginated_response(serializer.data)
 
-            return self.get_paginated_response(serializer.data)
+            serializer = self.search_serializer(response, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
         except Exception as e:
-            return HttpResponse(e, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -118,7 +118,7 @@ class ArticleLike(models.Model):
 
 
 class ReadingTime(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True,null=True)
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
 
     ip_address = models.CharField(max_length=45, blank=True)

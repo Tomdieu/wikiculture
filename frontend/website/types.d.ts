@@ -222,3 +222,20 @@ declare interface NotificationType {
 declare interface NotificationPaginationType extends PaginationType {
 results:NotificationType[]
 }
+
+declare interface SearchResultsType {
+  id:number;
+  title:string;
+  content:string;
+  tags:string;
+  categories:string;
+  slug:string;
+  village:string;
+  approved:boolean;
+  is_published:boolean;
+  author:UserType
+}
+
+declare interface SearchPaginationType extends PaginationType {
+  results:SearchResultsType[]
+}

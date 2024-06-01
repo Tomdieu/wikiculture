@@ -1,23 +1,16 @@
 "use client"
 import { getArticleWithRecommendation } from "@/actions/articles";
-import { formatDate } from "@/lib/formatDate";
-import Link from "next/link";
 import React from "react";
-import parseHtml from "html-react-parser";
-import Image from "next/image";
-import { Separator } from "@/components/ui/separator";
-import { Heart } from "lucide-react";
-import Article from "../../_components/Article";
-import { Textarea } from "@/components/ui/textarea";
 import { useQuery } from "@tanstack/react-query";
 import ShowArticle from "./_components/ShowArticle";
+import ArticleSkeleton from "./_components/ArticleSkeleton";
+import { notFound } from "next/navigation";
 
 type Props = {
   params: {
     articleId: number;
   };
 };
-
 
 const ArticleDetail =  ({ params: { articleId } }: Props) => {
   
@@ -28,12 +21,14 @@ const ArticleDetail =  ({ params: { articleId } }: Props) => {
 
   if(isLoading){
     return (
-      <p>Loading...</p>
+      <>
+       <ArticleSkeleton/>
+      </>
     )
   }
 
   if(isError){
-    return <p>Something went wrong</p>
+    return notFound()
   }
 
   if(!isLoading && data){

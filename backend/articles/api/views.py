@@ -9,12 +9,16 @@ from .serializers import CulturalListSerializer,ReadingTimeCreateSerializer,Arti
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from .authentication import TokenAuthentication
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from api.lib.recommend_articles import recommend_articles
 from django.db.models import Q
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+
 
 # Create your views here.
 
@@ -213,30 +217,33 @@ class VillageViewSet(GenericViewSet,ListModelMixin,RetrieveModelMixin):
 
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class ReadingTimeView(APIView):
-    permission_classes = [IsAuthenticated,AllowAny]
-    authentication_classes = [TokenAuthentication]
+    permission_classes = [AllowAny]
+    authentication_classes = [TokenAuthentication,SessionAuthentication]
 
     @swagger_auto_schema(
         request_body=ReadingTimeCreateSerializer,
         responses={201: ReadingTimeSerializer, 400: 'Bad Request'}
     )
     def post(self, request, format=None):
-        user = request.user
+        user = request.user if request.user.is_authenticated else None  # Handle both authenticated and unauthenticated users
         
         ip_address = request.META.get('REMOTE_ADDR')
         user_agent = request.META.get('HTTP_USER_AGENT')
+
+        print("User agent : ",user_agent, " ip address : ",ip_address)
         
         # Validate input data using the serializer
         serializer = ReadingTimeCreateSerializer(data=request.data)
         if serializer.is_valid():
-            article_id = serializer.validated_data.get('article_id')
+            article = serializer.validated_data.get('article_id')
             time_spent = serializer.validated_data.get('time_spent')
 
             # Retrieve or create ReadingTime object
             reading_time, created = ReadingTime.objects.get_or_create(
                 user=user,
-                article_id=article_id,
+                article=article,
                 ip_address=ip_address,
                 user_agent=user_agent
             )

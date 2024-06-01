@@ -10,7 +10,7 @@ const layout = ({ children }: Props) => {
   return (
     <div className="w-full h-screen scroll-smooth">
       <Header />
-      <main>
+      <main className="w-full">
 
       {children}
       </main>

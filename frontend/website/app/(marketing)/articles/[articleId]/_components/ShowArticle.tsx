@@ -24,7 +24,7 @@ const ShowArticle = ({ articleData }: Props) => {
         related_articles,
     } = articleData;
     const [timeSpent, setTimeSpent] = useState(0);
-    const [intervalId, setIntervalId] = useState<number | null|NodeJS.Timeout>(null);
+    const [intervalId, setIntervalId] = useState<number | null | NodeJS.Timeout>(null);
     const [hasReachedEnd, setHasReachedEnd] = useState(false);
     useEffect(() => {
         // Start the timer when the component mounts
@@ -61,11 +61,11 @@ const ShowArticle = ({ articleData }: Props) => {
 
     const sendTimeSpent = async () => {
         try {
-              
-              const res = await trackUserReadingTime(article.id,timeSpent);
-              if(res.user){
+
+            const res = await trackUserReadingTime(article.id, timeSpent);
+            if (res.user) {
                 console.log("Sent")
-              }
+            }
         } catch (error) {
             console.error('Error sending reading time data:', error);
         }
