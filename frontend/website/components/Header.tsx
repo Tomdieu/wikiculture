@@ -11,6 +11,7 @@ import {
 import { MoreHorizontalIcon } from "lucide-react";
 import { getSession } from "@/lib/getSession";
 import UserInfo from "./user-info";
+import { Input } from "./ui/input";
 
 type Props = {};
 
@@ -41,15 +42,10 @@ const Header = async (props: Props) => {
           >
             About
           </Link>
-          {session?.user && (
-<Link
-className="text-sm border rounded-full p-2 border-primary-foreground  shadow font-medium hover:bg-primary hover:text-primary-foreground underline-offset-4"
-href="/dashboard/articles/new"
->
-Create an article
-</Link>
-          )}
-          
+          <form method="get" action="/search">
+            <Input type="search" name="query" placeholder="Search article" />
+          </form>
+
         </nav>
         <ModeToggle />
         {session?.user && <UserInfo />}

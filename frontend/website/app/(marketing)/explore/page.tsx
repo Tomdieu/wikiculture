@@ -7,8 +7,13 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuRad
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { CatIcon, FilterIcon } from "lucide-react"
+import { getLatestArticles } from "@/actions/articles"
+import { cleanHtml } from "@/lib/cleanHtml"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { getFullName } from "@/lib/getFullName"
 
-export default function Component() {
+export default async function ExplorePages() {
+  const latestArticles = await getLatestArticles()
   return (
     <div>
       <section className="relative h-[500px] md:h-[600px] lg:h-[700px] overflow-hidden">
@@ -70,222 +75,38 @@ export default function Component() {
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <div className="bg-white dark:bg-gray-950 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <Link href="#" className="block" prefetch={false}>
+            {latestArticles.map((article,index)=>(
+              <div key={index} className="bg-white dark:bg-gray-950 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+              <Link href={`/articles/${article.id}/`} className="block" prefetch={false}>
                 <img
-                  src="/placeholder.svg"
+                  src={article.cover_image}
                   alt="Article Image"
                   width={400}
                   height={225}
                   className="w-full h-[225px] object-cover"
                 />
                 <div className="p-4">
-                  <h3 className="text-xl font-bold mb-2">The Art of Minimalist Living</h3>
-                  <p className="text-gray-500 dark:text-gray-400 mb-4">
-                    Discover the beauty and freedom in simplifying your life.
+                  <h3 className="text-lg font-semibold mb-2">{article.icon}{article.title}</h3>
+                  <p className="text-gray-500 text-sm dark:text-gray-400 mb-4 line-clamp-4">
+                    {cleanHtml(article.content)}
                   </p>
                   <div className="flex items-center text-gray-500 dark:text-gray-400">
-                    <img
-                      src="/placeholder.svg"
-                      alt="Author Avatar"
-                      width={32}
-                      height={32}
-                      className="rounded-full mr-2"
-                    />
-                    <span>John Doe</span>
+                  <Avatar className="rounded-full p-0.5 w-10 h-10">
+          <AvatarImage
+            className="h-10 w-10 rounded-full bg-gray-50"
+            src={article.author.image || ""}
+          />
+          <AvatarFallback className="rounded-full h-10 w-10  shadow-sm uppercase">
+            {article.author.username.charAt(0)}
+          </AvatarFallback>
+        </Avatar>
+                    <span>{getFullName(article.author)}</span>
                   </div>
                 </div>
               </Link>
             </div>
-            <div className="bg-white dark:bg-gray-950 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <Link href="#" className="block" prefetch={false}>
-                <img
-                  src="/placeholder.svg"
-                  alt="Article Image"
-                  width={400}
-                  height={225}
-                  className="w-full h-[225px] object-cover"
-                />
-                <div className="p-4">
-                  <h3 className="text-xl font-bold mb-2">The Rise of Sustainable Fashion</h3>
-                  <p className="text-gray-500 dark:text-gray-400 mb-4">
-                    Explore the latest trends in eco-friendly clothing.
-                  </p>
-                  <div className="flex items-center text-gray-500 dark:text-gray-400">
-                    <img
-                      src="/placeholder.svg"
-                      alt="Author Avatar"
-                      width={32}
-                      height={32}
-                      className="rounded-full mr-2"
-                    />
-                    <span>Jane Smith</span>
-                  </div>
-                </div>
-              </Link>
-            </div>
-            <div className="bg-white dark:bg-gray-950 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <Link href="#" className="block" prefetch={false}>
-                <img
-                  src="/placeholder.svg"
-                  alt="Article Image"
-                  width={400}
-                  height={225}
-                  className="w-full h-[225px] object-cover"
-                />
-                <div className="p-4">
-                  <h3 className="text-xl font-bold mb-2">The Art of Mindful Meditation</h3>
-                  <p className="text-gray-500 dark:text-gray-400 mb-4">
-                    Learn how to find inner peace and balance in your life.
-                  </p>
-                  <div className="flex items-center text-gray-500 dark:text-gray-400">
-                    <img
-                      src="/placeholder.svg"
-                      alt="Author Avatar"
-                      width={32}
-                      height={32}
-                      className="rounded-full mr-2"
-                    />
-                    <span>Sarah Lee</span>
-                  </div>
-                </div>
-              </Link>
-            </div>
-            <div className="bg-white dark:bg-gray-950 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <Link href="#" className="block" prefetch={false}>
-                <img
-                  src="/placeholder.svg"
-                  alt="Article Image"
-                  width={400}
-                  height={225}
-                  className="w-full h-[225px] object-cover"
-                />
-                <div className="p-4">
-                  <h3 className="text-xl font-bold mb-2">The Fascinating World of Street Art</h3>
-                  <p className="text-gray-500 dark:text-gray-400 mb-4">
-                    Explore the vibrant and ever-changing canvas of urban art.
-                  </p>
-                  <div className="flex items-center text-gray-500 dark:text-gray-400">
-                    <img
-                      src="/placeholder.svg"
-                      alt="Author Avatar"
-                      width={32}
-                      height={32}
-                      className="rounded-full mr-2"
-                    />
-                    <span>Michael Chen</span>
-                  </div>
-                </div>
-              </Link>
-            </div>
-            <div className="bg-white dark:bg-gray-950 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <Link href="#" className="block" prefetch={false}>
-                <img
-                  src="/placeholder.svg"
-                  alt="Article Image"
-                  width={400}
-                  height={225}
-                  className="w-full h-[225px] object-cover"
-                />
-                <div className="p-4">
-                  <h3 className="text-xl font-bold mb-2">The Art of Culinary Creativity</h3>
-                  <p className="text-gray-500 dark:text-gray-400 mb-4">
-                    Discover the latest trends and techniques in the world of food.
-                  </p>
-                  <div className="flex items-center text-gray-500 dark:text-gray-400">
-                    <img
-                      src="/placeholder.svg"
-                      alt="Author Avatar"
-                      width={32}
-                      height={32}
-                      className="rounded-full mr-2"
-                    />
-                    <span>Emily Wang</span>
-                  </div>
-                </div>
-              </Link>
-            </div>
-            <div className="bg-white dark:bg-gray-950 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <Link href="#" className="block" prefetch={false}>
-                <img
-                  src="/placeholder.svg"
-                  alt="Article Image"
-                  width={400}
-                  height={225}
-                  className="w-full h-[225px] object-cover"
-                />
-                <div className="p-4">
-                  <h3 className="text-xl font-bold mb-2">The Timeless Beauty of Vintage Fashion</h3>
-                  <p className="text-gray-500 dark:text-gray-400 mb-4">
-                    Explore the enduring appeal of vintage clothing and accessories.
-                  </p>
-                  <div className="flex items-center text-gray-500 dark:text-gray-400">
-                    <img
-                      src="/placeholder.svg"
-                      alt="Author Avatar"
-                      width={32}
-                      height={32}
-                      className="rounded-full mr-2"
-                    />
-                    <span>David Lee</span>
-                  </div>
-                </div>
-              </Link>
-            </div>
-            <div className="bg-white dark:bg-gray-950 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <Link href="#" className="block" prefetch={false}>
-                <img
-                  src="/placeholder.svg"
-                  alt="Article Image"
-                  width={400}
-                  height={225}
-                  className="w-full h-[225px] object-cover"
-                />
-                <div className="p-4">
-                  <h3 className="text-xl font-bold mb-2">The Art of Storytelling in Film</h3>
-                  <p className="text-gray-500 dark:text-gray-400 mb-4">
-                    Dive into the captivating world of cinematic storytelling.
-                  </p>
-                  <div className="flex items-center text-gray-500 dark:text-gray-400">
-                    <img
-                      src="/placeholder.svg"
-                      alt="Author Avatar"
-                      width={32}
-                      height={32}
-                      className="rounded-full mr-2"
-                    />
-                    <span>Jessica Huang</span>
-                  </div>
-                </div>
-              </Link>
-            </div>
-            <div className="bg-white dark:bg-gray-950 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <Link href="#" className="block" prefetch={false}>
-                <img
-                  src="/placeholder.svg"
-                  alt="Article Image"
-                  width={400}
-                  height={225}
-                  className="w-full h-[225px] object-cover"
-                />
-                <div className="p-4">
-                  <h3 className="text-xl font-bold mb-2">The Intersection of Art and Technology</h3>
-                  <p className="text-gray-500 dark:text-gray-400 mb-4">
-                    Explore the fascinating ways technology is transforming the art world.
-                  </p>
-                  <div className="flex items-center text-gray-500 dark:text-gray-400">
-                    <img
-                      src="/placeholder.svg"
-                      alt="Author Avatar"
-                      width={32}
-                      height={32}
-                      className="rounded-full mr-2"
-                    />
-                    <span>Alex Kim</span>
-                  </div>
-                </div>
-              </Link>
-            </div>
+            ))}
+            
           </div>
         </div>
       </section>

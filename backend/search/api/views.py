@@ -4,17 +4,24 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework import status
 
-from .serializers import ArticleSerializer
+from .serializers import ArticleSerializer,ArticleDocumentSerializer
 from .documents import ArticleDocument
 
 from elasticsearch_dsl.query import Q
 from elasticsearch_dsl import Search
 
+from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
+from django_elasticsearch_dsl_drf.pagination import PageNumberPagination
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
 # Create your views here.
 
+
+class SearchDocumentViewSet(DocumentViewSet):
+    document = ArticleDocument
+    serializer_class = ArticleDocumentSerializer
+    pagination_class = PageNumberPagination
 
 class SearchArticleView(APIView, LimitOffsetPagination):
     search_serializer = ArticleSerializer

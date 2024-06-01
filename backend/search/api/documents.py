@@ -51,5 +51,5 @@ class ArticleDocument(Document):
 
     class Django:
         model = Article
-        fields = ["id", "title", "content", "tags", "categories", "slug"]
+        fields = ["id", "title", "content", "tags", "categories", "slug","village","approved","is_published"]
         related_models = [User]

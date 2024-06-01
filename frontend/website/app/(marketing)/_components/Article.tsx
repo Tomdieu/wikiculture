@@ -1,6 +1,7 @@
 "use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatDate } from "@/lib/formatDate";
+import { getFullName } from "@/lib/getFullName";
 import { ArticleType } from "@/types";
 import DOMPurify from "dompurify";
 import React from "react";
@@ -60,7 +61,7 @@ const Article = ({ article }: Props) => {
           <p className="font-semibold text-stone-800 dark:text-stone-50">
             <a href="#">
               <span className=""></span>
-              {article.author.username}
+              {getFullName(article.author)}
             </a>
           </p>
           <p className="text-stone-800 dark:text-stone-200">{article.author.bio || "Writer"}</p>
