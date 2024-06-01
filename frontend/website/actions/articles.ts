@@ -258,3 +258,30 @@ export const deleteArticle = async (articleId: number) => {
         },
     });
 };
+
+
+export const trackUserReadingTime = async (articleId: number,timeSpent:number) =>{
+    try {
+        const session = await getSession();
+        
+
+        const url = `${process.env.NEXT_PUBLIC_ARTICLE_URL}/api/time-tracking/`;
+        
+        const res = await fetch(url, {
+            method:"POST",
+            body:JSON.stringify({article_id:articleId,time_spent:timeSpent}),
+            headers: {
+                Authorization: `token ${session?.user.token}`,
+                "Content-Type": "application/json",
+            },
+        });
+        if (!res.ok) {
+            throw new Error("Failed to fetch article");
+        }
+        const data = (await res.json());
+        return data;
+    } catch (error) {
+        console.error("Error fetching article:", error);
+        throw error;
+    }
+}

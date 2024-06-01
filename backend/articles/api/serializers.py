@@ -176,10 +176,10 @@ class ReadingTimeSerializer(serializers.ModelSerializer):
 
 class ReadingTimeCreateSerializer(serializers.Serializer):
 
-    article = serializers.IntegerField(help_text="Article id")
+    article_id = serializers.IntegerField(help_text="Article id")
     time_spent = serializers.IntegerField()
 
-    def validate_article(self, value):
+    def validate_article_id(self, value):
         """
         Custom validation for the article field to ensure the article ID exists.
         """

@@ -1,5 +1,5 @@
 import { ArticleWithRecommendationType } from '@/types'
-import { getArticleWithRecommendation } from "@/actions/articles";
+import { getArticleWithRecommendation, trackUserReadingTime } from "@/actions/articles";
 import { formatDate } from "@/lib/formatDate";
 import Link from "next/link";
 import React, { useMemo } from "react";
@@ -61,15 +61,11 @@ const ShowArticle = ({ articleData }: Props) => {
 
     const sendTimeSpent = async () => {
         try {
-            //   await axios.post('/api/reading-time', {
-            //     article_id: articleId,
-            //     time_spent: timeSpent,
-            //   }, {
-            //     headers: {
-            //       'Authorization': `Token ${userToken}`,
-            //       'Content-Type': 'application/json'
-            //     }
-            //   });
+              
+              const res = await trackUserReadingTime(article.id,timeSpent);
+              if(res.user){
+                console.log("Sent")
+              }
         } catch (error) {
             console.error('Error sending reading time data:', error);
         }
