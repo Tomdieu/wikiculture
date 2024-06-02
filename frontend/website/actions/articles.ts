@@ -383,7 +383,7 @@ export const getArticleLikes = async (articleId: number)=>{
         if (!res.ok) {
             throw new Error("Failed to fetch article");
         }
-        const data = (await res.json()) as {"likes":number};
+        const data = (await res.json()) as {"likes":number,"hasLike":boolean};
         return data;
     } catch (error) {
         console.error("Error fetching article:", error);
