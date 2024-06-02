@@ -86,7 +86,7 @@ class ArticleViewSet(
         return [IsAuthenticated()]  # For other actions, use IsAuthenticated permission
 
     def get_serializer_class(self):
-        if self.action in ["like","total"]:
+        if self.action in ["like", "total"]:
             return None
         if self.action in [
             "list",
@@ -162,12 +162,27 @@ class ArticleViewSet(
         user = request.user if (request.user and request.user.id) is not None else None
         instance = self.get_object()
         user_agent = request.META.get("HTTP_USER_AGENT", "")
-        ArticleLike.objects.create(
-            article=instance,
-            user=user,
-            ip_address=request.user_ip,
-            user_agent=user_agent,
-        )
+        # check if user already liked
+        if user:
+            hasLiked = ArticleLike.objects.filter(user=user, article=instance)
+            if hasLiked.exists():
+                hasLiked.delete()
+            else:
+                ArticleLike.objects.create(
+                    article=instance,
+                    user=user,
+                    ip_address=request.user_ip,
+                    user_agent=user_agent,
+                )
+
+        else:
+
+            ArticleLike.objects.create(
+                article=instance,
+                user=user,
+                ip_address=request.user_ip,
+                user_agent=user_agent,
+            )
 
         return Response({"message": "Article liked"}, status=status.HTTP_201_CREATED)
 
@@ -177,16 +192,22 @@ class ArticleViewSet(
         responses={
             200: openapi.Response(
                 description="Number of likes",
-                examples={"application/json": {"likes": 123}},
+                examples={"application/json": {"likes": 123, "hasLike": False}},
             )
         },
     )
     @action(methods=["get"], detail=True)
     def likes(self, request, *args, **kwargs):
         instance = self.get_object()
+        user = request.user if (request.user and request.user.id) is not None else None
         articles_likes = ArticleLike.objects.filter(article=instance)
+        user_agent = request.META.get("HTTP_USER_AGENT", "")
 
-        return Response({"likes": len(articles_likes)})
+        hasLike = ArticleLike.objects.filter(
+            user=user, article=instance, user_agent=user_agent
+        ).exists()
+        print({"likes": len(articles_likes), "hasLike": hasLike})
+        return Response({"likes": len(articles_likes), "hasLike": hasLike})
 
     @swagger_auto_schema(
         operation_description="Total number of articles",
