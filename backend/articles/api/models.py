@@ -153,7 +153,7 @@ class ArticleVistors(models.Model):
         
 
     def __str__(self):
-        return f"{self.article} - {self.date}: {self.count} visitors"
+        return f"{self.user_agent}:{self.ip_address} visited {self.article} on {self.date}"
 
 
 class Event(models.Model):
