@@ -5,7 +5,8 @@ import { useSearchParams } from 'next/navigation';
 import React from 'react'
 import Article from '../../_components/Article';
 import { Skeleton } from '@/components/ui/skeleton';
-import ArticlePagination from '@/components/table/article/pagination';
+import ArticlePagination from './ArticlePagination';
+import Link from 'next/link';
 
 type Props = {}
 
@@ -20,9 +21,9 @@ const ArticlesList = (props: Props) => {
 
     if (isLoading) {
         return (
-            <section className='grid grid-cols-4 space-x-2 gap-2 p-2'>
+            <div className='grid grid-cols-4 space-x-2 gap-2 p-2'>
                 {Array.from({ length: 10 }).map((_, index) => (
-                    <article className="flex h-full max-w-xl flex-col items-start justify-between border p-5 rounded-sm">
+                    <div className="flex h-full max-w-xl flex-col items-start justify-between border p-5 rounded-sm">
                         <div className="flex items-center gap-x-4 text-xs w-full">
                             <Skeleton className="h-4 w-24" />
                             <div className="flex-1 overflow-hidden">
@@ -47,14 +48,14 @@ const ArticlesList = (props: Props) => {
                                 <Skeleton className="h-4 w-24 mt-1" />
                             </div>
                         </div>
-                    </article>
+                    </div>
                 ))}
-            </section>
+            </div>
         )
     }
 
     return (
-        <section className='w-full h-full p-2 space-y-2'>
+        <div className='w-full h-full p-2 space-y-2'>
             {data?.count !== 0 && (
 
             <h1 className='font-semibold mb-5 text-2xl'>Article Found  {data && <span className='text-md'>({data?.count})</span>} </h1>
@@ -65,14 +66,14 @@ const ArticlesList = (props: Props) => {
                 <p className='lg:text-2xl text-red-400 font-semibold'>No Articles found from the filters</p>
             </div>
             )}
-            <section className='grid grid-cols-4 space-x-2 gap-2'>
-                {data?.results.map((article, index) => <Article article={article} key={index} />)}
-            </section>
+            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 space-x-2 gap-2'>
+                {data?.results.map((article, index) => <Link href={`/articles/${article.id}/`}><Article article={article} key={index} /></Link>)}
+            </div>
             {data && (
 
                 <ArticlePagination articlePagination={data} currentPage={parseInt(page)} />
             )}
-        </section>
+        </div>
     )
 }
 
