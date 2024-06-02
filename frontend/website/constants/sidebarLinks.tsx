@@ -123,12 +123,12 @@ const sidebarData = [
     ],
     viewOnlyBy: ["Admin", "Moderator", "User"],
   },
-  {
-    text: "Comments",
-    icon: MessageSquareMore,
-    link: "/dashboard/comments",
-    viewOnlyBy: ["Admin", "Moderator", "User"],
-  },
+  // {
+  //   text: "Comments",
+  //   icon: MessageSquareMore,
+  //   link: "/dashboard/comments",
+  //   viewOnlyBy: ["Admin", "Moderator", "User"],
+  // },
   {
     text: "Notifications",
     icon: Bell,
