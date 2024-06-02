@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useSearchParams } from 'next/navigation'
 import Notification from "./Notification"
 import { getNotifications } from '@/actions/notifications';
+import NotificationPagination from './NotificationPagination'
 
 
 type Props = {}
@@ -37,8 +38,12 @@ const Notifications = (props: Props) => {
 
   if (data && data.results) {
     return (
-      <div>
+      <div className='space-y-2 mb-5'>
         {data.results.map((notification, index) => <Notification key={index} notification={notification} index={index} />)}
+        {data && (
+          <NotificationPagination notificationPagination={data}/>
+        )}
+        <div className='h-10'></div>
       </div>
     )
   }
