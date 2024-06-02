@@ -111,13 +111,23 @@ class ArticleViewSet(
 
     def retrieve(self, request, *args, **kwargs):
         # Capture the visitor's IP address and user-agent
-        instance = self.get_object()
+        instance:Article = self.get_object()
+        user = request.user
+        
         ip_address = request.META.get("REMOTE_ADDR")
         user_agent = request.META.get("HTTP_USER_AGENT", "")
         try:
-            ArticleVistors.objects.create(
-                article=instance, ip_address=ip_address, user_agent=user_agent
-            )
+            if user:
+                if instance.author.id != user.id:
+                    ArticleVistors.objects.create(
+                        article=instance, ip_address=ip_address, user_agent=user_agent
+                    )
+                else:
+                    pass
+            else:
+                ArticleVistors.objects.create(
+                    article=instance, ip_address=ip_address, user_agent=user_agent
+                )
         except Exception as e:
             pass
         return super().retrieve(request, *args, **kwargs)
