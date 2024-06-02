@@ -29,16 +29,21 @@ const Dashboard = async (props: Props) => {
               <p className='text-muted-foreground text-xs'>{session?.user?.user_type !== "User" ? session?.user?.user_type : session?.user?.bio}</p>
             </div>
             <div className="flex items-center space-x-0.5">
-              <TotalArticle/> <span className="text-xs text-muted-foreground">Total Articles</span>
+              <TotalArticle /> <span className="text-xs text-muted-foreground">Total Articles</span>
             </div>
           </div>
           <Newspaper />
         </Card>
-        <TotalUsers/>
-        <TotalArticles/>
-        <TotalCulturalArea/>
-        <TotalRegions/>
-        <TotalVillage/>
+        {session && session.user.user_type !== "User" && (
+          <>
+            <TotalUsers />
+            <TotalArticles />
+            <TotalCulturalArea />
+            <TotalRegions />
+            <TotalVillage />
+          </>
+        )}
+
 
       </div>
 
