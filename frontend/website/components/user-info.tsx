@@ -24,14 +24,16 @@ const UserInfo = (props: Props) => {
                     <AvatarFallback className='rounded-full shadow-sm uppercase'>{session?.user?.username.charAt(0)}</AvatarFallback>
                 </Avatar>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuContent forceMount align='end'>
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                     <Link href="/dashboard">Dashboard</Link>
                 </DropdownMenuItem>
 
-                <DropdownMenuItem>Profile</DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                <Link href="/dashboard/profile">Profile</Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={()=>signOut()}>Logout</DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
