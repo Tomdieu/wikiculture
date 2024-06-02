@@ -88,10 +88,10 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="rounded-md border p-3">
-      <div className="flex items-center py-4">
+      <div className="flex flex-col sm:flex-row space-y-2 items-center py-4">
         {showInput && (
           <Input
-            placeholder="Filter all"
+            placeholder="Search all"
             value={value}
             type="search"
             onChange={(event) => {
