@@ -4,6 +4,28 @@ import { getSession } from "@/lib/getSession";
 import { UserPaginationType, UserType,UpdateUserType } from "@/types";
 
 
+export const getCurrentUser = async () => {
+    try {
+        const session = await getSession();
+
+        const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/users/current_user/`;
+
+        const res = await fetch(url, {
+            headers: {
+                Authorization: `token ${session?.user.token}`,
+                "Content-Type": "application/json",
+            },
+        }
+        )
+        const data = (await res.json()) as UserType;
+        return data;
+    } catch (error) {
+        console.log("Error fetching users.")
+        throw error;
+    }
+}
+
+
 export const getUsers = async (page?:string) => {
     try {
         const session = await getSession();
@@ -68,7 +90,7 @@ export const getUser = async (userId: number) => {
     }
 }
 
-export const updateUser = async (userId:number,body:UpdateUserType) => {
+export const updateUser = async (userId:number|string,body:UpdateUserType) => {
     try {
         const session = await getSession();
 
