@@ -28,14 +28,15 @@ const AdminHeader = ({ className }: Props) => {
           <MenuSheet/>
         </div>
         {pathName == "/dashboard" && (
-          <div className="flex-1 border rounded-lg px-2 flex items-center">
+          <form method="get" action={"/search"} className="flex-1 border rounded-lg px-2 flex items-center">
             <Search className="text-muted-foreground" />
             <Input
               type="search"
+              name="query"
               className="flex-1 border-none focus-within:border-none focus-visible:ring-0"
               placeholder="Search an article"
             />
-          </div>
+          </form>
         )}
 
         <div className="flex space-x-1 gap-1 md:gap-5 mx items-center">

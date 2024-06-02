@@ -1,17 +1,19 @@
 import { ArticleWithRecommendationType } from '@/types'
-import { getArticleWithRecommendation, trackUserReadingTime } from "@/actions/articles";
+import { getArticleLikes, getArticleWithRecommendation, trackUserReadingTime } from "@/actions/articles";
 import { formatDate } from "@/lib/formatDate";
 import Link from "next/link";
 import React, { useMemo } from "react";
 import parseHtml from "html-react-parser";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
-import { Heart } from "lucide-react";
+import { Heart, ThumbsUp, ThumbsUpIcon } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import Article from '@/app/(marketing)/_components/Article';
 import { useState, useEffect } from "react"
 import _ from "lodash"
-
+import { LinkedInLogoIcon, TwitterLogoIcon } from '@radix-ui/react-icons';
+import { useQuery } from '@tanstack/react-query';
+import CountUp from 'react-countup';
 
 type Props = {
     articleData: ArticleWithRecommendationType
@@ -23,6 +25,12 @@ const ShowArticle = ({ articleData }: Props) => {
         recommendations,
         related_articles,
     } = articleData;
+
+    const { data: articleLikes, isLoading } = useQuery({
+        queryKey: ["article-likes", article.id],
+        queryFn: () => getArticleLikes(article.id)
+    })
+
     const [timeSpent, setTimeSpent] = useState(0);
     const [intervalId, setIntervalId] = useState<number | null | NodeJS.Timeout>(null);
     const [hasReachedEnd, setHasReachedEnd] = useState(false);
@@ -149,22 +157,26 @@ const ShowArticle = ({ articleData }: Props) => {
                                 <div className="border rounded flex">
                                     <Link
                                         href={`http://twitter.com/share?text=${article.title}&url=`}
-                                        className="p-1 text-green-600 hover:bg-green-200"
+                                        className="p-1 text-green-600 hover:bg-green-200 flex items-center space-x-1 border-r"
                                     >
-                                        Twitter
+                                        <TwitterLogoIcon />
+                                        <span className='text-sm'>Twitter</span>
                                     </Link>
-                                    <Separator orientation="vertical" className="h-full" />
                                     <Link
                                         href={`https://www.linkedin.com/sharing/share-offsite/?url=`}
-                                        className="p-1 text-green-600 hover:bg-green-200"
+                                        className="p-1 text-green-600 hover:bg-green-200 flex items-center space-x-1"
                                     >
-                                        LinkedIn
+                                        <LinkedInLogoIcon />
+                                        <span className='text-sm'>LinkedIn</span>
                                     </Link>
                                 </div>
                             </div>
-                            <div className="flex items-center space-x-2">
-                                <span>287</span>
-                                <Heart />
+                            <div className="flex items-center justify-center py-1 space-x-2 border rounded-full px-2 cursor-pointer text-muted-foreground">
+
+                                {articleLikes && (
+                                    <CountUp end={articleLikes?.likes} />
+                                )}
+                                <ThumbsUpIcon className='w-5 h-5 text-blue-500 animate-out' />
                             </div>
                         </div>
                         <div>

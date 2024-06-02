@@ -18,11 +18,12 @@ import { ArticleType, FileType, VillageType } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Save } from "lucide-react";
 import toast from "react-hot-toast";
-import PageNotFound from "./404";
+import PageNotFound from "./not-found";
 import { getSession } from "@/lib/getSession";
 import JoditEditor from "@/components/editor/JoditEditor";
 import VillageInput from "@/components/VillageInput";
 import Approve from "@/components/Approve";
+import { notFound } from "next/navigation";
 
 const Editor = dynamic(() => import("@/components/Editor"), { ssr: false });
 
@@ -110,13 +111,7 @@ export default function ArticlePage({
   }
 
   if (isError) {
-    return (
-      <PageNotFound
-        params={{
-          articleId: articleId,
-        }}
-      />
-    );
+    return notFound()
   }
 
   if (data && article?.id) {
