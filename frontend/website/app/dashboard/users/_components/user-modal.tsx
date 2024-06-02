@@ -30,6 +30,7 @@ import { LoaderIcon } from "lucide-react";
 import { UserType } from "@/types";
 import toast from "react-hot-toast";
 import { updateUser } from "@/actions/users";
+import { revalidatePage } from "@/actions/revalidate";
 
 type Props = {
 };
@@ -62,7 +63,7 @@ const DisplayUserModal = ({ user }: DisplayUserModalProps) => {
     }
     setTimeout(()=>{
       setIsSubmiting(false)
-
+      revalidatePage("/dashboard/users")
       onClose()
     },1000)
 
@@ -190,7 +191,6 @@ const DisplayUserModal = ({ user }: DisplayUserModalProps) => {
 
 const UserModal = (props: Props) => {
   const { isOpen, onClose, user } = useUserStore();
-  const [isSubmiting, setIsSubmiting] = useState(false);
 
 
   return (
