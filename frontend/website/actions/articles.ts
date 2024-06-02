@@ -61,6 +61,28 @@ export const getFilteredArticle = async (filters?:string,page:string="1") => {
     }
 };
 
+export const getExploreFilteredArticle = async (filter:"newest"|"most_read"|"popular"|string,category?:string,page:string="1") => {
+    try {
+        const session = await getSession();
+        let url = `${process.env.NEXT_PUBLIC_ARTICLE_URL}/api/articles/${filter}/?page=${page}`;
+        url = category ? `${url}&category=${category}`:url;
+        const res = await fetch(url, {
+            headers: {
+                Authorization: `token ${session?.user.token}`,
+                "Content-Type": "application/json",
+            },
+        });
+        if (!res.ok) {
+            throw new Error("Failed to fetch article");
+        }
+        const data = await res.json();
+        return data as ArticlePaginationType;
+    } catch (error) {
+        console.error("Error fetching article:", error);
+        throw error; // Rethrow the error to handle it at the caller level if needed
+    }
+};
+
 export const getTotalArticles = async () => {
     try {
         const session = await getSession();
