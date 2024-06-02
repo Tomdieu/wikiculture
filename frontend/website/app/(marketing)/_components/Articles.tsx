@@ -1,3 +1,4 @@
+"use client"
 import { getLatestArticles } from "@/actions/articles";
 import { formatDate } from "@/lib/formatDate";
 import React from "react";
@@ -5,13 +6,26 @@ import DOMPurify from 'dompurify';
 import Article from "./Article";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useQuery } from "@tanstack/react-query";
 type Props = {};
 
-const Articles = async (props: Props) => {
-  const latestArticles = await getLatestArticles()
-  if(!latestArticles){
-    return (
-      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
+const Articles = (props: Props) => {
+  // const latestArticles = await getLatestArticles()
+  const {data:latestArticles,isLoading} = useQuery({
+    queryKey:["latest-articles"],
+    queryFn:()=>getLatestArticles()
+  })
+  return (
+    <section className="w-full px-10 py-12 space-y-2">
+      <div className="text-center space-y-2">
+        <h1 className="inline-block rounded-lg px-3 py-1 text-2xl font-bold">Articles</h1>
+        <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
+          Latest Articles
+        </h2>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {isLoading && (
+          <>
           {Array.from({ length: 10 }).map((_, index) => (
               <div className="flex h-full max-w-xl flex-col items-start justify-between border p-5 rounded-sm">
                   <div className="flex items-center gap-x-4 text-xs w-full">
@@ -40,19 +54,9 @@ const Articles = async (props: Props) => {
                   </div>
               </div>
           ))}
-      </div>
-  )
-  }
-  return (
-    <section className="w-full px-10 py-12 space-y-2">
-      <div className="text-center space-y-2">
-        <h1 className="inline-block rounded-lg px-3 py-1 text-sm">Articles</h1>
-        <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
-          Latest Articles
-        </h2>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {latestArticles.map((article)=>{
+          </>
+        )}
+        {latestArticles?.map((article)=>{
           return (
            <Link key={article.id} href={`/articles/${article.id}`}>
             <Article key={article.id}  article={article}/>
