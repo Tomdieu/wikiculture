@@ -110,11 +110,16 @@ class ArticleRevision(models.Model):
 
 class ArticleLike(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name="likes")
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE,null=True,blank=True)
+    ip_address = models.CharField(max_length=45, blank=True)
+    user_agent = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
         return f"{self.user} Liked {self.article}"
+    
+    class Meta:
+        unique_together = ('article','user','ip_address','user_agent',)
 
 
 class ReadingTime(models.Model):
