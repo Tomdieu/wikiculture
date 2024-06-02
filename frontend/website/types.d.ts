@@ -17,7 +17,7 @@ export declare interface UpdateUserType {
   email?: string;
   bio?: string;
   image?: string;
-  user_type?: "User" | "Moderator" | "Admin";
+  user_type?:string;
 }
 
 export declare interface NextAuthUserType extends UserType {

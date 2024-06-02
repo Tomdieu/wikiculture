@@ -54,7 +54,7 @@ const DisplayUserModal = ({ user }: DisplayUserModalProps) => {
 
   async function onSubmit(values: updateUserSchemaType) {
     setIsSubmiting(true);
-    const res = await updateUser(user.id,values)
+    const res = await updateUser(user.id,{...values})
     if(res.id){
       toast.success("User updated successfully")
     }else{
