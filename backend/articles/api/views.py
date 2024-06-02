@@ -43,7 +43,7 @@ from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from api.lib.recommend_articles import recommend_articles
-from django.db.models import Q,Count,Sum
+from django.db.models import Q, Count, Sum
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
@@ -76,12 +76,23 @@ class ArticleViewSet(
             "retrieve",
             "latest",
             "with_recommendations",
+            "newest",
+            "popular",
+            "most_read",
         ]:  # AllowAny for 'list' action
             return [AllowAny()]
         return [IsAuthenticated()]  # For other actions, use IsAuthenticated permission
 
     def get_serializer_class(self):
-        if self.action in ["list", "retrieve", "mine", "latest"]:
+        if self.action in [
+            "list",
+            "retrieve",
+            "mine",
+            "latest",
+            "newest",
+            "popular",
+            "most_read",
+        ]:
             return ArticleListSerializer
         elif self.action in ["with_recommendations"]:
             return ArticleListWithRecommendationSerializer
@@ -97,17 +108,15 @@ class ArticleViewSet(
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
-    
+
     def retrieve(self, request, *args, **kwargs):
         # Capture the visitor's IP address and user-agent
         instance = self.get_object()
-        ip_address = request.META.get('REMOTE_ADDR')
-        user_agent = request.META.get('HTTP_USER_AGENT', '')
+        ip_address = request.META.get("REMOTE_ADDR")
+        user_agent = request.META.get("HTTP_USER_AGENT", "")
         try:
             ArticleVistors.objects.create(
-            article=instance,
-            ip_address=ip_address,
-            user_agent=user_agent
+                article=instance, ip_address=ip_address, user_agent=user_agent
             )
         except Exception as e:
             pass
@@ -129,10 +138,16 @@ class ArticleViewSet(
         user = request.user
         articles = Article.objects.filter(author_id=user.id)
         return Response({"total": len(articles)})
-    
-    @action(detail=False, methods=['get'], url_path='newest')
+
+    @action(methods=["get"], detail=False)
+    def latest(self, request, *args, **kwargs):
+        queryset = Article.objects.all()[:10]
+        serializer = ArticleListSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=["get"], url_path="newest")
     def newest(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset().order_by('-created_at'))
+        queryset = self.filter_queryset(self.get_queryset().order_by("-created_at"))
 
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -141,11 +156,14 @@ class ArticleViewSet(
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
-    
-    @action(detail=False, methods=['get'], url_path='popular')
+
+    @action(detail=False, methods=["get"], url_path="popular")
     def popular(self, request, *args, **kwargs):
         queryset = self.filter_queryset(
-            self.get_queryset().annotate(likes_count=Count('likes')).order_by('-likes_count')
+            self.get_queryset()
+            .annotate(likes_count=Count("likes"))
+            .order_by("-likes_count")
+            .filter(likes_count__gt=0)
         )
 
         page = self.paginate_queryset(queryset)
@@ -156,10 +174,13 @@ class ArticleViewSet(
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-    @action(detail=False, methods=['get'], url_path='most_read')
+    @action(detail=False, methods=["get"], url_path="most_read")
     def most_read(self, request, *args, **kwargs):
         queryset = self.filter_queryset(
-            self.get_queryset().annotate(total_time_spent=Sum('readingtime__total_time_spent')).order_by('-total_time_spent')
+            self.get_queryset()
+            .annotate(total_time_spent=Sum("readingtime__total_time_spent"))
+            .order_by("-total_time_spent")
+            .filter(total_time_spent__gt=0)
         )
 
         page = self.paginate_queryset(queryset)
@@ -217,12 +238,6 @@ class ArticleViewSet(
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
-
-    @action(methods=["get"], detail=False)
-    def latest(self, request, *args, **kwargs):
-        queryset = Article.objects.all()[:5]
-        serializer = ArticleListSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(detail=True)
     def versions(self, request, *args, **kwargs):
