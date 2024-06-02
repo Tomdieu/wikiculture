@@ -79,11 +79,15 @@ class ArticleViewSet(
             "newest",
             "popular",
             "most_read",
+            "like",
+            "likes",
         ]:  # AllowAny for 'list' action
             return [AllowAny()]
         return [IsAuthenticated()]  # For other actions, use IsAuthenticated permission
 
     def get_serializer_class(self):
+        if self.action in ["like","total"]:
+            return None
         if self.action in [
             "list",
             "retrieve",
@@ -111,9 +115,9 @@ class ArticleViewSet(
 
     def retrieve(self, request, *args, **kwargs):
         # Capture the visitor's IP address and user-agent
-        instance:Article = self.get_object()
+        instance: Article = self.get_object()
         user = request.user
-        
+
         ip_address = request.META.get("REMOTE_ADDR")
         user_agent = request.META.get("HTTP_USER_AGENT", "")
         try:
@@ -143,6 +147,57 @@ class ArticleViewSet(
             headers=headers,
         )
 
+    @swagger_auto_schema(
+        operation_description="Like an article",
+        request_body=None,
+        responses={
+            201: openapi.Response(
+                description="Article liked",
+                examples={"application/json": {"message": "Article liked"}},
+            )
+        },
+    )
+    @action(methods=["post"], detail=True)
+    def like(self, request, *args, **kwargs):
+        user = request.user if (request.user and request.user.id) is not None else None
+        instance = self.get_object()
+        user_agent = request.META.get("HTTP_USER_AGENT", "")
+        ArticleLike.objects.create(
+            article=instance,
+            user=user,
+            ip_address=request.user_ip,
+            user_agent=user_agent,
+        )
+
+        return Response({"message": "Article liked"}, status=status.HTTP_201_CREATED)
+
+    @swagger_auto_schema(
+        operation_description="Get the number of likes of an article",
+        request_body=None,
+        responses={
+            200: openapi.Response(
+                description="Number of likes",
+                examples={"application/json": {"likes": 123}},
+            )
+        },
+    )
+    @action(methods=["get"], detail=True)
+    def likes(self, request, *args, **kwargs):
+        instance = self.get_object()
+        articles_likes = ArticleLike.objects.filter(article=instance)
+
+        return Response({"likes": len(articles_likes)})
+
+    @swagger_auto_schema(
+        operation_description="Total number of articles",
+        request_body=None,
+        responses={
+            200: openapi.Response(
+                description="Total number of aricles",
+                examples={"application/json": {"total": 100}},
+            )
+        },
+    )
     @action(detail=False)
     def total(self, request, *args, **kwargs):
         user = request.user
