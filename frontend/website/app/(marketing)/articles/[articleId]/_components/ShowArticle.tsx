@@ -1,5 +1,5 @@
 import { ArticleWithRecommendationType } from '@/types'
-import { getArticleLikes, getArticleWithRecommendation, trackUserReadingTime } from "@/actions/articles";
+import { getArticleLikes, getArticleWithRecommendation, likeArticle, trackUserReadingTime } from "@/actions/articles";
 import { formatDate } from "@/lib/formatDate";
 import Link from "next/link";
 import React, { useMemo } from "react";
@@ -12,8 +12,10 @@ import Article from '@/app/(marketing)/_components/Article';
 import { useState, useEffect } from "react"
 import _ from "lodash"
 import { LinkedInLogoIcon, TwitterLogoIcon } from '@radix-ui/react-icons';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import CountUp from 'react-countup';
+import AnimatedLikeButton from './AnimatedLikeButton';
+import { getFullName } from '@/lib/getFullName';
 
 type Props = {
     articleData: ArticleWithRecommendationType
@@ -30,6 +32,8 @@ const ShowArticle = ({ articleData }: Props) => {
         queryKey: ["article-likes", article.id],
         queryFn: () => getArticleLikes(article.id)
     })
+
+    const queryClient = useQueryClient()
 
     const [timeSpent, setTimeSpent] = useState(0);
     const [intervalId, setIntervalId] = useState<number | null | NodeJS.Timeout>(null);
@@ -79,7 +83,15 @@ const ShowArticle = ({ articleData }: Props) => {
         }
     };
 
+    const handleLikeArticle = async () => {
+        const liked = await likeArticle(article.id);
+        if (liked.message) {
+            queryClient.invalidateQueries({
+                queryKey: ["article-likes", article.id]
+            })
+        }
 
+    }
 
     const throttledHandleScroll = useMemo(() => _.throttle(handleScroll, 200), [hasReachedEnd]);
 
@@ -103,18 +115,18 @@ const ShowArticle = ({ articleData }: Props) => {
                             >
                                 {formatDate(article.created_at)}
                             </time>
-                            <span className="text-gray-400">1 min read</span>
+                            <span className="text-gray-400">2 min read</span>
                             <Link
                                 href={`/author/${article.author.username}`}
                                 className="hover:underline text-blue-500"
                             >
                                 <span className="text-xs font-medium ">
-                                    {article.author.username}
+                                    {getFullName(article.author)}
                                 </span>
                             </Link>
-                            <Link href={"#"} className="text-gray-400">
+                            {/* <Link href={"#"} className="text-gray-400">
                                 Chats: 2
-                            </Link>
+                            </Link> */}
                             <div className="space-x-1">
                                 {article.categories.map((cat, index) => (
                                     <Link
@@ -153,7 +165,7 @@ const ShowArticle = ({ articleData }: Props) => {
                         </div>
                         <div className="flex items-center justify-between space-x-3">
                             <div className="flex items-center  space-x-3">
-                                <h3 className="text-xl">Share : </h3>
+                                <h3 className="text-lg">Share : </h3>
                                 <div className="border rounded flex">
                                     <Link
                                         href={`http://twitter.com/share?text=${article.title}&url=`}
@@ -171,17 +183,12 @@ const ShowArticle = ({ articleData }: Props) => {
                                     </Link>
                                 </div>
                             </div>
-                            <div className="flex items-center justify-center py-1 space-x-2 border rounded-full px-2 cursor-pointer text-muted-foreground">
+                            <AnimatedLikeButton onClick={handleLikeArticle} articleLikes={articleLikes} />
 
-                                {articleLikes && (
-                                    <CountUp end={articleLikes?.likes} />
-                                )}
-                                <ThumbsUpIcon className='w-5 h-5 text-blue-500 animate-out' />
-                            </div>
                         </div>
-                        <div>
+                        {/* <div>
                             <Textarea placeholder="Type your comment..."></Textarea>
-                        </div>
+                        </div> */}
                     </article>
                 </div>
                 <div className="w-full md:w-1/4 p-0 space-y-3">
