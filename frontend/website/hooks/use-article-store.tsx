@@ -1,4 +1,5 @@
 import { updateArticle } from "@/actions/articles";
+import { revalidatePage } from "@/actions/revalidate";
 import { ArticleType, ArticleUpdateType } from "@/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { revalidatePath } from "next/cache";
@@ -50,6 +51,9 @@ export const useArticleStore = create(
             });
             set({ article: newData }); // Update store's state with new data
             toast.success("Updated Article");
+
+            // revalidate article page
+            revalidatePage(`/dashboard/articles/${article.id}/`)
 
           } catch (error) {
             toast.error("Could not save article");
