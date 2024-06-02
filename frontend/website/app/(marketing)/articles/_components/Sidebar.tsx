@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { useFilterStore } from '@/hooks/use-filter'
 import { cn } from '@/lib/utils'
@@ -61,13 +62,13 @@ const Sidebar = (props: Props) => {
   return (
     <div className='min-h-full h-full flex flex-col space-y-2 p-3 sticky top-0 bottom-0 overflow-y-auto'>
       <div className='flex items-center justify-between'>
-        <h1 className='text-lg font-bold flex items-center space-x-1'><Filter className='w-4 h-4'/>Filter</h1>
+        <h1 className='text-lg font-bold flex items-center space-x-1'><Filter className='w-4 h-4' />Filter</h1>
 
         {filters.isToClear && (
           <div className='flex items-center space-x-1'>
-            
+
             <div onClick={() => filters.clearFilter()} className="flex items-center space-x-1 rounded-full border px-1 py-1 text-muted-foreground select-none cursor-pointer">
-            <FilterX className='w-4 h-4' />
+              <FilterX className='w-4 h-4' />
               <span className='text-xs'>Clear Filter</span>
               <div className='rounded-full border w-5 h-5 flex items-center justify-center'>
                 <X className='w-3 h-3' />
@@ -185,14 +186,14 @@ const Sidebar = (props: Props) => {
                     Select Village
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent align="end" className="w-full p-0 max-h-[500px]">
-                  <Command className='relative top-0'>
+                <PopoverContent align="end" className="w-full p-0 max-h-[500px] overflow-auto">
+                  <Command className='relative top-0 max-h-[400px] overflow-auto'>
                     <CommandInput
                       placeholder="Search a village..."
                       className="h-9"
                     />
                     <CommandEmpty>No village found.</CommandEmpty>
-                    <CommandGroup>
+                    <CommandGroup forceMount value='villages' heading={`Villages (${villages?.length})`}>
                       {villages?.map((_village) => (
                         <CommandItem
                           key={_village.name}
