@@ -341,3 +341,52 @@ export const trackUserReadingTime = async (articleId: number,timeSpent:number) =
         throw error;
     }
 }
+
+export const likeArticle = async (articleId: number)=>{
+    try {
+        const session = await getSession();
+        
+
+        const url = `${process.env.NEXT_PUBLIC_ARTICLE_URL}/api/articles/${articleId}/like/`;
+        
+        const res = await fetch(url, {
+            method:"POST",
+            headers: {
+                Authorization: `token ${session?.user.token}`,
+                "Content-Type": "application/json",
+            },
+        });
+        if (!res.ok) {
+            throw new Error("Failed to fetch article");
+        }
+        const data = (await res.json());
+        return data;
+    } catch (error) {
+        console.error("Error fetching article:", error);
+        throw error;
+    }
+}
+
+export const getArticleLikes = async (articleId: number)=>{
+    try {
+        const session = await getSession();
+        
+
+        const url = `${process.env.NEXT_PUBLIC_ARTICLE_URL}/api/articles/${articleId}/likes/`;
+        
+        const res = await fetch(url, {
+            headers: {
+                Authorization: `token ${session?.user.token}`,
+                "Content-Type": "application/json",
+            },
+        });
+        if (!res.ok) {
+            throw new Error("Failed to fetch article");
+        }
+        const data = (await res.json()) as {"likes":number};
+        return data;
+    } catch (error) {
+        console.error("Error fetching article:", error);
+        throw error;
+    }
+}
