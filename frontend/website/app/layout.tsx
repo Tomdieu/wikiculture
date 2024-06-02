@@ -105,11 +105,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning={true}>
+    <html lang="en" suppressHydrationWarning={true} suppressContentEditableWarning>
       <NextAuthProvider>
         <body
           suppressHydrationWarning={true}
           className={`${poppins.variable} w-full h-screen p-0 font-poppins`}
+          suppressContentEditableWarning
         >
           <ReactQueryProvider>
             <ThemeProvider
