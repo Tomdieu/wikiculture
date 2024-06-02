@@ -6,7 +6,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from "./ui/dropdown-menu";
 import { MoreHorizontalIcon } from "lucide-react";
 import { getSession } from "@/lib/getSession";
@@ -18,7 +18,7 @@ type Props = {};
 const Header = async (props: Props) => {
   const session = await getSession();
   return (
-    <div className="flex items-center justify-between p-3  xl:p-6 border-b sticky top-0 backdrop-blur backdrop-filter bg-white">
+    <div className="flex items-center justify-between p-3  xl:p-6 border-b">
       <Link className="flex items-center justify-center" href="/">
         <h1 className="text-2xl font-bold">Wikiculture</h1>
       </Link>
@@ -56,32 +56,32 @@ const Header = async (props: Props) => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem>
+            <DropdownMenuItem asChild>
               <Link
                 className="text-sm font-medium hover:underline underline-offset-4"
-                href="#"
+                href="/explore"
               >
                 Explore
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem asChild>
               <Link
                 className="text-sm font-medium hover:underline underline-offset-4"
-                href="#"
+                href="/articles"
               >
                 Articles
               </Link>
             </DropdownMenuItem>
 
-            <DropdownMenuItem>
+            <DropdownMenuItem asChild>
               <Link
                 className="text-sm font-medium hover:underline underline-offset-4"
-                href="#"
+                href="/about"
               >
                 About
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem asChild>
               <Link
                 className="text-sm font-medium hover:underline underline-offset-4"
                 href="/login"
@@ -89,7 +89,7 @@ const Header = async (props: Props) => {
                 Sign In
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem asChild>
               <Link
                 className="text-sm font-medium hover:underline underline-offset-4"
                 href="/register"
