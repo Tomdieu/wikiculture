@@ -17,12 +17,12 @@ const ArticlesPage = (props: Props) => {
 
   return (
     <ResizablePanelGroup direction="horizontal" className='flex h-full'>
-      <ResizablePanel defaultSize={25}>
+      <ResizablePanel defaultSize={25} className='hidden md:flex'>
         <Sidebar />
       </ResizablePanel>
       <ResizableHandle />
 
-      <ResizablePanel defaultSize={75}>
+      <ResizablePanel defaultSize={75} minSize={25}>
 
         <div className='w-full h-full p-2'>
           {!filters.getQueryParams() && (
