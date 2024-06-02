@@ -55,14 +55,22 @@ const ArticlesList = (props: Props) => {
 
     return (
         <section className='w-full h-full p-2 space-y-2'>
+            {data?.count !== 0 && (
+
             <h1 className='font-semibold mb-5 text-2xl'>Article Found  {data && <span className='text-md'>({data?.count})</span>} </h1>
-            <div>{getQueryParams()}</div>
+            )}
+            {data?.count === 0 && (
+
+                <div className='w-full h-full flex items-center justify-center'>
+                <p className='lg:text-2xl text-red-400 font-semibold'>No Articles found from the filters</p>
+            </div>
+            )}
             <section className='grid grid-cols-4 space-x-2 gap-2'>
                 {data?.results.map((article, index) => <Article article={article} key={index} />)}
             </section>
             {data && (
 
-            <ArticlePagination articlePagination={data} currentPage={parseInt(page)} />
+                <ArticlePagination articlePagination={data} currentPage={parseInt(page)} />
             )}
         </section>
     )

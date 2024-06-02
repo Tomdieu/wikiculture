@@ -65,10 +65,7 @@ const Sidebar = (props: Props) => {
 
         {filters.isToClear && (
           <div className='flex items-center space-x-1'>
-            <Button className='w-8 h-8 border' variant={"ghost"} size={"icon"}>
-              <Search className='w-4 h-4 text-muted-foreground' />
-              <span className='sr-only'>Search</span>
-            </Button>
+            
             <div onClick={() => filters.clearFilter()} className="flex items-center space-x-1 rounded-full border px-1 py-1 text-muted-foreground select-none cursor-pointer">
             <FilterX className='w-4 h-4' />
               <span className='text-xs'>Clear Filter</span>
