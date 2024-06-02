@@ -1,0 +1,1 @@
+export const articleFilter = [{ value: "newest", label: "Latest" }, { value: "popular", label: "Popular" }, { value: "most_read", label: "Most read" }]
