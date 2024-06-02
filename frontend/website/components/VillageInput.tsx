@@ -299,7 +299,7 @@ const VillageInput = ({
                         <CheckIcon
                           className={cn(
                             "ml-auto h-4 w-4",
-                            region?.name === _village.name
+                            village?.name === _village.name
                               ? "opacity-100"
                               : "opacity-0"
                           )}

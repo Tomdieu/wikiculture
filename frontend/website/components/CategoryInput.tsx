@@ -18,7 +18,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useQuery } from "@tanstack/react-query";
-import { getCategories } from "@/actions/articles";
+import { getAllCategories, getCategories } from "@/actions/articles";
 import { CategoryType } from "@/types";
 import { Skeleton } from "./ui/skeleton";
 
@@ -41,12 +41,12 @@ export default function CategoryInput({
 
   const { data, isSuccess, isLoading, isError, error } = useQuery({
     queryKey: ["categories"],
-    queryFn: () => getCategories(),
+    queryFn: () => getAllCategories(),
   });
 
   useEffect(() => {
     if (data) {
-      setCategories(data?.results);
+      setCategories(data);
     }
   }, [data, isSuccess, setCategories]);
 
