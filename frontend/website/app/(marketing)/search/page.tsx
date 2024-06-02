@@ -9,6 +9,7 @@ import { useQuery } from '@tanstack/react-query'
 import { searchArticles } from '@/actions/search'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cleanHtml } from '@/lib/cleanHtml'
+import SearchPagination from './_components/SearchPagination'
 
 type Props = {}
 
@@ -65,7 +66,7 @@ const page = (props: Props) => {
           </form>
           <div className="space-y-6 w-full">
             <div className="flex flex-col gap-2 w-full">
-              {Array.from({ length: 10 }).map((_, index) => (
+              {Array.from({ length: 6 }).map((_, index) => (
                 <div className="group" key={index}>
                   <Skeleton className="h-6 w-48 mb-2" />
                   <Skeleton className="h-4 w-full mb-1" />
@@ -121,6 +122,10 @@ const page = (props: Props) => {
               </Link>
             ))}
           </div>
+          {data && (
+
+          <SearchPagination searchPagination={data} currentPage={parseInt(page)}/>
+          )}
         </div>
       </div>
     </div>
