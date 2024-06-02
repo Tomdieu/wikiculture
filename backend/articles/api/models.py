@@ -140,9 +140,10 @@ class ArticleVistors(models.Model):
     article = models.ForeignKey(Article,on_delete=models.CASCADE,related_name="visitors")
     date = models.DateField(default=timezone.now)
     ip_address = models.CharField(max_length=45, blank=True)
+    user_agent = models.CharField(max_length=255)
 
     class Meta:
-        unique_together = ('article', 'date','ip_address') 
+        unique_together = ('article', 'date','user_agent','ip_address') 
 
         
 
