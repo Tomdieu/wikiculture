@@ -54,6 +54,35 @@ class CheckUserNameView(APIView):
 
         return Response({"exists": exists})
 
+class GetUserByUserName(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        operation_description="Get a user by username",
+        manual_parameters=[
+            openapi.Parameter(
+                "username",
+                openapi.IN_PATH,
+                description="username to check",
+                type=openapi.TYPE_STRING,
+            ),
+        ],
+    )
+    def get(self, requests, username=None):
+
+        if username:
+            users = User.objects.filter(username=username)
+            if users.exists():
+                queryset = users.first()
+                serializer = UserSerializer(queryset,context={'request':requests})
+                return Response(serializer.data)
+
+            else:
+                return Response({"message":f"user with username {username} not found"},status=status.HTTP_404_NOT_FOUND)
+
+        else:
+            return Response({"message":"Please provide the username"},status=status.HTTP_400_BAD_REQUEST)
+
 
 class LoginViewSet(GenericViewSet, CreateAPIView):
     serializer_class = LoginSerializer
