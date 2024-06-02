@@ -40,6 +40,27 @@ export const getArticle = async (articleId: number) => {
     }
 };
 
+export const getFilteredArticle = async (filters?:string,page:string="1") => {
+    try {
+        const session = await getSession();
+        const url = `${process.env.NEXT_PUBLIC_ARTICLE_URL}/api/articles/?page=${page}&${filters}`;
+        const res = await fetch(url, {
+            headers: {
+                Authorization: `token ${session?.user.token}`,
+                "Content-Type": "application/json",
+            },
+        });
+        if (!res.ok) {
+            throw new Error("Failed to fetch article");
+        }
+        const data = await res.json();
+        return data as ArticlePaginationType;
+    } catch (error) {
+        console.error("Error fetching article:", error);
+        throw error; // Rethrow the error to handle it at the caller level if needed
+    }
+};
+
 export const getTotalArticles = async () => {
     try {
         const session = await getSession();
@@ -138,6 +159,19 @@ export const getCategories = async () => {
         },
     });
     const data = (await res.json()) as CategoryPaginationType;
+    return data;
+}
+
+export const getAllCategories = async () => {
+    const session = await getSession();
+    const url = `${process.env.NEXT_PUBLIC_ARTICLE_URL}/api/categories/all/`;
+    const res = await fetch(url, {
+        headers: {
+            Authorization: `token ${session?.user.token}`,
+            "Content-Type": "application/json",
+        },
+    });
+    const data = (await res.json()) as CategoryType[];
     return data;
 }
 
