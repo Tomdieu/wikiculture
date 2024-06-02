@@ -12,27 +12,28 @@ type Props = {
   };
 };
 
-const ArticleDetail =  ({ params: { articleId } }: Props) => {
-  
-  const {data,isLoading,isError} = useQuery({
-    queryKey:["article",articleId],
-    queryFn:()=>getArticleWithRecommendation(articleId)
+const ArticleDetail = ({ params: { articleId } }: Props) => {
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["article", articleId],
+    queryFn: () => getArticleWithRecommendation(articleId),
+    retry: false
   })
 
-  if(isLoading){
+  if (isLoading) {
     return (
       <>
-       <ArticleSkeleton/>
+        <ArticleSkeleton />
       </>
     )
   }
 
-  if(isError){
+  if (isError) {
     return notFound()
   }
 
-  if(!isLoading && data){
-    return <ShowArticle articleData={data}/>
+  if (!isLoading && data) {
+    return <ShowArticle articleData={data} />
   }
 
   return null;
