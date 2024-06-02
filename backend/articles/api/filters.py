@@ -19,7 +19,7 @@ class ArticleFilter(filters.FilterSet):
     villages_list = BaseInFilter(field_name="village__name", lookup_expr="in")
     regions_list = BaseInFilter(field_name="village__region__name", lookup_expr="in")
     cultural_areas_list = BaseInFilter(
-        field_name="village__region__cultural_area__name", lookup_expr="in"
+        field_name="village__region__cultural_area__name", lookup_expr="in" 
     )
     username = django_filters.CharFilter(
         field_name="author__username", lookup_expr="iexact"
