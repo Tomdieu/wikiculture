@@ -124,7 +124,12 @@ export default function ArticlePage({
             </h1>
           </div>
           <div className="flex items-center space-x-2">
-            {["Admin","Moderator"].includes(userSession?.user.user_type!) && <Approve article={data!} />}
+            {["Admin","Moderator"].includes(userSession?.user.user_type!) && (
+              <>
+              {/* Here we make sure that only if an article was created by an admin it can not be un approved */}
+              {article.author?.user_type !== "Admin" && <Approve article={data!} />}
+              </>
+            )}
             
 
             <Publish article={data!} />
