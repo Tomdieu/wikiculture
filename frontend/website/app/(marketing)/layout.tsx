@@ -1,3 +1,4 @@
+import ExtraFooter from "@/components/ExtraFooter";
 import Header from "@/components/Header";
 import Footer from "@/components/footer";
 import React from "react";
@@ -14,6 +15,7 @@ const layout = ({ children }: Props) => {
 
       {children}
       </main>
+      <ExtraFooter/>
       <Footer/>
     </div>
   );
