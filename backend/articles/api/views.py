@@ -48,7 +48,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
 from django_filters.rest_framework import DjangoFilterBackend
-from .filters import ArticleFilter
+from .filters import ArticleFilter, CulturalAreaFilter
 
 
 # Create your views here.
@@ -380,6 +380,15 @@ class CategoryViewSet(
 ):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    authentication_classes = [TokenAuthentication]
+
+    def get_permissions(self):
+        if self.action in ["list", "retrieve", "all"]:  # AllowAny for 'list' action
+            return [AllowAny()]
+        return [IsAuthenticated()]  # For other actions, use IsAuthenticated permission
+
+    def get_permissions(self):
+        return super().get_permissions()
 
     @action(methods=["get"], detail=False)
     def all(self, requests, *args, **kwargs):
@@ -393,6 +402,26 @@ class CulturalAreaViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin):
     queryset = CulturalArea.objects.all()
     serializer_class = CulturalAreaSerializer
     permission_classes = [AllowAny]
+    authentication_classes = [TokenAuthentication]
+
+
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = CulturalAreaFilter
+
+    def get_permissions(self):
+        if self.action in [
+            "list",
+            "retrieve",
+            "all",
+            "get_by_name",
+        ]:  # AllowAny for 'list' action
+            return [AllowAny()]
+        return [IsAuthenticated()]  # For other actions, use IsAuthenticated permission
+
+    def get_serializer_class(self):
+        if self.action in ["all"]:
+            return CulturalListSerializer
+        return CulturalAreaSerializer
 
     @action(detail=False)
     def all(self, requests, *args, **kwargs):
@@ -400,17 +429,57 @@ class CulturalAreaViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin):
         serializer = CulturalListSerializer(queryset, many=True)
         return Response(serializer.data)
 
+    @swagger_auto_schema(
+        operation_description="List of articles with optional query params",
+        manual_parameters=[
+            openapi.Parameter(
+                "name",
+                openapi.IN_QUERY,
+                description="Search cultural area",
+                type=openapi.TYPE_STRING,
+                required=True,
+            ),
+        ],
+    )
+    @action(detail=False, url_path="get")
+    def get_by_name(self, requests, *args, **kwargs):
+        name = requests.query_params.get("name", None)
+        if name:
+            queryset = CulturalArea.objects.filter(name__icontains=name)
+            if not queryset.exists():
+                return Response(
+                    {"detail": "Not Found"}, status=status.HTTP_404_NOT_FOUND
+                )
+            cultural_area = queryset.first()
+            serializer = CulturalAreaSerializer(cultural_area)
+            return Response(serializer.data)
+        else:
+            return Response(
+                {"detail": "Provide the query parameter name"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
 
 class RegionViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin):
     queryset = Region.objects.all()
     serializer_class = RegionSerializer
     permission_classes = [AllowAny]
+    authentication_classes = [TokenAuthentication]
+
+
+    @action(detail=False)
+    def all(self, requests, *args, **kwargs):
+        queryset = Region.objects.all()
+        serializer = RegionSerializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class VillageViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin):
     queryset = Village.objects.all()
     serializer_class = VillageSerializer
     permission_classes = [AllowAny]
+    authentication_classes = [TokenAuthentication]
+
 
     @swagger_auto_schema(
         operation_description="List of articles with optional query params",
