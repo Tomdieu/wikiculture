@@ -1,6 +1,6 @@
 "use server";
 
-import { RegionPaginationType } from "@/types";
+import { RegionPaginationType, RegionType } from "@/types";
 
 
 export const getRegions = async (page:string="1") => {
@@ -17,7 +17,26 @@ export const getRegions = async (page:string="1") => {
       const data = await res.json() as RegionPaginationType;
       return data;
     }catch(error){
-      console.error("Error fetching cultural areas:", error);
+      console.error("Error fetching regions:", error);
+      throw error; // Rethrow the error to handle it at the caller level if needed
+    }
+  }
+
+  export const getAllRegions = async () => {
+    try{
+      const url = `${process.env.NEXT_PUBLIC_ARTICLE_URL}/api/regions/all/`;
+      const res = await fetch(url, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!res.ok) {
+        throw new Error("Failed to fetch article");
+      }
+      const data = await res.json() as RegionType[];
+      return data;
+    }catch(error){
+      console.error("Error fetching regions:", error);
       throw error; // Rethrow the error to handle it at the caller level if needed
     }
   }
