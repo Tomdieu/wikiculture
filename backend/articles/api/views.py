@@ -372,11 +372,8 @@ class ArticleViewSet(
 
 class CategoryViewSet(
     GenericViewSet,
-    CreateModelMixin,
     RetrieveModelMixin,
     ListModelMixin,
-    DestroyModelMixin,
-    UpdateModelMixin,
 ):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer

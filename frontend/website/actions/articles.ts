@@ -57,7 +57,7 @@ export const getFilteredArticle = async (
     const url = `${process.env.NEXT_PUBLIC_ARTICLE_URL}/api/articles/?page=${page}&${filters}`;
     const res = await fetch(url, {
       headers: {
-        Authorization: `token ${session?.user.token}`,
+        // Authorization: `token ${session?.user.token}`,
         "Content-Type": "application/json",
       },
       // cache:"no-store"
@@ -84,7 +84,7 @@ export const getExploreFilteredArticle = async (
     url = category ? `${url}&category=${category}` : url;
     const res = await fetch(url, {
       headers: {
-        Authorization: `token ${session?.user.token}`,
+        // Authorization: `token ${session?.user.token}`,
         "Content-Type": "application/json",
       },
     });
@@ -191,7 +191,7 @@ export const getCategories = async () => {
   const url = `${process.env.NEXT_PUBLIC_ARTICLE_URL}/api/categories/`;
   const res = await fetch(url, {
     headers: {
-      Authorization: `token ${session?.user.token}`,
+      // Authorization: `token ${session?.user.token}`,
       "Content-Type": "application/json",
     },
   });
@@ -204,7 +204,7 @@ export const getAllCategories = async () => {
   const url = `${process.env.NEXT_PUBLIC_ARTICLE_URL}/api/categories/all/`;
   const res = await fetch(url, {
     headers: {
-      Authorization: `token ${session?.user.token}`,
+      // Authorization: `token ${session?.user.token}`,
       "Content-Type": "application/json",
     },
     cache: "no-store",
@@ -391,7 +391,7 @@ export const getArticleLikes = async (articleId: number) => {
 
     const res = await fetch(url, {
       headers: {
-        Authorization: `token ${session?.user.token}`,
+        // Authorization: `token ${session?.user.token}`,
         "Content-Type": "application/json",
       },
     });

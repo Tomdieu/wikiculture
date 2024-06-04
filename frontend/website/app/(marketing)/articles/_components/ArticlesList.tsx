@@ -66,7 +66,7 @@ const ArticlesList = (props: Props) => {
                 <p className='lg:text-2xl text-red-400 font-semibold'>No Articles found from the filters</p>
             </div>
             )}
-            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2'>
                 {data?.results.map((article, index) => <Link href={`/articles/${article.id}/`}><Article article={article} key={index} /></Link>)}
             </div>
             {data && (

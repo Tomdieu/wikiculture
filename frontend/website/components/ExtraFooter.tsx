@@ -51,7 +51,7 @@ const ExtraFooter = (props: Props) => {
               {isCategoriesLoading && (
                 <Loader className="w-5 h-4 animate-spin" />
               )}
-              {/* {categories?.map((category, index) => (
+              {categories?.map((category, index) => (
                 <li>
                   <Link
                     href={`/articles?category=${category.name}`}
@@ -66,7 +66,7 @@ const ExtraFooter = (props: Props) => {
                     {category.name}
                   </Link>
                 </li>
-              ))} */}
+              ))}
             </ul>
           </div>
           <div>
