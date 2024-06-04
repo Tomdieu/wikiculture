@@ -78,14 +78,14 @@ class Command(BaseCommand):
 
         for cultural_area_name, regions in cultural_areas_data.items():
             cultural_area, created = CulturalArea.objects.get_or_create(
-                name=cultural_area_name, defaults={"description": ""}
+                name=cultural_area_name, defaults={"description": CULTURAL_AREA_DESCRIPTION[cultural_area_name]}
             )
             cultural_area_map[cultural_area_name] = cultural_area
 
             for region_name in regions:
                 region, created = Region.objects.get_or_create(
                     name=region_name,
-                    defaults={"description": CULTURAL_AREA_DESCRIPTION[cultural_area], "cultural_area": cultural_area},
+                    defaults={"description": "", "cultural_area": cultural_area},
                 )
                 region_map[region_name] = region
 
