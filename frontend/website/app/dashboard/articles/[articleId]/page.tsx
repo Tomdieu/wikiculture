@@ -24,6 +24,7 @@ import JoditEditor from "@/components/editor/JoditEditor";
 import VillageInput from "@/components/VillageInput";
 import Approve from "@/components/Approve";
 import { notFound } from "next/navigation";
+import Tiptap from "@/components/editor/Tiptap/Tiptap";
 
 const Editor = dynamic(() => import("@/components/Editor"), { ssr: false });
 
@@ -37,18 +38,16 @@ export default function ArticlePage({
   params: { articleId },
 }: ArticlePageParams) {
   const [mounted, setMounted] = useState(false);
-  
+
   const { article, setArticle, saveArticle, mutateArticle } = useArticleStore();
   const [content, setContent] = useState(article?.content || "");
 
-
   const [unsavedChanges, setUnsavedChanges] = useState(true);
 
-  const {data:userSession} = useQuery({
-    queryKey:["user"],
-    queryFn:()=>getSession()
-  })
-
+  const { data: userSession } = useQuery({
+    queryKey: ["user"],
+    queryFn: () => getSession(),
+  });
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["article", articleId],
@@ -70,21 +69,21 @@ export default function ArticlePage({
   }, [data, setArticle]);
 
   // Effect to attach and remove event listener
-  useEffect(() => {
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      if (unsavedChanges) {
-        event.preventDefault();
+  // useEffect(() => {
+  //   const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+  //     if (unsavedChanges) {
+  //       event.preventDefault();
 
-        event.returnValue = true; // Display a custom message in some browsers
-      }
-    };
+  //       event.returnValue = true; // Display a custom message in some browsers
+  //     }
+  //   };
 
-    window.addEventListener("beforeunload", handleBeforeUnload);
+  //   window.addEventListener("beforeunload", handleBeforeUnload);
 
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, [unsavedChanges]);
+  //   return () => {
+  //     window.removeEventListener("beforeunload", handleBeforeUnload);
+  //   };
+  // }, [unsavedChanges]);
 
   useEffect(() => {
     setMounted(true);
@@ -111,7 +110,7 @@ export default function ArticlePage({
   }
 
   if (isError) {
-    return notFound()
+    return notFound();
   }
 
   if (data && article?.id) {
@@ -124,13 +123,14 @@ export default function ArticlePage({
             </h1>
           </div>
           <div className="flex items-center space-x-2">
-            {["Admin","Moderator"].includes(userSession?.user.user_type!) && (
+            {["Admin", "Moderator"].includes(userSession?.user.user_type!) && (
               <>
-              {/* Here we make sure that only if an article was created by an admin it can not be un approved */}
-              {article.author?.user_type !== "Admin" && <Approve article={data!} />}
+                {/* Here we make sure that only if an article was created by an admin it can not be un approved */}
+                {article.author?.user_type !== "Admin" && (
+                  <Approve article={data!} />
+                )}
               </>
             )}
-            
 
             <Publish article={data!} />
             <More article={data!} />
@@ -139,7 +139,7 @@ export default function ArticlePage({
         <VillageInput
           village={article.village}
           onChange={(village) => {
-            if(village){
+            if (village) {
               mutateArticle({ village: village });
             }
           }}
@@ -155,13 +155,14 @@ nt) => {
         }} /> */}
 
         <JoditEditor
-          
           value={article.content!}
           onBlur={(newContent) => {
             mutateArticle({ content: newContent });
           }}
           onChange={(newContent) => {}}
+          height={400}
         />
+        {/* <Tiptap content={article.content!}  onChange={()=>{}} /> */}
         <CategoryInput
           onCategoryChange={(categories) => {
             mutateArticle({ categories });
@@ -169,7 +170,6 @@ nt) => {
           categories={article.categories || []}
         />
 
-        
         <TagInput
           onTagChange={(tags) => {
             mutateArticle({ tags });
