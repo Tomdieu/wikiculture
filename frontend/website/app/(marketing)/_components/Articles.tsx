@@ -27,7 +27,7 @@ const Articles = (props: Props) => {
         {isLoading && (
           <>
           {Array.from({ length: 10 }).map((_, index) => (
-              <div className="flex h-full max-w-xl flex-col items-start justify-between border p-5 rounded-sm">
+              <div key={index} className="flex h-full max-w-xl flex-col items-start justify-between border p-5 rounded-sm">
                   <div className="flex items-center gap-x-4 text-xs w-full">
                       <Skeleton className="h-4 w-24" />
                       <div className="flex-1 overflow-hidden">
