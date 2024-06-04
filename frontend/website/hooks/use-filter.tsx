@@ -2,7 +2,7 @@ import { getAllCategories } from "@/actions/articles";
 import { getAllCulturalAreas } from "@/actions/cultural_areas";
 import { CategoryType, CulturalAreaListType, RegionListType, VillageListType } from "@/types";
 import { create } from "zustand"
-import { createJSONStorage, persist } from "zustand/middleware";
+// import { createJSONStorage, persist } from "zustand/middleware";
 
 type FilterStoreType = {
     categories: Array<string>;
@@ -31,8 +31,8 @@ type FilterStoreType = {
 
 }
 
-export const useFilterStore = create(
-    persist<FilterStoreType>((set, get) => ({
+export const useFilterStore = create<FilterStoreType>(
+    (set, get) => ({
         isToClear: false,
         categories: [],
         cultural_areas: [],
@@ -41,7 +41,11 @@ export const useFilterStore = create(
         addCategory: (cat) => set((state) => ({ isToClear: true, categories: [...state.categories, cat] })),
         addCulturalArea: (cul) => set((state) => ({ isToClear: true, cultural_areas: [...state.cultural_areas, cul] })),
         addRegion: (reg) => set((state) => ({ isToClear: true, regions: [...state.regions, reg] })),
-        addVillage: (village) => set((state) => ({ isToClear: true, villages: [...state.villages, village] })),
+        addVillage: (village) => {
+            const villages = get().villages
+            const filteredVillages = villages.filter((_village) => village != _village)
+            set((state) => ({ isToClear: true, villages: [...filteredVillages, village] }))
+        },
         setCategories: (categories) => set({ isToClear: true, categories: categories }),
         setCulturalAreas: (culturalAreas) => set({ isToClear: true, cultural_areas: culturalAreas }),
         setRegions: (regions) => set({ isToClear: true, regions: regions }),
@@ -140,8 +144,5 @@ export const useFilterStore = create(
             return query;
         }
 
-    }), {
-        name: "filters-store",
-        storage: createJSONStorage(() => localStorage)
     })
 )
