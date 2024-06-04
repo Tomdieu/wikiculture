@@ -17,9 +17,17 @@ class ReadOnlyAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         return False
-    
-admin.site.register(ArticleVistors)
-admin.site.register(ArticleLike)
+
+@admin.register(ArticleVistors)
+class ArticleVistorsAdmin(ReadOnlyAdmin):
+    list_display = ['article','ip_address','user_agent','date']
+    list_filter = ['article','date','user_agent']
+
+
+@admin.register(ArticleLike)
+class ArticleLikeAdmin(ReadOnlyAdmin):
+    list_display = ['article','user','ip_address','user_agent','created_at']
+    list_filter = ['article','user','ip_address','created_at']
     
 @admin.register(CulturalArea)
 class CulturalAreaAdmin(admin.ModelAdmin):
