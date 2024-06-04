@@ -74,3 +74,21 @@
     @apply bg-background text-foreground;
   }
 }
+
+.jodit-wysiwyg,.ql-editor{
+  /* max-height: 400px; */
+  overflow-y: auto;
+}
+
+*::-webkit-scrollbar{
+  width: 5px;
+  border-radius: 2px;
+  background-color: rgb(42, 201, 103);
+}
+
+*::-webkit-scrollbar-thumb,html::-webkit-scrollbar-thumb,body::-webkit-scrollbar-thumb{
+  background-color: green;
+  height: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+}
