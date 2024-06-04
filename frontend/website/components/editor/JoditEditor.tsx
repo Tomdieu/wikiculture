@@ -1,6 +1,6 @@
 "use client"
-import React, { useMemo, useRef } from 'react'
-import Editor, { Jodit } from "jodit-react";
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import Editor, { IJoditEditorProps, Jodit } from "jodit-react";
 import { FileType } from '@/types';
 import { getSession } from '@/lib/getSession';
 import { useQuery } from '@tanstack/react-query';
@@ -9,14 +9,25 @@ import { useTheme } from 'next-themes';
 
 type Props = {
     value: string;
-    onBlur: (value: string) => void;
+    onBlur?: (value: string) => void;
     onChange: (value: string) => void;
-}
+    toolbar?:boolean;
+    statusbar?:boolean;
+    readonly?:boolean;
+    disable?:boolean;
+    height?:number;
+    safeMode?:boolean;
+} & IJoditEditorProps["config"]
 
-const JoditEditor = ({ value, onBlur, onChange }: Props) => {
+const JoditEditor = ({ value, onBlur, onChange,toolbar=true,statusbar=true,readonly=false,disable=false,safeMode=true,...others}: Props) => {
     const editor = useRef<Jodit>(null);
     const url = process.env.NEXT_PUBLIC_MEDIA_URL;
     const { theme } = useTheme();
+    const [content,setContent] = useState(value)
+
+    useEffect(()=>{
+        onChange(content)
+    },[content])
 
     const { data: user, isError, isLoading } = useQuery({
         queryKey: ["user"],
@@ -46,10 +57,16 @@ const JoditEditor = ({ value, onBlur, onChange }: Props) => {
 
     const config = useMemo(
         () => ({
-            readonly: false,
+            readonly: readonly,
+            statusbar:statusbar,
+            disable:disable,
             placeholder: 'Start typings...',
             editHTMLDocumentMode: true,
             theme:theme==="dark"?"dark":"light",
+            safeMode:safeMode,
+            zIndex:999999,
+            extraPlugins:['emoji'],
+            toolbar:toolbar,
             uploader: {
                 url: url + "/api/upload/",
                 headers: {
@@ -106,6 +123,7 @@ const JoditEditor = ({ value, onBlur, onChange }: Props) => {
                     }
                 }
             },
+            ...others
         }),
         [editor.current,theme]
     );
@@ -117,7 +135,8 @@ const JoditEditor = ({ value, onBlur, onChange }: Props) => {
             value={value}
             onBlur={onBlur}
             config={config}
-            onChange={onChange}
+            onChange={setContent}
+            className='max-h-[700px] relative'
         />
     )
 }
