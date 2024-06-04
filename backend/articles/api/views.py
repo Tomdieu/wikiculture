@@ -387,8 +387,6 @@ class CategoryViewSet(
             return [AllowAny()]
         return [IsAuthenticated()]  # For other actions, use IsAuthenticated permission
 
-    def get_permissions(self):
-        return super().get_permissions()
 
     @action(methods=["get"], detail=False)
     def all(self, requests, *args, **kwargs):
