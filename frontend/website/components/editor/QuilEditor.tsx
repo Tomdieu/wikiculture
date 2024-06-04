@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
-type Props = {};
+type Props = {
+  editable?: boolean;
+  content: string;
+  onChange:(value:string)=>void;
+};
 
 const formats = [
   "header",
@@ -69,8 +73,13 @@ const modules = {
   
 
 
-const QuilEditor = (props: Props) => {
-  const [value, setValue] = useState("");
+const QuilEditor = ({ content, editable = true ,onChange}: Props) => {
+  const [value, setValue] = useState(content);
+  useEffect(()=>{
+    if(onChange){
+      onChange(value)
+    }
+  },[value])
   return (
     <ReactQuill
       theme="snow"
@@ -78,6 +87,7 @@ const QuilEditor = (props: Props) => {
       value={value}
       onChange={setValue}
       modules={modules}
+      className="overflow-y-auto rounded-md"
     />
   );
 };
