@@ -44,14 +44,14 @@ class Category(models.Model):
 class CulturalArea(models.Model):
 
     name = models.CharField(max_length=255,unique=True)
-    description = models.TextField(blank=True,null=True)
+    description = RichTextField(blank=True,null=True)
 
     def __str__(self) -> str:
         return self.name
     
 class Region(models.Model):
     name = models.CharField(max_length=255,unique=True)
-    description = models.TextField(blank=True)
+    description = RichTextField(blank=True,null=True)
     cultural_area = models.ForeignKey(CulturalArea, on_delete=models.CASCADE,related_name='cultural_area')
 
     def __str__(self):
@@ -59,7 +59,7 @@ class Region(models.Model):
     
 class Village(models.Model):
     name = models.CharField(max_length=255,unique=True)
-    description = models.TextField(blank=True)
+    description = RichTextField(blank=True,null=True)
     region = models.ForeignKey(Region, on_delete=models.CASCADE,related_name='region')
 
     def __str__(self):
