@@ -108,6 +108,9 @@ const page = (props: Props) => {
           </Button>
         </form>
         <div className="space-y-6">
+          {data && data?.count && (
+            <p>Found {data?.count} results containing : {query}</p>
+          )}
           <div className="flex flex-col gap-2">
             {data?.results.map((article) => (
               <Link href={`/articles/${article.id}/`} className="group" prefetch={false} key={article.id}>
