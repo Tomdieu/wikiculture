@@ -3,7 +3,7 @@
 { pkgs, ... }: {
   # Which nixpkgs channel to use.
   channel = "stable-23.11"; # or "unstable"
-  service.docker.enable = true;
+  services.docker.enable = true;
   # Use https://search.nixos.org/packages to find packages
   packages = [
     # pkgs.go
@@ -13,8 +13,8 @@
     # pkgs.nodejs_20
     # pkgs.nodePackages.nodemon
     # pkgs.docker
-    pkgs.nvidia-docker
-    pkgs.docker-compose
+    # pkgs.nvidia-docker
+    # pkgs.docker-compose
   ];
 
   # Sets environment variables in the workspace
@@ -29,16 +29,17 @@
     previews = {
       enable = true;
       previews = {
-        # web = {
-        #   # Example: run "npm run dev" with PORT set to IDX's defined port for previews,
-        #   # and show it in IDX's web preview panel
-        #   command = ["npm" "run" "dev"];
-        #   manager = "web";
-        #   env = {
-        #     # Environment variables to set for your server
-        #     PORT = "$PORT";
-        #   };
-        # };
+        web = {
+          # Example: run "npm run dev" with PORT set to IDX's defined port for previews,
+          # and show it in IDX's web preview panel
+          command = ["npm" "run" "dev"];
+          cwd="/home/user/wikiculture/frontend/website";
+          manager = "web";
+          env = {
+            # Environment variables to set for your server
+            # PORT = "$PORT";
+          };
+        };
       };
     };
 
