@@ -9,7 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Session } from "next-auth";
 
 type NavLinkProps = {
-  session?: Session;
+  session: Session|null;
 };
 
 const NavLink = ({ session }: NavLinkProps) => {
