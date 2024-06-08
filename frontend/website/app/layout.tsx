@@ -72,14 +72,15 @@ export const metadata: Metadata = {
       "WikiCulture is a free culture encyclopedia that anyone can edit. It is a collaborative creation by people all over the world. It is a free content project with the goal of creating a free culture encyclopedia to the highest possible quality. We welcome everyone to contribute to it and help it grow.",
 
     creator: "@tomdieu ivan",
-    images: ["https://wikiculture.vercel.app/wikiculture-favicon-color.svg"],
+    images: ["https://wikiculture.vercel.app/wikiculture-favicon-color.png"],
   },
   openGraph: {
     title: "WikiCulture - The Free Culture Encyclopedia",
+    siteName: "WikiCulture",
     description:
       "WikiCulture is a free culture encyclopedia that anyone can edit. It is a collaborative creation by people all over the world. It is a free content project with the goal of creating a free culture encyclopedia to the highest possible quality. We welcome everyone to contribute to it and help it grow.",
 
-    images: ["https://wikiculture.vercel.app/wikiculture-favicon-color.svg"],
+    images: ["https://wikiculture.vercel.app/wikiculture-favicon-color.png"],
     creators: ["@tomdieu ivan"],
     url: "https://wikiculture.vercel.app",
   },
@@ -87,13 +88,13 @@ export const metadata: Metadata = {
     icon: [
       {
         media: "(prefers-color-scheme:light)",
-        url: "wikiculture-favicon-color.svg",
-        href: "wikiculture-favicon-color.svg",
+        url: "wikiculture-favicon-color.png",
+        href: "wikiculture-favicon-color.png",
       },
       {
         media: "(prefers-color-scheme:dark)",
-        url: "/wikiculture-favicon-color.svg",
-        href: "/wikiculture-favicon-color.svg",
+        url: "/wikiculture-favicon-color.png",
+        href: "/wikiculture-favicon-color.png",
       },
     ],
   },

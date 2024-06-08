@@ -405,3 +405,56 @@ export const getArticleLikes = async (articleId: number) => {
     throw error;
   }
 };
+
+export const visitorsPerDay = async (
+  articleId: string | null,
+  startDate = "",
+  endDate = "",
+  period = "",
+  userId: string | null
+) => {
+  // Construct the URL with query parameters
+  let url: string;
+
+  if (articleId === null && userId) {
+    url = `${process.env.NEXT_PUBLIC_ARTICLE_URL}/api/users/${userId}/articles-visitors-per-day/`;
+  } else {
+    url = `${process.env.NEXT_PUBLIC_ARTICLE_URL}/api/articles/${articleId}/visitors-per-day/`;
+  }
+  const params = new URLSearchParams();
+
+  if (startDate) {
+    params.append("start_date", startDate);
+  }
+  if (endDate) {
+    params.append("end_date", endDate);
+  }
+  if (period) {
+    params.append("period", period);
+  }
+
+  // Append query parameters to the URL
+  if (params.toString()) {
+    url += `?${params.toString()}`;
+  }
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      cache:"no-store"
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch visitors per day:", error);
+    throw error;
+  }
+};

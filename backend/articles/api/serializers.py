@@ -188,3 +188,7 @@ class ReadingTimeCreateSerializer(serializers.Serializer):
         except Article.DoesNotExist:
             raise serializers.ValidationError("Article with this ID does not exist.")
         return article
+    
+class ArticleVisitorsSerializer(serializers.Serializer):
+    date = serializers.DateField()
+    count = serializers.IntegerField()

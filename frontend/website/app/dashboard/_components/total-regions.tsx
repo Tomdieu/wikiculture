@@ -19,7 +19,7 @@ const TotalRegions = ({ className }: Props) => {
     });
 
     if (isLoading) {
-        return <Card className="w-full p-5 lg:max-w-md flex  shadow-lg select-none">
+        return <Card className="w-full p-5 lg:max-w-md flex  shadow-lg select-none h-full">
         <div className='rounded-md flex flex-1 space-y-10 flex-col'>
         <div>
             <Skeleton className="w-[40%] h-10"/>
@@ -33,7 +33,7 @@ const TotalRegions = ({ className }: Props) => {
     }
 
     return (
-        <Card className="w-full p-5 lg:max-w-md flex  shadow-lg select-none">
+        <Card className="w-full p-5 lg:max-w-md flex  shadow-lg select-none h-full">
             <div className='rounded-md flex flex-1 space-y-10 flex-col'>
                 <div>
                     <h2 className="text-3xl text-muted-foreground">Regions</h2>

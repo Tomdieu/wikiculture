@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/collapsible";
 import sidebarData, { filterSidebarDataByUserType } from "@/constants/sidebarLinks";
 import { cn } from "@/lib/utils";
+import Img from "./Img";
 
 type Props = {};
 
@@ -37,7 +38,8 @@ const MenuSheet = (props: Props) => {
       <SheetContent side={"left"} className="md:hidden md:w-full p-0">
         <div className="w-full flex flex-col h-screen overflow-y-auto">
           <div className="py-5 px-4 border-b border-b-stone-100 dark:border-b-stone-600 flex items-center justify-between relative">
-            <Link href={"/dashboard"}>
+            <Link href={"/dashboard"} className="flex items-center">
+              <Img />
               <h1 className="transition-all duration-500 text-xl sm:text-2xl lg:text-3xl font-medium cursor-pointer select-none">
                 WikiCulture
               </h1>

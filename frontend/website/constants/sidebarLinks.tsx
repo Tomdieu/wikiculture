@@ -59,7 +59,7 @@ const sidebarData = [
         viewOnlyBy: ["Admin", "Moderator", "User"],
       },
       {
-        text: "New Articles",
+        text: "New Article",
         icon: BookPlus,
         link: "/dashboard/articles/new",
         viewOnlyBy: ["Admin", "Moderator", "User"],

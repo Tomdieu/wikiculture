@@ -57,6 +57,7 @@ const JoditEditor = ({ value, onBlur, onChange,toolbar=true,statusbar=true,reado
 
     const config = useMemo(
         () => ({
+            ...others,
             readonly: readonly,
             statusbar:statusbar,
             disable:disable,
@@ -122,8 +123,8 @@ const JoditEditor = ({ value, onBlur, onChange,toolbar=true,statusbar=true,reado
                         editor?.current?.selection?.insertImage(elm, null, 250);
                     }
                 }
-            },
-            ...others
+            }
+            
         }),
         [editor.current,theme]
     );

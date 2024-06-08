@@ -19,7 +19,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
 
   return (
     <React.Fragment>
-      <div className="flex gap-8 px-4 mx-auto py-4 h-screen w-screen">
+      <div className="flex gap-8 px-4 mx-auto py-4 h-full flex-1">
         <div className="hidden lg:flex flex-col w-0/12 lg:w-8/12 space-y-4 lg:space-y-6 xl:space-y-8">
           <div className="flex w-full items-center justify-between">
             <Logo />
