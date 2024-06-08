@@ -1,22 +1,26 @@
-"use client"
-import { useTheme } from 'next-themes'
-import Image from 'next/image'
-import React from 'react'
+"use client";
+import { useTheme } from "next-themes";
+import Image from "next/image";
+import React from "react";
 
 type Props = {
-    width?:number;
-    height?:number;
-    className?:string
-} ;
+  width?: number;
+  height?: number;
+  className?: string;
+};
 
-const Img = ({width,height,className}: Props) => {
+const Img = ({ width, height, className }: Props) => {
+  // const {theme} = useTheme()
 
-    const {theme} = useTheme()
-    
   return (
-    <Image src={theme === "dark" ? "/white.svg":"/dark.svg"} alt={"logo"} width={width || 64} height={height||64} className={className}/>
+    <Image
+      src={"/wikiculture-favicon-color.svg"}
+      alt={"logo"}
+      width={width || 64}
+      height={height || 64}
+      className={className}
+    />
+  );
+};
 
-  )
-}
-
-export default Img
+export default Img;

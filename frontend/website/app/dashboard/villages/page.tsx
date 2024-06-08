@@ -1,5 +1,13 @@
-import React, { Suspense } from 'react'
-import VillageTable from './_components/VillageTable'
+"use client"
+
+import React from 'react'
+// import VillageTable from './_components/VillageTable'
+
+import dynamic from "next/dynamic";
+
+const VillageTable = dynamic(() => import("./_components/VillageTable"), {
+  ssr: false,
+});
 
 type Props = {}
 
@@ -10,9 +18,7 @@ const page = (props: Props) => {
         <h1 className="font-bold text-2xl">Regions</h1>
 
       </div>
-      <Suspense fallback={null}>
         <VillageTable />
-      </Suspense>
     </div>
   )
 }

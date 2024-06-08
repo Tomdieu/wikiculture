@@ -4,26 +4,34 @@ import { usePathname } from "next/navigation";
 import React from "react";
 import { Input } from "./ui/input";
 import { cn } from "@/lib/utils";
+import { SquarePen } from "lucide-react";
 
 const NavLink = () => {
   const pathName = usePathname();
   return (
     <nav className="hidden ml-auto md:flex gap-4 sm:gap-6 items-center">
-        {['explore','articles','about'].map((link,index)=>(
-          <Link
-          className={cn("text-sm font-medium hover:underline underline-offset-4 capitalize",{
-            'font-bold':pathName.includes(`/${link}`)
-          })}
+      {["explore", "articles", "about"].map((link, index) => (
+        <Link
+          className={cn(
+            "text-sm font-medium hover:underline underline-offset-4 capitalize",
+            {
+              "font-bold": pathName.includes(`/${link}`),
+            }
+          )}
           href={`/${link}`}
           key={index}
         >
           {link}
-        </Link> 
-        ))}
-      
-      <form method="get" action="/search">
-        <Input type="search" name="query" placeholder="Search article" />
-      </form>
+        </Link>
+      ))}
+
+      <Link
+        href={"/login"}
+        className="flex items-center justify-center gap-1 p-2 bg-stone-950 text-white rounded-full hover:shadow-md"
+      >
+        <SquarePen className="w-5 h-5" />
+        <span className="text-sm">Write</span>
+      </Link>
     </nav>
   );
 };

@@ -72,14 +72,14 @@ export const metadata: Metadata = {
       "WikiCulture is a free culture encyclopedia that anyone can edit. It is a collaborative creation by people all over the world. It is a free content project with the goal of creating a free culture encyclopedia to the highest possible quality. We welcome everyone to contribute to it and help it grow.",
 
     creator: "@tomdieu ivan",
-    images: ["https://wikiculture.vercel.app/white.svg"],
+    images: ["https://wikiculture.vercel.app/wikiculture-favicon-color.svg"],
   },
   openGraph: {
     title: "WikiCulture - The Free Culture Encyclopedia",
     description:
       "WikiCulture is a free culture encyclopedia that anyone can edit. It is a collaborative creation by people all over the world. It is a free content project with the goal of creating a free culture encyclopedia to the highest possible quality. We welcome everyone to contribute to it and help it grow.",
 
-    images: ["https://wikiculture.vercel.app/white.svg"],
+    images: ["https://wikiculture.vercel.app/wikiculture-favicon-color.svg"],
     creators: ["@tomdieu ivan"],
     url: "https://wikiculture.vercel.app",
   },
@@ -87,13 +87,13 @@ export const metadata: Metadata = {
     icon: [
       {
         media: "(prefers-color-scheme:light)",
-        url: "/dark.svg",
-        href: "/dark.svg",
+        url: "wikiculture-favicon-color.svg",
+        href: "wikiculture-favicon-color.svg",
       },
       {
         media: "(prefers-color-scheme:dark)",
-        url: "/white.svg",
-        href: "/white.svg",
+        url: "/wikiculture-favicon-color.svg",
+        href: "/wikiculture-favicon-color.svg",
       },
     ],
   },
@@ -105,7 +105,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning={true} suppressContentEditableWarning>
+    <html
+      lang="en"
+      suppressHydrationWarning={true}
+      suppressContentEditableWarning
+    >
       <NextAuthProvider>
         <body
           suppressHydrationWarning={true}

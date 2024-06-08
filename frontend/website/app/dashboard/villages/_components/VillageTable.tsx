@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import { columns } from "./village-columns";
 import { useSearchParams } from "next/navigation";
 import { VillageType } from "@/types";
-import { getCulturalAreas } from "@/actions/cultural_areas";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DataTable } from "@/components/table/article/data-table";
 import { getVillages } from "../../../../actions/villages";
@@ -33,28 +32,16 @@ const VillageTable = (props: Props) => {
 
   useEffect(() => {
     if (search) {
-      // const _villages =
-      //     data?.results.filter(
-      //         (__villages) =>
-      //             __villages.name.toLocaleLowerCase().includes(search) ||
-      //             __villages.description.toLocaleLowerCase().includes(search) ||
-      //             __villages.region.name.toLocaleLowerCase().includes(search) ||
-      //             __villages.region.cultural_area.name.toLocaleLowerCase().includes(search)
-
-      //     )
-
-      // setVillages(_villages!);
-    //   router.push(`/dashboard/villages/?query=${search}`);
     } else {
       setVillages(data?.results!);
     }
   }, [search]);
 
   const handleSearch = () => {
-    if(search){
-        router.push(`/dashboard/villages/?query=${search}`);
+    if (search) {
+      router.push(`/dashboard/villages/?query=${search}`);
     }
-  }
+  };
 
   if (isLoading) {
     return (
@@ -77,7 +64,7 @@ const VillageTable = (props: Props) => {
     );
   }
 
-  if (data && data.results && villages) {
+  if (data && villages) {
     return (
       <div className="w-full space-y-3">
         <DataTable
@@ -88,9 +75,9 @@ const VillageTable = (props: Props) => {
           onChange={setSearch}
           inputProps={{
             onKeyDown: (e) => {
-              console.log(e)
-              if(e.code=="Enter"){
-                handleSearch()
+              console.log(e);
+              if (e.code == "Enter") {
+                handleSearch();
               }
             },
           }}
@@ -104,7 +91,7 @@ const VillageTable = (props: Props) => {
     );
   }
 
-  return null;
+  return <div></div>;
 };
 
 export default VillageTable;

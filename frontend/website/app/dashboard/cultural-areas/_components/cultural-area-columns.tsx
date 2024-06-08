@@ -1,17 +1,12 @@
 "use client";
 
 import JoditEditor from "@/components/editor/JoditEditor";
-import QuilEditor from "@/components/editor/QuilEditor";
-import Tiptap from "@/components/editor/Tiptap/Tiptap";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { cleanHtml } from "@/lib/cleanHtml";
 import { cn } from "@/lib/utils";
 import { CulturalAreaType } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
