@@ -27,7 +27,7 @@ const Header = async (props: Props) => {
         </form>
       </div>
       <div className="flex items-center space-x-3">
-        <NavLink />
+        <NavLink session={session}/>
         <ModeToggle />
         {session?.user && <UserInfo />}
         <HeaderSheet session={session} />

@@ -34,6 +34,9 @@ const UserInfo = (props: Props) => {
                 <DropdownMenuItem asChild>
                 <Link href="/dashboard/profile">Profile</Link>
                 </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                <Link href="/">View Site</Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={()=>signOut()}>Logout</DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
