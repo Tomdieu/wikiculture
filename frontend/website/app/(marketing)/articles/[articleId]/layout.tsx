@@ -6,11 +6,10 @@ import React from "react";
 type Props = {
   children: React.ReactNode;
   params: { articleId: string };
-  searchParams: { [key: string]: string | string[] | undefined };
 };
 
 export async function generateMetadata(
-  { params, searchParams }: Props,
+  { params }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   // read route params
@@ -46,8 +45,8 @@ export async function generateMetadata(
   };
 }
 
-const layout = ({ children, params }: Props) => {
+const ArticleLayoutPage = ({ children }: Props) => {
   return <>{children}</>;
 };
 
-export default layout;
+export default ArticleLayoutPage;
