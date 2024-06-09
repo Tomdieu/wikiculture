@@ -1,7 +1,6 @@
 import { ArticleWithRecommendationType } from "@/types";
 import {
   getArticleLikes,
-  getArticleWithRecommendation,
   likeArticle,
   trackUserReadingTime,
 } from "@/actions/articles";
@@ -11,14 +10,11 @@ import React, { useMemo } from "react";
 import parseHtml from "html-react-parser";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
-import { Heart, ThumbsUp, ThumbsUpIcon } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
 import Article from "@/app/(marketing)/_components/Article";
 import { useState, useEffect } from "react";
 import _ from "lodash";
 import { LinkedInLogoIcon, TwitterLogoIcon } from "@radix-ui/react-icons";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import CountUp from "react-countup";
 import AnimatedLikeButton from "./AnimatedLikeButton";
 import { getFullName } from "@/lib/getFullName";
 import { cleanHtml } from "@/lib/cleanHtml";
@@ -58,6 +54,15 @@ const ShowArticle = ({ articleData }: Props) => {
     // Cleanup the timer when the component unmounts
     return () => clearInterval(id);
   }, []);
+
+  const bookMarkArticle = () => {
+  
+    // let createBookmark = browser.bookmarks.create({
+    //   title: article.title,
+    //   url: url,
+    // });
+    
+  }
 
   const handleScroll = () => {
     // Get the scroll position
@@ -149,6 +154,10 @@ const ShowArticle = ({ articleData }: Props) => {
                   </Link>
                 ))}
               </div>
+              {/* <Button onClick={bookMarkArticle} size={"icon"} variant={"ghost"} title="Book mark article">
+                <Heart className="w-4 h-4 text-muted-foreground text-red-500 fill-red-500"/>
+                <span className="sr-only">Book Mark</span>
+              </Button> */}
             </div>
             <div className="space-y-2 py-5">
               <h1 className="text-5xl">
@@ -212,7 +221,7 @@ const ShowArticle = ({ articleData }: Props) => {
               <div>
                 <h1 className={"text font-bold"}>Cultural Area</h1>
                 <Link
-                  href={`/articles/?cultural_area=${article.village?.region.cultural_area.name}`}
+                  href={`/cultural-regions/${article.village?.region.cultural_area.name}`}
                   className={"text-sm text-muted-foreground hover:underline"}
                 >
                   {article.village?.region.cultural_area.name}
