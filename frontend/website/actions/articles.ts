@@ -27,7 +27,7 @@ export const createArticle = async () => {
   return data;
 };
 
-export const getArticle = async (articleId: number) => {
+export const getArticle = async (articleId: number|string) => {
   try {
     const session = await getSession();
     const url = `${process.env.NEXT_PUBLIC_ARTICLE_URL}/api/articles/${articleId}/`;
