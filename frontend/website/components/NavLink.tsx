@@ -2,10 +2,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
-import { Input } from "./ui/input";
 import { cn } from "@/lib/utils";
 import { SquarePen } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
 import { Session } from "next-auth";
 
 type NavLinkProps = {
@@ -14,7 +12,7 @@ type NavLinkProps = {
 
 const NavLink = ({ session }: NavLinkProps) => {
   const pathName = usePathname();
-  const url = session?.user ? "/articles" : "/login";
+  const url = session?.user ? "/dashboard/articles" : "/login";
 
   return (
     <nav className="hidden ml-auto md:flex gap-4 sm:gap-6 items-center">

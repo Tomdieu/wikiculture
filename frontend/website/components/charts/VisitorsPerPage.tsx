@@ -9,10 +9,11 @@ import {
   // XAxis,
   // YAxis,
   // CartesianGrid,
-  // Tooltip,
+  Tooltip,
   // Legend,
   ResponsiveContainer,
 } from "recharts";
+import { Card } from "../ui/card";
 
 type Props = {
   userId?: string;
@@ -28,7 +29,8 @@ const VisitorsPerPage = ({ userId }: Props) => {
   console.log({ data });
 
   return (
-    <div className="shadow-lg border rounded-md h-full">
+    <Card className="shadow-lg border rounded- h-full p-2 flex flex-col max-h-[162px]">
+      <h1 className="text-3xl text-muted-foreground">Visitors</h1>
       <ResponsiveContainer width="100%" height={"100%"}>
         <LineChart
           data={data}
@@ -37,12 +39,12 @@ const VisitorsPerPage = ({ userId }: Props) => {
           {/* <CartesianGrid strokeDasharray="3 3" /> */}
           {/* <XAxis dataKey="date" tick={false}/> */}
           {/* <YAxis /> */}
-          {/* <Tooltip /> */}
+          <Tooltip />
           {/* <Legend /> */}
           <Line type="monotone" dataKey="count" stroke="#8884d8" strokeWidth={2} />
         </LineChart>
       </ResponsiveContainer>
-    </div>
+    </Card>
   );
 };
 

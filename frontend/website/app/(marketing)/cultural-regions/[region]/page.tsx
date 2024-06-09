@@ -48,9 +48,9 @@ const page = ({ params: { region } }: Props) => {
         )}
         {data && (
           <div className="w-full h-full flex-1 grid grid-cols-1 md:grid-cols-12 mb-4">
-            <div className="prose w-full max-w-fit col-span-full lg:col-span-8">
+            <article className="prose dark:text-muted-foreground w-full max-w-fit col-span-full lg:col-span-8">
               {parseHtml(data.description)}
-            </div>
+            </article>
             <div className="space-y-2 w-full col-span-full lg:col-span-4">
               <div className="flex gap-x-2 items-center">
                 <h1 className="font-semibold text-xl">Articles</h1>

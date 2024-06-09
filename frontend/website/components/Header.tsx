@@ -8,7 +8,6 @@ import UserInfo from "./user-info";
 import { Input } from "./ui/input";
 import NavLink from "./NavLink";
 import HeaderSheet from "./HeaderSheet";
-import Image from "next/image";
 import LogoIcon from "./LogoIcon";
 
 type Props = {};

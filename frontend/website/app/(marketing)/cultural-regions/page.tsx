@@ -18,7 +18,7 @@ const page = (props: Props) => {
     <div className="w-full h-full py-2">
       <div className="container mx-auto h-full py-10">
         <div className="flex flex-col justify-center space-y-4">
-            <h1 className="text-lg font-bold">Cultural Areas</h1>
+            <h1 className="text-lg lg:text-2xl font-bold">Cultural Areas</h1>
           <ul className="grid gap-6 space-y-2">
             {isCulturalAreaLoading && (
               <>

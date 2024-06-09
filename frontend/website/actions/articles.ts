@@ -146,9 +146,29 @@ export const getArticles = async (page?: number) => {
   }
 };
 
+export const getAllArticles = async () => {
+  try {
+    const url = `${process.env.NEXT_PUBLIC_ARTICLE_URL}/api/articles/all/`;
+    const res = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      cache: "no-cache",
+    });
+    if (!res.ok) {
+      throw new Error("Failed to fetch article");
+    }
+    const data = (await res.json()) as ArticleType[];
+    return data;
+  } catch (error) {
+    console.error("Error fetching article:", error);
+    throw error;
+  }
+};
+
 export const getLatestArticles = async () => {
   try {
-    const url = `${process.env.NEXT_PUBLIC_ARTICLE_URL}/api/articles/latest`;
+    const url = `${process.env.NEXT_PUBLIC_ARTICLE_URL}/api/articles/latest/`;
     const res = await fetch(url, {
       headers: {
         "Content-Type": "application/json",

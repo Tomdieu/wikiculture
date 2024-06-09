@@ -1,5 +1,9 @@
 from django.shortcuts import render
-from rest_framework.permissions import IsAuthenticated, AllowAny,IsAuthenticatedOrReadOnly
+from rest_framework.permissions import (
+    IsAuthenticated,
+    AllowAny,
+    IsAuthenticatedOrReadOnly,
+)
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import (
     CreateModelMixin,
@@ -20,7 +24,7 @@ from .models import (
     ArticleVistors,
     ArticleRevision,
     ArticleLike,
-    User
+    User,
 )
 from .serializers import (
     CulturalListSerializer,
@@ -35,7 +39,7 @@ from .serializers import (
     CulturalAreaSerializer,
     RegionSerializer,
     VillageSerializer,
-    ArticleVisitorsSerializer
+    ArticleVisitorsSerializer,
 )
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -52,6 +56,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import ArticleFilter, CulturalAreaFilter
+
+from rest_framework.parsers import MultiPartParser,FormParser
 
 import datetime
 from django.utils import timezone
@@ -87,6 +93,7 @@ class ArticleViewSet(
             "most_read",
             "like",
             "likes",
+            "all",
         ]:  # AllowAny for 'list' action
             return [AllowAny()]
         return [IsAuthenticated()]  # For other actions, use IsAuthenticated permission
@@ -102,6 +109,7 @@ class ArticleViewSet(
             "newest",
             "popular",
             "most_read",
+            "all",
         ]:
             return ArticleListSerializer
         elif self.action in ["with_recommendations"]:
@@ -152,6 +160,12 @@ class ArticleViewSet(
             status=status.HTTP_201_CREATED,
             headers=headers,
         )
+
+    @action(methods=["get"], detail=False)
+    def all(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = ArticleListSerializer(queryset, many=True)
+        return Response(serializer.data)
 
     @swagger_auto_schema(
         operation_description="Like an article",
@@ -377,34 +391,33 @@ class ArticleVisitorsPerDayView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
     authentication_classes = [TokenAuthentication]
 
-
     @swagger_auto_schema(
         manual_parameters=[
             openapi.Parameter(
-                'start_date',
+                "start_date",
                 openapi.IN_QUERY,
                 description="Start date for filtering visitors (YYYY-MM-DD)",
                 type=openapi.TYPE_STRING,
                 format=openapi.FORMAT_DATE,
-                required=False
+                required=False,
             ),
             openapi.Parameter(
-                'end_date',
+                "end_date",
                 openapi.IN_QUERY,
                 description="End date for filtering visitors (YYYY-MM-DD)",
                 type=openapi.TYPE_STRING,
                 format=openapi.FORMAT_DATE,
-                required=False
+                required=False,
             ),
             openapi.Parameter(
-                'period',
+                "period",
                 openapi.IN_QUERY,
                 description="Period for filtering visitors (7days, 1month, 12months)",
                 type=openapi.TYPE_STRING,
-                required=False
+                required=False,
             ),
         ],
-        responses={200: ArticleVisitorsSerializer(many=True)}
+        responses={200: ArticleVisitorsSerializer(many=True)},
     )
     def get(self, request, article_id):
         # Ensure the article exists
@@ -414,18 +427,18 @@ class ArticleVisitorsPerDayView(APIView):
             return Response({"error": "Article not found"}, status=404)
 
         # Get the query parameters for filtering
-        start_date = request.query_params.get('start_date')
-        end_date = request.query_params.get('end_date')
-        period = request.query_params.get('period')
+        start_date = request.query_params.get("start_date")
+        end_date = request.query_params.get("end_date")
+        period = request.query_params.get("period")
 
         # If period is specified, calculate start_date and end_date
         if period:
             end_date = timezone.now().date()
-            if period == '7days':
+            if period == "7days":
                 start_date = end_date - datetime.timedelta(days=7)
-            elif period == '1month':
+            elif period == "1month":
                 start_date = end_date - datetime.timedelta(days=30)
-            elif period == '12months':
+            elif period == "12months":
                 start_date = end_date - datetime.timedelta(days=365)
             else:
                 return Response({"error": "Invalid period specified"}, status=400)
@@ -440,11 +453,13 @@ class ArticleVisitorsPerDayView(APIView):
             if end_date:
                 end_date = parse_date(end_date)
             else:
-                end_date = timezone.now().date()  # Default end_date to today if not provided
+                end_date = (
+                    timezone.now().date()
+                )  # Default end_date to today if not provided
 
         # Filter visitors by date range
         visitors_query = ArticleVistors.objects.filter(article=article)
-        
+
         if start_date:
             visitors_query = visitors_query.filter(date__gte=start_date)
         if end_date:
@@ -452,36 +467,27 @@ class ArticleVisitorsPerDayView(APIView):
 
         # Aggregate the visitors by date
         visitors_data = (
-            visitors_query.values('date')
-            .annotate(count=Count('id'))
-            .order_by('date')
+            visitors_query.values("date").annotate(count=Count("id")).order_by("date")
         )
 
         output = []
-        for date,_ in self.get_date_range(start_date, end_date):
-            output.append({
-                "date": date,
-                "count": 0
-            })
+        for date, _ in self.get_date_range(start_date, end_date):
+            output.append({"date": date, "count": 0})
 
         for visitor in visitors_data:
             for entry in output:
-                if entry['date'] == visitor['date']:
-                    entry['count'] += visitor['count']
+                if entry["date"] == visitor["date"]:
+                    entry["count"] += visitor["count"]
                     break  # Break the inner loop if the date is found to avoid unnecessary iterations
 
         serialized_data = [
-            {
-                'date': entry['date'],
-                'count': entry['count']
-            }
-            for entry in output
+            {"date": entry["date"], "count": entry["count"]} for entry in output
         ]
 
         # Serialize the data
         serializer = ArticleVisitorsSerializer(serialized_data, many=True)
         return Response(serializer.data)
-    
+
     def get_date_range(self, start_date, end_date):
         """
         Generate a date range between start_date and end_date.
@@ -493,37 +499,38 @@ class ArticleVisitorsPerDayView(APIView):
         while current_date <= end_date:
             yield current_date, None  # None represents the article without visitors for the date
             current_date += datetime.timedelta(days=1)
-    
+
+
 class UserArticleVisitorsPerDayView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     @swagger_auto_schema(
         manual_parameters=[
             openapi.Parameter(
-                'start_date',
+                "start_date",
                 openapi.IN_QUERY,
                 description="Start date for filtering visitors (YYYY-MM-DD)",
                 type=openapi.TYPE_STRING,
                 format=openapi.FORMAT_DATE,
-                required=False
+                required=False,
             ),
             openapi.Parameter(
-                'end_date',
+                "end_date",
                 openapi.IN_QUERY,
                 description="End date for filtering visitors (YYYY-MM-DD)",
                 type=openapi.TYPE_STRING,
                 format=openapi.FORMAT_DATE,
-                required=False
+                required=False,
             ),
             openapi.Parameter(
-                'period',
+                "period",
                 openapi.IN_QUERY,
                 description="Period for filtering visitors (7days, 1month, 12months)",
                 type=openapi.TYPE_STRING,
-                required=False
+                required=False,
             ),
         ],
-        responses={200: ArticleVisitorsSerializer(many=True)}
+        responses={200: ArticleVisitorsSerializer(many=True)},
     )
     def get(self, request, user_id):
         # Ensure the user exists
@@ -536,18 +543,18 @@ class UserArticleVisitorsPerDayView(APIView):
 
     def get_user_articles_visitors(self, request, user):
         # Get the query parameters for filtering
-        start_date = request.query_params.get('start_date')
-        end_date = request.query_params.get('end_date')
-        period = request.query_params.get('period')
+        start_date = request.query_params.get("start_date")
+        end_date = request.query_params.get("end_date")
+        period = request.query_params.get("period")
 
         # Determine the date range based on the parameters provided
         if period:
             end_date = timezone.now().date()
-            if period == '7days':
+            if period == "7days":
                 start_date = end_date - datetime.timedelta(days=7)
-            elif period == '1month':
+            elif period == "1month":
                 start_date = end_date - datetime.timedelta(days=30)
-            elif period == '12months':
+            elif period == "12months":
                 start_date = end_date - datetime.timedelta(days=365)
             else:
                 return Response({"error": "Invalid period specified"}, status=400)
@@ -562,10 +569,12 @@ class UserArticleVisitorsPerDayView(APIView):
             if end_date:
                 end_date = parse_date(end_date)
             else:
-                end_date = timezone.now().date()  # Default end_date to today if not provided
-         # Filter visitors by date range for all articles of the user
+                end_date = (
+                    timezone.now().date()
+                )  # Default end_date to today if not provided
+        # Filter visitors by date range for all articles of the user
         visitors_query = ArticleVistors.objects.filter(article__author=user)
-        
+
         if start_date:
             visitors_query = visitors_query.filter(date__gte=start_date)
         if end_date:
@@ -573,31 +582,24 @@ class UserArticleVisitorsPerDayView(APIView):
 
         # Aggregate the visitors by date and article
         visitors_data = (
-            visitors_query.values('date', 'article__title')
-            .annotate(count=Count('id'))
-            .order_by('date')
+            visitors_query.values("date", "article__title")
+            .annotate(count=Count("id"))
+            .order_by("date")
         )
 
         # Prepare data for serialization with article names
         output = []
-        for date,_ in self.get_date_range(start_date, end_date):
-            output.append({
-                "date": date,
-                "count": 0
-            })
+        for date, _ in self.get_date_range(start_date, end_date):
+            output.append({"date": date, "count": 0})
 
         for visitor in visitors_data:
             for entry in output:
-                if entry['date'] == visitor['date']:
-                    entry['count'] += visitor['count']
+                if entry["date"] == visitor["date"]:
+                    entry["count"] += visitor["count"]
                     break  # Break the inner loop if the date is found to avoid unnecessary iterations
 
         serialized_data = [
-            {
-                'date': entry['date'],
-                'count': entry['count']
-            }
-            for entry in output
+            {"date": entry["date"], "count": entry["count"]} for entry in output
         ]
 
         return Response(serialized_data)
@@ -614,6 +616,7 @@ class UserArticleVisitorsPerDayView(APIView):
             yield current_date, None  # None represents the article without visitors for the date
             current_date += datetime.timedelta(days=1)
 
+
 class CategoryViewSet(
     GenericViewSet,
     RetrieveModelMixin,
@@ -628,7 +631,6 @@ class CategoryViewSet(
             return [AllowAny()]
         return [IsAuthenticated()]  # For other actions, use IsAuthenticated permission
 
-
     @action(methods=["get"], detail=False)
     def all(self, requests, *args, **kwargs):
         queryset = self.get_queryset()
@@ -642,7 +644,6 @@ class CulturalAreaViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin):
     serializer_class = CulturalAreaSerializer
     permission_classes = [AllowAny]
     authentication_classes = [TokenAuthentication]
-
 
     filter_backends = [DjangoFilterBackend]
     filterset_class = CulturalAreaFilter
@@ -705,7 +706,6 @@ class RegionViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin):
     permission_classes = [AllowAny]
     authentication_classes = [TokenAuthentication]
 
-
     @action(detail=False)
     def all(self, requests, *args, **kwargs):
         queryset = Region.objects.all()
@@ -718,7 +718,6 @@ class VillageViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin):
     serializer_class = VillageSerializer
     permission_classes = [AllowAny]
     authentication_classes = [TokenAuthentication]
-
 
     @swagger_auto_schema(
         operation_description="List of articles with optional query params",
