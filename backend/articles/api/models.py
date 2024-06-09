@@ -26,6 +26,7 @@ class User(models.Model):
 
     def __str__(self):
         return f"{self.username} - {self.user_type}"
+    
 
 
 class Category(models.Model):
@@ -94,6 +95,15 @@ class Article(models.Model):
         # if not self.slug:
         self.slug = slugify(self.title)
         super().save(*args, **kwargs)
+
+class UserArticleInteraction(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,related_name="articles_interactions")
+    article = models.ForeignKey(Article, on_delete=models.CASCADE,related_name="articles_interactions")
+    timestamp = models.DateTimeField(auto_now_add=True)
+    interaction_type = models.CharField(max_length=50, choices=(('view', 'View'), ('like', 'Like')))
+
+    def __str__(self):
+        return f"{self.user.username} - {self.article.title} ({self.interaction_type})"
 
 
 class ArticleRevision(models.Model):
