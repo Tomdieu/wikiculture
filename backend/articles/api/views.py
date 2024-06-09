@@ -25,6 +25,7 @@ from .models import (
     ArticleRevision,
     ArticleLike,
     User,
+    UserArticleInteraction
 )
 from .serializers import (
     CulturalListSerializer,
@@ -49,7 +50,7 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
-from api.lib.recommend_articles import recommend_articles
+
 from django.db.models import Q, Count, Sum
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -57,7 +58,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import ArticleFilter, CulturalAreaFilter
 
-from rest_framework.parsers import MultiPartParser,FormParser
+
+from api.lib.recommend_articles import recommend_articles,recommend_articles_by_preferences
 
 import datetime
 from django.utils import timezone
@@ -135,6 +137,8 @@ class ArticleViewSet(
         ip_address = request.META.get("REMOTE_ADDR")
         user_agent = request.META.get("HTTP_USER_AGENT", "")
         try:
+            if user.is_authenticated:
+                UserArticleInteraction.objects.create(user=request.user, article=instance, interaction_type='view') 
             if user:
                 if instance.author.id != user.id:
                     ArticleVistors.objects.create(
@@ -184,6 +188,8 @@ class ArticleViewSet(
         user_agent = request.META.get("HTTP_USER_AGENT", "")
         # check if user already liked
         if user:
+            if user.is_authenticated:
+                UserArticleInteraction.objects.create(user=request.user, article=instance, interaction_type='like')
             hasLiked = ArticleLike.objects.filter(user=user, article=instance)
             if hasLiked.exists():
                 hasLiked.delete()
@@ -301,6 +307,7 @@ class ArticleViewSet(
     def with_recommendations(self, request, *args, **kwargs):
         instance = self.get_object()
         article_id = instance.id
+        user = request.user
         print("User Ip : ", request.user_ip)
         serializer = ArticleListSerializer(
             instance, context={"request": request.user_ip}
@@ -319,6 +326,8 @@ class ArticleViewSet(
         ]  # Exclude the current article
         related_articles_serializer = ArticleListSerializer(related_articles, many=True)
         recommendations = recommend_articles(article_id)
+        if user.is_is_authenticated:
+            recommendations.extend(recommend_articles_by_preferences(request.user))
         recommendation_serializer = ArticleListSerializer(recommendations, many=True)
         print("Recommended : ", recommendations)
         print("Related : ", related_articles)
