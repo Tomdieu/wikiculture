@@ -33,7 +33,7 @@ const NavLink = ({ session }: NavLinkProps) => {
 
       <Link
         href={url}
-        className="flex items-center justify-center gap-1 p-2 bg-stone-950 text-white rounded-full hover:shadow-md"
+        className="flex items-center justify-center gap-1 p-2 bg-stone-950 text-white rounded-full hover:shadow-md dark:invert"
       >
         <SquarePen className="w-5 h-5" />
         <span className="text-sm">Write</span>
