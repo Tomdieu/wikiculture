@@ -7,6 +7,11 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { BookmarkIcon, SearchIcon, SignalIcon, TrendingUpIcon } from "lucide-react"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "About",
+}
 
 export default function Page() {
   return (
