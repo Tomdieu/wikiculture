@@ -1,24 +1,6 @@
 from django.core.management.base import BaseCommand
 from api.models import Category
 
-# CATEGORIES = [
-#     {"name": "Art and Design", "is_cultural": True, "description": "Visual Arts, Architecture, Graphic Design, Fashion"},
-#     {"name": "Music", "is_cultural": True, "description": "Genres, Music History, Artist Profiles, Album Reviews"},
-#     {"name": "Literature", "is_cultural": True, "description": "Book Reviews, Author Interviews, Literary Criticism, Poetry"},
-#     {"name": "Film and Television", "is_cultural": True, "description": "Movie Reviews, TV Show Reviews, Filmmaker Interviews, Industry News"},
-#     {"name": "Theatre and Performing Arts", "is_cultural": True, "description": "Play Reviews, Dance Performances, Theatre Criticism, Performer Profiles"},
-#     {"name": "Culinary Arts", "is_cultural": True, "description": "Recipes, Restaurant Reviews, Food Culture, Chef Interviews"},
-#     {"name": "History and Heritage", "is_cultural": True, "description": "Historical Events, Cultural Heritage Sites, Biographies of Historical Figures, Cultural Traditions"},
-#     {"name": "Lifestyle and Trends", "is_cultural": False, "description": "Fashion Trends, Health and Wellness, Travel, Home and Living"},
-#     {"name": "Science and Technology in Culture", "is_cultural": True, "description": "Science Communication, Technological Innovations, Science Fiction, Impact of Technology on Society"},
-#     {"name": "Philosophy and Ideas", "is_cultural": True, "description": "Philosophical Concepts, Interviews with Thinkers, Essays on Modern Issues, Debates and Discussions"},
-#     {"name": "Cultural Commentary and Criticism", "is_cultural": True, "description": "Social Issues, Political Commentary, Cultural Trends Analysis, Opinion Pieces"},
-#     {"name": "Events and Festivals", "is_cultural": True, "description": "Cultural Festivals, Art Exhibitions, Music Concerts, Film Festivals"},
-#     {"name": "Global Cultures", "is_cultural": True, "description": "Cultural Practices from Around the World, Profiles of Different Countries, Global Art Movements, Cross-Cultural Interactions"},
-#     {"name": "Education and Learning", "is_cultural": True, "description": "Educational Resources, Cultural Workshops, Learning Programs, Book Clubs and Study Groups"},
-#     {"name": "Digital Culture", "is_cultural": True, "description": "Social Media Trends, Digital Art, Online Communities, Impact of the Internet on Culture"},
-# ]
-
 CATEGORIES = [
     {"name": "Ethnic Groups and Tribes", "is_cultural": True, "description": "Information about the different ethnic groups in Cameroon, including their history and customs."},
     {"name": "Languages", "is_cultural": True, "description": "Overview of the major and indigenous languages spoken in Cameroon, including language preservation efforts."},
@@ -33,6 +15,9 @@ CATEGORIES = [
     {"name": "Nature and Environment", "is_cultural": True, "description": "Natural landscapes, sacred sites, and conservation efforts in Cameroon."},
     {"name": "Modern Culture and Lifestyle", "is_cultural": True, "description": "Influence of globalization, urban vs. rural cultural dynamics, and contemporary trends."},
     {"name": "Notable Personalities and Influencers", "is_cultural": True, "description": "Prominent figures and the contributions of the Cameroonian diaspora to global culture."},
+    {"name": "Traditional Healing Practices", "is_cultural": True, "description": "Traditional healing methods, herbal medicine, and spiritual healing practices in Cameroonian culture."},
+    {"name": "Marriage Customs", "is_cultural": True, "description": "Traditional marriage customs and ceremonies among different ethnic groups in Cameroon."},
+    {"name": "Traditional Festivals and Ceremonies", "is_cultural": True, "description": "Detailed descriptions of traditional festivals, rituals, and ceremonies specific to various communities in Cameroon."},
 ]
 
 
