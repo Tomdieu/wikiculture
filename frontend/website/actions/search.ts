@@ -9,6 +9,7 @@ export const searchArticles = async (query: string, page: string = "1") => {
             headers: {
                 "Content-Type": "application/json",
             },
+            cache:"no-store"
         });
         const data = (await res.json()) as SearchPaginationType;
         return data;

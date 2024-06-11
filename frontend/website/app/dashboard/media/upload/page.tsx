@@ -32,7 +32,11 @@ const UploadMediaPage = (props: Props) => {
     }
   }
   return (
-    <div className="h-full w-full flex items-center justify-center">
+    <div className="w-full h-full container mx-auto space-y-3">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold"> Upload Media</h1>
+      </div>
+      <div className="h-full w-full flex items-center justify-center">
       <div className="grid grid-cols-[1fr_auto] items-center gap-4 w-full max-w-md">
         <div className="grid gap-2">
           <div className="group relative  flex h-32 w-full cursor-pointer items-center justify-center rounded-md border-2 border-dashed border-gray-300 bg-white p-4 transition-colors hover:border-gray-400 dark:border-gray-600 dark:bg-gray-800 dark:hover:border-gray-500">
@@ -46,6 +50,9 @@ const UploadMediaPage = (props: Props) => {
         </div>
       </div>
     </div>
+      <div className="h-24"></div>
+    </div>
+    
   )
 }
 

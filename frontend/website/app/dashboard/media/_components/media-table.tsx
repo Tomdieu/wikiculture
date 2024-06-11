@@ -8,6 +8,9 @@ import { getMedia } from "@/actions/media";
 import { useSearchParams } from "next/navigation";
 import { FileType } from "@/types";
 import MediaPagination from "./pagination";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { UploadCloud } from "lucide-react";
 
 type Props = {};
 
@@ -44,7 +47,7 @@ const MediaTable = (props: Props) => {
     );
   }
 
-  if (data) {
+  if (data && data.results.length > 0) {
     return (
       <div className="w-full h-full space-y-2">
         <DataTable
@@ -56,8 +59,19 @@ const MediaTable = (props: Props) => {
       </div>
     );
   }
-
-  return null;
+else{
+  return (
+    <div className="w-full h-full flex items-center justify-center flex-col">
+      <h1 className="font-bold text-2xl">You have no files uploaded</h1>
+      <Button>
+        <Link href={"/dashboard/media/upload"} className="flex items-center gap-2">
+          <UploadCloud className="w-4 h-4" />
+          Upload One
+        </Link>
+      </Button>
+    </div>
+  );
+}
 };
 
 export default MediaTable;

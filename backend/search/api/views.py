@@ -44,6 +44,8 @@ class SearchArticleView(APIView):
                     "author.first_name",
                     "author.last_name",
                     "slug",
+                    "village",
+                    
                 ],
                 fuzziness="auto",
             ) & Q(

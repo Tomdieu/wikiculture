@@ -27,15 +27,19 @@ export const createArticle = async () => {
   return data;
 };
 
-export const getArticle = async (articleId: number|string) => {
+export const getArticle = async (articleId: number | string) => {
   try {
     const session = await getSession();
     const url = `${process.env.NEXT_PUBLIC_ARTICLE_URL}/api/articles/${articleId}/`;
+    const headers: HeadersInit = {
+      "Content-Type": "application/json",
+    };
+
+    if (session?.user.token) {
+      headers.Authorization = `token ${session.user.token}`;
+    }
     const res = await fetch(url, {
-      headers: {
-        Authorization: `token ${session?.user.token}`,
-        "Content-Type": "application/json",
-      },
+      headers,
     });
     if (!res.ok) {
       throw new Error("Failed to fetch article");
@@ -464,7 +468,7 @@ export const visitorsPerDay = async (
       headers: {
         "Content-Type": "application/json",
       },
-      cache:"no-store"
+      cache: "no-store",
     });
 
     if (!response.ok) {

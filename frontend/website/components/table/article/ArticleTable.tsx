@@ -11,6 +11,8 @@ import { useParams, useSearchParams } from "next/navigation";
 import Pagination from "./pagination";
 import { Input } from "@/components/ui/input";
 import { ArticleType } from "@/types";
+import { Button } from "@/components/ui/button";
+import { BookPlusIcon } from "lucide-react";
 
 type Props = {};
 
@@ -92,8 +94,10 @@ const ArticleTable = (props: Props) => {
               ))}
             </div>
             {articlesToDisplay.length >= 1 && (
-
-            <Pagination currentPage={parseInt(page)} articlePagination={data!} />
+              <Pagination
+                currentPage={parseInt(page)}
+                articlePagination={data!}
+              />
             )}
           </React.Fragment>
         )}
@@ -105,9 +109,19 @@ const ArticleTable = (props: Props) => {
         )}
       </div>
     );
+  } else {
+    return (
+      <div className="w-full h-full flex items-center justify-center flex-col">
+        <h1 className="font-bold text-2xl">You have no articles</h1>
+        <Button>
+          <Link href={"/dashboard/articles/new"} className="flex items-center gap-2">
+            <BookPlusIcon className="w-4 h-4" />
+            Create One
+          </Link>
+        </Button>
+      </div>
+    );
   }
-
-  return null;
 };
 
 export default ArticleTable;
