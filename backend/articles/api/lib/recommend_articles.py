@@ -39,7 +39,7 @@ def get_tags_to_str(tags):
 def calculate_similarity():
     # Fetch all articles from the database
     articles = Article.objects.all()
-    articles_content = [clean_text(article.content) + " " + get_tags_to_str(article.tags.all()) + " "+get_categories_as_string(article)+ " "+get_village_detail(article) for article in articles]
+    articles_content = [clean_text(article.content if article.content is not None else "") + " " + get_tags_to_str(article.tags.all()) + " "+get_categories_as_string(article)+ " "+get_village_detail(article) for article in articles]
 
     print(articles_content)
 
@@ -72,7 +72,7 @@ def recommend_articles(article_id, num_recommendations=5):
 
     return recommended_articles
 
-def recommend_articles_by_preferences(user, num_recommendations=5):
+def recommend_articles_by_preferences(user, num_recommendations=5, exclude_article_ids=[]):
     category_preferences, tag_preferences = get_user_preferences(user)
 
     # Get articles based on category preferences
@@ -83,5 +83,9 @@ def recommend_articles_by_preferences(user, num_recommendations=5):
     
     # Combine the querysets and remove duplicates
     recommended_articles = (category_articles | tag_articles).distinct().order_by('-created_at')[:num_recommendations]
+
+    # Exclude specified article IDs
+    recommended_articles = recommended_articles.exclude(id__in=exclude_article_ids)
     
     return recommended_articles
+
