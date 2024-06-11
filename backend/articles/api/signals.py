@@ -1,6 +1,6 @@
 from django.dispatch import receiver
 
-from django.db.models.signals import post_save, pre_delete, pre_save
+from django.db.models.signals import post_save, pre_delete, pre_save,m2m_changed
 from .models import Article
 from .serializers import ArticleListPublishSerializer
 from .producer import publish
@@ -31,3 +31,11 @@ def update_article_update_field(sender, instance: Article, **kwargs):
 def delete_article(sender, instance, **kwargs):
     serializer = ArticleListPublishSerializer(instance)
     publish(event_type=events.ARTICLE_DELETED, body=serializer.data)
+
+@receiver(m2m_changed, sender=Article.categories.through)
+def categories_changed(sender, instance, **kwargs):
+    instance.record_m2m_history()
+
+@receiver(m2m_changed, sender=Article.tags.through)
+def tags_changed(sender, instance, **kwargs):
+    instance.record_m2m_history()
