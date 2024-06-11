@@ -22,6 +22,7 @@ from .models import (
     Region,
     Village,
     ArticleVistors,
+    CulturalSimilarity,
     ArticleRevision,
     ArticleLike,
     User,
@@ -41,6 +42,7 @@ from .serializers import (
     RegionSerializer,
     VillageSerializer,
     ArticleVisitorsSerializer,
+    CulturalSimilaritySerializer
 )
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -167,7 +169,7 @@ class ArticleViewSet(
 
     @action(methods=["get"], detail=False)
     def all(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
+        queryset = self.filter_queryset(self.get_queryset())
         serializer = ArticleListSerializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -253,7 +255,7 @@ class ArticleViewSet(
 
     @action(methods=["get"], detail=False)
     def latest(self, request, *args, **kwargs):
-        queryset = Article.objects.all()[:10]
+        queryset = Article.objects.filter(is_published=True,approved=True)[:10]
         serializer = ArticleListSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -326,8 +328,15 @@ class ArticleViewSet(
         ]  # Exclude the current article
         related_articles_serializer = ArticleListSerializer(related_articles, many=True)
         recommendations = recommend_articles(article_id)
-        if user.is_is_authenticated:
-            recommendations.extend(recommend_articles_by_preferences(request.user))
+        exclude_article_ids = [instance.id]
+        if request.user.is_authenticated:
+            # print(recommend_articles_by_preferences(request.user))
+            exclude_article_ids.extend([article.id for article in user_recommendations])
+            print("Exclude ids :",exclude_article_ids)
+            user_recommendations = recommend_articles_by_preferences(request.user,num_recommendations=5,exclude_article_ids=exclude_article_ids)
+            # recommendations.extend(recommend_articles_by_preferences(request.user))
+            recommendations.extend(user_recommendations)
+
         recommendation_serializer = ArticleListSerializer(recommendations, many=True)
         print("Recommended : ", recommendations)
         print("Related : ", related_articles)
@@ -394,6 +403,18 @@ class ArticleViewSet(
         return Response(
             {"message": "Permission deny"}, status=status.HTTP_401_UNAUTHORIZED
         )
+    
+    @action(detail=True, methods=['post'])
+    def add_similarity(self, request, pk=None):
+        article = self.get_object()
+        village_id = request.data.get('village')
+        percentage = request.data.get('similarity_percentage')
+        try:
+            village = Village.objects.get(pk=village_id)
+            article.add_similarity(village, percentage)
+            return Response({'status': 'similarity added'}, status=status.HTTP_200_OK)
+        except Village.DoesNotExist:
+            return Response({'error': 'Village not found'}, status=status.HTTP_404_NOT_FOUND)
 
 
 class ArticleVisitorsPerDayView(APIView):
