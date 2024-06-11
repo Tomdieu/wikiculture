@@ -34,8 +34,6 @@ const ExtraFooter = (props: Props) => {
 
   const pathName = usePathname();
 
-  console.log({ categories });
-
   const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";
   return (

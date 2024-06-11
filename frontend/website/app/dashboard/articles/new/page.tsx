@@ -16,7 +16,7 @@ const CreateArticlePage = async (props: Props) => {
     } else {
       throw new Error("Could Not Create Article");
     }
-  } catch (error) {
+  } catch (error:any) {
     console.error(error);
     return (
       <div className="w-full h-full flex items-center justify-center">
