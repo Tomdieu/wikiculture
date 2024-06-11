@@ -77,4 +77,4 @@ def parse_user_agent(user_agent):
     os_info = browser_info.get('os', {})
     os_name = os_info.get('name', 'Unknown')
     os_version = os_info.get('version', 'Unknown')
-    return f"{browser_name} {browser_version} on {os_name} {os_version}
+    return f"{browser_name} {browser_version} on {os_name} {os_version}"

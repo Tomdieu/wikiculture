@@ -8,6 +8,23 @@ from simple_history.models import HistoricalRecords
 
 from django.utils import timezone
 
+from django.conf import settings
+
+import os
+
+import nltk
+nltk_data_dir = os.path.join(settings.BASE_DIR,"nltk_data")
+
+nltk.data.path.append(nltk_data_dir)
+
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize, sent_tokenize
+from nltk.stem import WordNetLemmatizer
+from nltk.tag import pos_tag
+from nltk.chunk import ne_chunk
+from nltk.sentiment import SentimentIntensityAnalyzer
+from collections import Counter
+
 
 # Create your models here.
 
@@ -72,7 +89,7 @@ class Article(models.Model):
     icon = models.CharField(max_length=10,default="",null=True,blank=True)
     title = models.CharField(max_length=255, default="Untitled")
     cover_image = models.CharField(max_length=1000,blank=True,null=True)
-    content = RichTextField(blank=True,null=True)
+    content = RichTextField(blank=True,null=True,default="")
     tags = TaggableManager(blank=True,related_name="tagged_articles")
     village = models.ForeignKey(Village,on_delete=models.CASCADE,null=True,blank=True)
     approved = models.BooleanField(default=False)
@@ -91,11 +108,6 @@ class Article(models.Model):
     def __str__(self):
         return f"{self.title} by {self.author}"
 
-    def save(self, *args, **kwargs):
-        # if not self.slug:
-        self.slug = slugify(self.title)
-        super().save(*args, **kwargs)
-
     def record_m2m_history(self):
         categories = list(self.categories.all())
         tags = list(self.tags.all())
@@ -108,6 +120,81 @@ class Article(models.Model):
 
     def get_similarities(self):
         return self.similarities.all()
+    
+    def preprocess_text(self, text):
+        stop_words = set(stopwords.words('english'))
+        word_tokens = word_tokenize(text)
+        filtered_words = [word for word in word_tokens if word.lower() not in stop_words]
+        return filtered_words
+
+    def tokenize_sentences(self):
+        return sent_tokenize(self.content)
+
+    def tokenize_words(self):
+        return word_tokenize(self.content)
+
+    def pos_tagging(self):
+        tokens = self.tokenize_words()
+        return pos_tag(tokens)
+
+    def named_entity_recognition(self):
+        pos_tags = self.pos_tagging()
+        return ne_chunk(pos_tags)
+    
+    def lemmatize_words(self):
+        lemmatizer = WordNetLemmatizer()
+        tokens = self.tokenize_words()
+        lemmatized_words = [lemmatizer.lemmatize(token) for token in tokens]
+        return lemmatized_words
+
+    def extract_keywords(self):
+        tokens = self.preprocess_text(self.content)
+        return Counter(tokens).most_common(10)
+
+    def extract_named_entities(self):
+        named_entities = self.named_entity_recognition()
+        entities = []
+        for chunk in named_entities:
+            if hasattr(chunk, 'label'):
+                entities.append(' '.join(c[0] for c in chunk))
+        return entities
+
+    def sentiment_analysis(self):
+        sia = SentimentIntensityAnalyzer()
+        return sia.polarity_scores(self.content)
+    
+    def get_text_analysis(self):
+        analysis = {
+            "tokens": self.tokenize_words(),
+            "sentences": self.tokenize_sentences(),
+            "pos_tags": self.pos_tagging(),
+            "named_entities": self.extract_named_entities(),
+            "lemmatized_words": self.lemmatize_words(),
+            "keywords": self.extract_keywords(),
+            "sentiment": self.sentiment_analysis(),
+        }
+        return analysis
+    
+    def save(self, *args, **kwargs):
+        # if not self.slug:
+        self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+
+        analysis_data = self.get_text_analysis()
+        ArticleAnalysis.objects.update_or_create(
+            article=self,
+            defaults={
+                'keywords': analysis_data['keywords'],
+                'named_entities': analysis_data['named_entities'],
+                'sentiment': analysis_data['sentiment'],
+            }
+        )
+
+        from .lib import link_related_articles
+
+        self.content = link_related_articles(self.content, analysis_data['named_entities'])
+        super().save(update_fields=['content'])
+        print("Text Analysis:", analysis_data)
 
 class CulturalSimilarity(models.Model):
     article = models.ForeignKey(Article, related_name='similarities', on_delete=models.CASCADE)
@@ -119,6 +206,16 @@ class CulturalSimilarity(models.Model):
 
     def __str__(self):
         return f"{self.article.title} -> {self.village.name} : {self.similarity_percentage}%"
+
+class ArticleAnalysis(models.Model):
+    article = models.OneToOneField(Article, on_delete=models.CASCADE, related_name='analysis')
+    keywords = models.JSONField()  # Store keywords as JSON
+    named_entities = models.JSONField()  # Store named entities as JSON
+    sentiment = models.JSONField()  # Store sentiment as JSON
+
+    def __str__(self):
+        return f"Analysis for {self.article.title}"
+
 
 class UserArticleInteraction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,related_name="articles_interactions")

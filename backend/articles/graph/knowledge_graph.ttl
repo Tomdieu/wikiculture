@@ -1,0 +1,412 @@
+@prefix ex: <http://example.org/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://example.org/article/1> a ex:Article ;
+    ex:belongsToCategory <http://example.org/category/7> ;
+    ex:content "Updated Article"^^xsd:string ;
+    ex:hasEntity <http://example.org/entity/Article> ;
+    ex:hasKeyword <http://example.org/keyword/Article>,
+        <http://example.org/keyword/Updated> ;
+    ex:isLocatedIn <http://example.org/village/23> ;
+    ex:title "Updated Article"^^xsd:string .
+
+<http://example.org/article/2> a ex:Article ;
+    ex:belongsToCategory <http://example.org/category/7> ;
+    ex:content "Cameroon is known for its rich musical heritage, featuring diverse genres such as Makossa, Bikutsi, and traditional drumming. Music and dance are integral to various ceremonies and festivals, reflecting the cultural diversity of the country."^^xsd:string ;
+    ex:hasEntity <http://example.org/entity/Bikutsi>,
+        <http://example.org/entity/Cameroon>,
+        <http://example.org/entity/Makossa>,
+        <http://example.org/entity/Music> ;
+    ex:hasKeyword <http://example.org/keyword/%2C>,
+        <http://example.org/keyword/.>,
+        <http://example.org/keyword/Cameroon>,
+        <http://example.org/keyword/diverse>,
+        <http://example.org/keyword/featuring>,
+        <http://example.org/keyword/genres>,
+        <http://example.org/keyword/heritage>,
+        <http://example.org/keyword/known>,
+        <http://example.org/keyword/musical>,
+        <http://example.org/keyword/rich> ;
+    ex:title "Traditional Music and Dance in Cameroon"^^xsd:string .
+
+<http://example.org/article/3> a ex:Article ;
+    ex:belongsToCategory <http://example.org/category/6> ;
+    ex:content "Cameroonian cuisine is a vibrant mix of flavors and ingredients, influenced by the country's ethnic diversity. Popular dishes include Ndolé, Achu, and Koki. Food plays a central role in social gatherings and celebrations."^^xsd:string ;
+    ex:hasEntity <http://example.org/entity/Achu>,
+        <http://example.org/entity/Cameroonian>,
+        <http://example.org/entity/Food>,
+        <http://example.org/entity/Koki>,
+        <http://example.org/entity/Ndol%C3%A9> ;
+    ex:hasKeyword <http://example.org/keyword/%2C>,
+        <http://example.org/keyword/.>,
+        <http://example.org/keyword/Cameroonian>,
+        <http://example.org/keyword/country>,
+        <http://example.org/keyword/cuisine>,
+        <http://example.org/keyword/flavors>,
+        <http://example.org/keyword/influenced>,
+        <http://example.org/keyword/ingredients>,
+        <http://example.org/keyword/mix>,
+        <http://example.org/keyword/vibrant> ;
+    ex:title "The Culinary Delights of Cameroon"^^xsd:string .
+
+<http://example.org/article/4> a ex:Article ;
+    ex:content "Traditional clothing in Cameroon varies among ethnic groups, with each having unique styles and fabrics. For example, the Toghu worn by the Bamileke people and the Kaba Ngondo dress of the Douala women are significant cultural symbols."^^xsd:string ;
+    ex:hasEntity <http://example.org/entity/Bamileke>,
+        <http://example.org/entity/Cameroon>,
+        <http://example.org/entity/Douala>,
+        <http://example.org/entity/Kaba%20Ngondo>,
+        <http://example.org/entity/Toghu> ;
+    ex:hasKeyword <http://example.org/keyword/%2C>,
+        <http://example.org/keyword/.>,
+        <http://example.org/keyword/Cameroon>,
+        <http://example.org/keyword/Traditional>,
+        <http://example.org/keyword/among>,
+        <http://example.org/keyword/clothing>,
+        <http://example.org/keyword/ethnic>,
+        <http://example.org/keyword/groups>,
+        <http://example.org/keyword/unique>,
+        <http://example.org/keyword/varies> ;
+    ex:title "The Significance of Traditional Attire in Cameroon"^^xsd:string .
+
+<http://example.org/article/5> a ex:Article ;
+    ex:belongsToCategory <http://example.org/category/8> ;
+    ex:content "Folklore and oral traditions are vital in preserving the history and values of Cameroonian communities. Stories, proverbs, and songs are passed down through generations, serving as educational tools and cultural identity markers."^^xsd:string ;
+    ex:hasEntity <http://example.org/entity/Cameroonian>,
+        <http://example.org/entity/Folklore> ;
+    ex:hasKeyword <http://example.org/keyword/%2C>,
+        <http://example.org/keyword/.>,
+        <http://example.org/keyword/Cameroonian>,
+        <http://example.org/keyword/Folklore>,
+        <http://example.org/keyword/history>,
+        <http://example.org/keyword/oral>,
+        <http://example.org/keyword/preserving>,
+        <http://example.org/keyword/traditions>,
+        <http://example.org/keyword/values>,
+        <http://example.org/keyword/vital> ;
+    ex:title "Folklore and Oral Traditions in CameroonUntitled"^^xsd:string .
+
+<http://example.org/article/6> a ex:Article ;
+    ex:belongsToCategory <http://example.org/category/4> ;
+    ex:content "Cameroon hosts numerous festivals that celebrate cultural diversity and heritage. Notable festivals include the Ngondo Festival of the Sawa people and the Nguon Festival of the Bamoun. These events are marked by music, dance, and traditional rituals."^^xsd:string ;
+    ex:hasEntity <http://example.org/entity/Bamoun>,
+        <http://example.org/entity/Cameroon>,
+        <http://example.org/entity/Ngondo%20Festival>,
+        <http://example.org/entity/Nguon%20Festival>,
+        <http://example.org/entity/Sawa> ;
+    ex:hasKeyword <http://example.org/keyword/%2C>,
+        <http://example.org/keyword/.>,
+        <http://example.org/keyword/Cameroon>,
+        <http://example.org/keyword/Festival>,
+        <http://example.org/keyword/celebrate>,
+        <http://example.org/keyword/cultural>,
+        <http://example.org/keyword/diversity>,
+        <http://example.org/keyword/festivals>,
+        <http://example.org/keyword/hosts>,
+        <http://example.org/keyword/numerous> ;
+    ex:title "Exploring Cameroon's Festivals and Celebrations"^^xsd:string .
+
+<http://example.org/article/7> a ex:Article ;
+    ex:belongsToCategory <http://example.org/category/7> ;
+    ex:content "Nso village is renowned for its traditional music, particularly the use of xylophones and drums during cultural ceremonies. Music plays a pivotal role in celebrations and storytelling, passing down history and traditions."^^xsd:string ;
+    ex:hasEntity <http://example.org/entity/Music>,
+        <http://example.org/entity/Nso> ;
+    ex:hasKeyword <http://example.org/keyword/%2C>,
+        <http://example.org/keyword/.>,
+        <http://example.org/keyword/Nso>,
+        <http://example.org/keyword/music>,
+        <http://example.org/keyword/particularly>,
+        <http://example.org/keyword/renowned>,
+        <http://example.org/keyword/traditional>,
+        <http://example.org/keyword/use>,
+        <http://example.org/keyword/village>,
+        <http://example.org/keyword/xylophones> ;
+    ex:title "The Traditional Music of Nso Village"^^xsd:string .
+
+<http://example.org/article/8> a ex:Article ;
+    ex:belongsToCategory <http://example.org/category/6> ;
+    ex:content "The Bakweri people of Buea village have a rich culinary tradition featuring dishes like eru and ndolé. Meals are often communal, reinforcing social bonds and cultural identity within the community."^^xsd:string ;
+    ex:hasEntity <http://example.org/entity/Bakweri>,
+        <http://example.org/entity/Buea> ;
+    ex:hasKeyword <http://example.org/keyword/.>,
+        <http://example.org/keyword/Bakweri>,
+        <http://example.org/keyword/Buea>,
+        <http://example.org/keyword/culinary>,
+        <http://example.org/keyword/dishes>,
+        <http://example.org/keyword/featuring>,
+        <http://example.org/keyword/people>,
+        <http://example.org/keyword/rich>,
+        <http://example.org/keyword/tradition>,
+        <http://example.org/keyword/village> ;
+    ex:title "Culinary Traditions of the Bakweri People"^^xsd:string .
+
+<http://example.org/article/9> a ex:Article ;
+    ex:belongsToCategory <http://example.org/category/1> ;
+    ex:content "content"^^xsd:string ;
+    ex:hasKeyword <http://example.org/keyword/content> ;
+    ex:isLocatedIn <http://example.org/village/17> ;
+    ex:title "Title Untitled"^^xsd:string .
+
+<http://example.org/category/1> a ex:Category ;
+    ex:name "Ethnic Groups and Tribes"^^xsd:string .
+
+<http://example.org/category/4> a ex:Category ;
+    ex:name "Music and Dance"^^xsd:string .
+
+<http://example.org/category/8> a ex:Category ;
+    ex:name "History and Heritage"^^xsd:string .
+
+<http://example.org/cultural_area/1> a ex:CulturalArea ;
+    ex:name "Western Highlands (Grassfields)"^^xsd:string .
+
+<http://example.org/entity/Achu> a ex:Entity ;
+    ex:name "Achu"^^xsd:string .
+
+<http://example.org/entity/Article> a ex:Entity ;
+    ex:name "Article"^^xsd:string .
+
+<http://example.org/entity/Bakweri> a ex:Entity ;
+    ex:name "Bakweri"^^xsd:string .
+
+<http://example.org/entity/Bamileke> a ex:Entity ;
+    ex:name "Bamileke"^^xsd:string .
+
+<http://example.org/entity/Bamoun> a ex:Entity ;
+    ex:name "Bamoun"^^xsd:string .
+
+<http://example.org/entity/Bikutsi> a ex:Entity ;
+    ex:name "Bikutsi"^^xsd:string .
+
+<http://example.org/entity/Buea> a ex:Entity ;
+    ex:name "Buea"^^xsd:string .
+
+<http://example.org/entity/Douala> a ex:Entity ;
+    ex:name "Douala"^^xsd:string .
+
+<http://example.org/entity/Folklore> a ex:Entity ;
+    ex:name "Folklore"^^xsd:string .
+
+<http://example.org/entity/Food> a ex:Entity ;
+    ex:name "Food"^^xsd:string .
+
+<http://example.org/entity/Kaba%20Ngondo> a ex:Entity ;
+    ex:name "Kaba Ngondo"^^xsd:string .
+
+<http://example.org/entity/Koki> a ex:Entity ;
+    ex:name "Koki"^^xsd:string .
+
+<http://example.org/entity/Makossa> a ex:Entity ;
+    ex:name "Makossa"^^xsd:string .
+
+<http://example.org/entity/Ndol%C3%A9> a ex:Entity ;
+    ex:name "Ndolé"^^xsd:string .
+
+<http://example.org/entity/Ngondo%20Festival> a ex:Entity ;
+    ex:name "Ngondo Festival"^^xsd:string .
+
+<http://example.org/entity/Nguon%20Festival> a ex:Entity ;
+    ex:name "Nguon Festival"^^xsd:string .
+
+<http://example.org/entity/Nso> a ex:Entity ;
+    ex:name "Nso"^^xsd:string .
+
+<http://example.org/entity/Sawa> a ex:Entity ;
+    ex:name "Sawa"^^xsd:string .
+
+<http://example.org/entity/Toghu> a ex:Entity ;
+    ex:name "Toghu"^^xsd:string .
+
+<http://example.org/keyword/Article> a ex:Keyword ;
+    ex:name "Article"^^xsd:string .
+
+<http://example.org/keyword/Bakweri> a ex:Keyword ;
+    ex:name "Bakweri"^^xsd:string .
+
+<http://example.org/keyword/Buea> a ex:Keyword ;
+    ex:name "Buea"^^xsd:string .
+
+<http://example.org/keyword/Festival> a ex:Keyword ;
+    ex:name "Festival"^^xsd:string .
+
+<http://example.org/keyword/Folklore> a ex:Keyword ;
+    ex:name "Folklore"^^xsd:string .
+
+<http://example.org/keyword/Nso> a ex:Keyword ;
+    ex:name "Nso"^^xsd:string .
+
+<http://example.org/keyword/Traditional> a ex:Keyword ;
+    ex:name "Traditional"^^xsd:string .
+
+<http://example.org/keyword/Updated> a ex:Keyword ;
+    ex:name "Updated"^^xsd:string .
+
+<http://example.org/keyword/among> a ex:Keyword ;
+    ex:name "among"^^xsd:string .
+
+<http://example.org/keyword/celebrate> a ex:Keyword ;
+    ex:name "celebrate"^^xsd:string .
+
+<http://example.org/keyword/clothing> a ex:Keyword ;
+    ex:name "clothing"^^xsd:string .
+
+<http://example.org/keyword/content> a ex:Keyword ;
+    ex:name "content"^^xsd:string .
+
+<http://example.org/keyword/country> a ex:Keyword ;
+    ex:name "country"^^xsd:string .
+
+<http://example.org/keyword/cuisine> a ex:Keyword ;
+    ex:name "cuisine"^^xsd:string .
+
+<http://example.org/keyword/culinary> a ex:Keyword ;
+    ex:name "culinary"^^xsd:string .
+
+<http://example.org/keyword/cultural> a ex:Keyword ;
+    ex:name "cultural"^^xsd:string .
+
+<http://example.org/keyword/dishes> a ex:Keyword ;
+    ex:name "dishes"^^xsd:string .
+
+<http://example.org/keyword/diverse> a ex:Keyword ;
+    ex:name "diverse"^^xsd:string .
+
+<http://example.org/keyword/diversity> a ex:Keyword ;
+    ex:name "diversity"^^xsd:string .
+
+<http://example.org/keyword/ethnic> a ex:Keyword ;
+    ex:name "ethnic"^^xsd:string .
+
+<http://example.org/keyword/festivals> a ex:Keyword ;
+    ex:name "festivals"^^xsd:string .
+
+<http://example.org/keyword/flavors> a ex:Keyword ;
+    ex:name "flavors"^^xsd:string .
+
+<http://example.org/keyword/genres> a ex:Keyword ;
+    ex:name "genres"^^xsd:string .
+
+<http://example.org/keyword/groups> a ex:Keyword ;
+    ex:name "groups"^^xsd:string .
+
+<http://example.org/keyword/heritage> a ex:Keyword ;
+    ex:name "heritage"^^xsd:string .
+
+<http://example.org/keyword/history> a ex:Keyword ;
+    ex:name "history"^^xsd:string .
+
+<http://example.org/keyword/hosts> a ex:Keyword ;
+    ex:name "hosts"^^xsd:string .
+
+<http://example.org/keyword/influenced> a ex:Keyword ;
+    ex:name "influenced"^^xsd:string .
+
+<http://example.org/keyword/ingredients> a ex:Keyword ;
+    ex:name "ingredients"^^xsd:string .
+
+<http://example.org/keyword/known> a ex:Keyword ;
+    ex:name "known"^^xsd:string .
+
+<http://example.org/keyword/mix> a ex:Keyword ;
+    ex:name "mix"^^xsd:string .
+
+<http://example.org/keyword/music> a ex:Keyword ;
+    ex:name "music"^^xsd:string .
+
+<http://example.org/keyword/musical> a ex:Keyword ;
+    ex:name "musical"^^xsd:string .
+
+<http://example.org/keyword/numerous> a ex:Keyword ;
+    ex:name "numerous"^^xsd:string .
+
+<http://example.org/keyword/oral> a ex:Keyword ;
+    ex:name "oral"^^xsd:string .
+
+<http://example.org/keyword/particularly> a ex:Keyword ;
+    ex:name "particularly"^^xsd:string .
+
+<http://example.org/keyword/people> a ex:Keyword ;
+    ex:name "people"^^xsd:string .
+
+<http://example.org/keyword/preserving> a ex:Keyword ;
+    ex:name "preserving"^^xsd:string .
+
+<http://example.org/keyword/renowned> a ex:Keyword ;
+    ex:name "renowned"^^xsd:string .
+
+<http://example.org/keyword/tradition> a ex:Keyword ;
+    ex:name "tradition"^^xsd:string .
+
+<http://example.org/keyword/traditional> a ex:Keyword ;
+    ex:name "traditional"^^xsd:string .
+
+<http://example.org/keyword/traditions> a ex:Keyword ;
+    ex:name "traditions"^^xsd:string .
+
+<http://example.org/keyword/unique> a ex:Keyword ;
+    ex:name "unique"^^xsd:string .
+
+<http://example.org/keyword/use> a ex:Keyword ;
+    ex:name "use"^^xsd:string .
+
+<http://example.org/keyword/values> a ex:Keyword ;
+    ex:name "values"^^xsd:string .
+
+<http://example.org/keyword/varies> a ex:Keyword ;
+    ex:name "varies"^^xsd:string .
+
+<http://example.org/keyword/vibrant> a ex:Keyword ;
+    ex:name "vibrant"^^xsd:string .
+
+<http://example.org/keyword/vital> a ex:Keyword ;
+    ex:name "vital"^^xsd:string .
+
+<http://example.org/keyword/xylophones> a ex:Keyword ;
+    ex:name "xylophones"^^xsd:string .
+
+<http://example.org/village/17> a ex:Village ;
+    ex:isPartOf <http://example.org/region/1> ;
+    ex:name "Babessi"^^xsd:string .
+
+<http://example.org/village/23> a ex:Village ;
+    ex:isPartOf <http://example.org/region/1> ;
+    ex:name "Bafut"^^xsd:string .
+
+<http://example.org/category/6> a ex:Category ;
+    ex:name "Cuisine"^^xsd:string .
+
+<http://example.org/entity/Cameroonian> a ex:Entity ;
+    ex:name "Cameroonian"^^xsd:string .
+
+<http://example.org/entity/Music> a ex:Entity ;
+    ex:name "Music"^^xsd:string .
+
+<http://example.org/keyword/Cameroonian> a ex:Keyword ;
+    ex:name "Cameroonian"^^xsd:string .
+
+<http://example.org/keyword/featuring> a ex:Keyword ;
+    ex:name "featuring"^^xsd:string .
+
+<http://example.org/keyword/rich> a ex:Keyword ;
+    ex:name "rich"^^xsd:string .
+
+<http://example.org/keyword/village> a ex:Keyword ;
+    ex:name "village"^^xsd:string .
+
+<http://example.org/region/1> a ex:Region ;
+    ex:isPartOf <http://example.org/cultural_area/1> ;
+    ex:name "Northwest Region"^^xsd:string .
+
+<http://example.org/category/7> a ex:Category ;
+    ex:name "Arts and Crafts"^^xsd:string .
+
+<http://example.org/entity/Cameroon> a ex:Entity ;
+    ex:name "Cameroon"^^xsd:string .
+
+<http://example.org/keyword/Cameroon> a ex:Keyword ;
+    ex:name "Cameroon"^^xsd:string .
+
+<http://example.org/keyword/%2C> a ex:Keyword ;
+    ex:name ","^^xsd:string .
+
+<http://example.org/keyword/.> a ex:Keyword ;
+    ex:name "."^^xsd:string .
+

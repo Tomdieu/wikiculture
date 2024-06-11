@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from import_export.admin import ImportExportModelAdmin
 from simple_history.admin import SimpleHistoryAdmin
-from .models import User, Article, Category, Event,ReadingTime,ArticleVistors,CulturalArea,Region,Village,ArticleLike,UserArticleInteraction
+from .models import User, Article, Category, Event,ReadingTime,ArticleVistors,CulturalArea,Region,Village,ArticleLike,UserArticleInteraction,ArticleAnalysis,CulturalSimilarity
 
 
 # Register your models here.
@@ -98,3 +98,13 @@ class UserArticleInteractionAdmin(admin.ModelAdmin):
 
     list_display = ('user', 'article', 'timestamp', 'interaction_type', )
     
+@admin.register(ArticleAnalysis)
+class ArticleAnalysisAdmin(admin.ModelAdmin):
+
+    list_display = ('article', 'keywords', 'named_entities', 'sentiment', )
+    search_fields = ('keywords','named_entities')
+
+@admin.register(CulturalSimilarity)
+class CulturalSimilarityAdmin(admin.ModelAdmin):
+
+    list_display = ('article', 'village', 'similarity_percentage', )

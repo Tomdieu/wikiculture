@@ -63,6 +63,8 @@ from .filters import ArticleFilter, CulturalAreaFilter
 
 from api.lib.recommend_articles import recommend_articles,recommend_articles_by_preferences
 
+from api.lib import create_knowledge_graph,load_knowledge_graph,query_related_articles
+
 import datetime
 from django.utils import timezone
 
@@ -340,11 +342,17 @@ class ArticleViewSet(
         recommendation_serializer = ArticleListSerializer(recommendations, many=True)
         print("Recommended : ", recommendations)
         print("Related : ", related_articles)
+
+        graph = load_knowledge_graph()
+        graph_related_articles = query_related_articles(graph, article_id)
+        print("Graph Related Articles : ",graph_related_articles)
+
         return Response(
             {
                 "data": serializer.data,
                 "recommendations": recommendation_serializer.data,
                 "related_articles": related_articles_serializer.data,
+                "graph_related_articles":ArticleListSerializer(graph_related_articles,many=True).data
             },
             status=status.HTTP_200_OK,
         )

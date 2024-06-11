@@ -89,3 +89,30 @@ def recommend_articles_by_preferences(user, num_recommendations=5, exclude_artic
     
     return recommended_articles
 
+
+def recommend_similar_articles(article_id, top_n=5):
+    article = Article.objects.get(id=article_id)
+    article_analysis = article.analysis
+
+    # Get all articles excluding the current one
+    all_articles = Article.objects.exclude(id=article_id)
+    similarities = []
+
+    for other_article in all_articles:
+        other_article_analysis = other_article.analysis
+        similarity_score = 0
+
+        # Calculate similarity based on keywords
+        keywords_overlap = set(article_analysis.keywords) & set(other_article_analysis.keywords)
+        similarity_score += len(keywords_overlap)
+
+        # Calculate similarity based on named entities
+        entities_overlap = set(article_analysis.named_entities) & set(other_article_analysis.named_entities)
+        similarity_score += len(entities_overlap)
+
+        similarities.append((other_article, similarity_score))
+
+    # Sort articles based on similarity score and return top_n articles
+    similarities.sort(key=lambda x: x[1], reverse=True)
+    recommended_articles = [article for article, score in similarities[:top_n]]
+    return recommended_articles
