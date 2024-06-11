@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from taggit.serializers import TagListSerializerField, TaggitSerializer
-from .models import Article, Category, User, ReadingTime,Village,Region,CulturalArea,ArticleVistors
+from .models import Article, Category, User, ReadingTime,Village,Region,CulturalArea,CulturalSimilarity
 from api.lib.recommend_articles import get_village_detail
 
 class UserSerializer(serializers.ModelSerializer):
@@ -64,12 +64,20 @@ class CulturalListSerializer(serializers.ModelSerializer):
         serializer = RegionListSerializer(regions,many=True)
         return serializer.data
 
+class CulturalSimilaritySerializer(serializers.ModelSerializer):
+    village_name = serializers.CharField(source='village.name', read_only=True)
+
+    class Meta:
+        model = CulturalSimilarity
+        fields = ['village', 'village_name', 'similarity_percentage']
+
 
 class ArticleSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
     categories = serializers.ListSerializer(
         child=serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
     )
+    
 
     class Meta:
         model = Article
@@ -121,13 +129,12 @@ class ArticleHistoryDeleteSerializer(serializers.Serializer):
 
 
 class ArticleListSerializer(TaggitSerializer, serializers.ModelSerializer):
-    # categories = serializers.SerializerMethodField()
     categories = CategorySerializer(many=True)
     tags = TagListSerializerField()
     history = ArticleHistorySerializer(many=True)
     author = UserSerializer()
     village = VillageSerializer()
-
+    similarities = CulturalSimilaritySerializer(source='get_similarities', many=True, read_only=True)
 
     class Meta:
         model = Article
