@@ -55,3 +55,14 @@ class UserPasswordResetToken(models.Model):
             # Generate a random 6-digit code
             self.code = "".join(random.choices("0123456789", k=6))
         super().save(*args, **kwargs)
+
+
+class LoginHistory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="login_history")
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    user_agent = models.CharField(max_length=255, null=True, blank=True)
+    browser_info = models.CharField(max_length=255, null=True, blank=True)  # New field for parsed browser info
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Login history for {self.user.username} at {self.timestamp}"

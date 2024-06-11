@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
-from .models import Event
+from .models import Event,LoginHistory
 # Register your models here.
 
 User = get_user_model()
@@ -48,3 +48,9 @@ class EventAdmin(admin.ModelAdmin):
     list_display = ['id','event_type','timestamp','data']
     list_filter = ['event_type','timestamp']
     search_fields = ['event_type','timestamp']
+
+@admin.register(LoginHistory)
+class LoginHistoryAdmin(admin.ModelAdmin):
+    list_display = ('user', 'ip_address', 'user_agent','browser_info', 'timestamp')
+    search_fields = ('user__username', 'ip_address', 'user_agent')
+    list_filter = ('timestamp',)
