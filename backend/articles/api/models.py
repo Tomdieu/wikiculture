@@ -96,6 +96,30 @@ class Article(models.Model):
         self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
+    def record_m2m_history(self):
+        categories = list(self.categories.all())
+        tags = list(self.tags.all())
+        history_instance = self.history.latest()
+        history_instance.history_change_reason = 'Updated M2M fields'
+        history_instance.save()
+        history_instance.categories = categories
+        history_instance.tags = tags
+        history_instance.save()
+
+    def get_similarities(self):
+        return self.similarities.all()
+
+class CulturalSimilarity(models.Model):
+    article = models.ForeignKey(Article, related_name='similarities', on_delete=models.CASCADE)
+    village = models.ForeignKey(Village, related_name='similarities', on_delete=models.CASCADE)
+    similarity_percentage = models.FloatField()
+
+    class Meta:
+        unique_together = ('article', 'village')
+
+    def __str__(self):
+        return f"{self.article.title} -> {self.village.name} : {self.similarity_percentage}%"
+
 class UserArticleInteraction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,related_name="articles_interactions")
     article = models.ForeignKey(Article, on_delete=models.CASCADE,related_name="articles_interactions")
