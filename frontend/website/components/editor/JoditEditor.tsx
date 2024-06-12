@@ -17,9 +17,10 @@ type Props = {
     disable?:boolean;
     height?:number;
     safeMode?:boolean;
+    className?:string;
 }
 
-const JoditEditor = ({ value, onBlur, onChange,toolbar=true,statusbar=true,readonly=false,disable=false,safeMode=true}: Props) => {
+const JoditEditor = ({ value, onBlur, onChange,toolbar=true,statusbar=true,readonly=false,disable=false,safeMode=true,className}: Props) => {
     const editor = useRef<Jodit>(null);
     const url = process.env.NEXT_PUBLIC_MEDIA_URL;
     const { theme } = useTheme();
@@ -57,6 +58,7 @@ const JoditEditor = ({ value, onBlur, onChange,toolbar=true,statusbar=true,reado
 
     const config = useMemo(
         () => ({
+            className,
             placeholder: 'Start typings...',
             editHTMLDocumentMode: true,
             theme:theme==="dark"?"dark":"light",
