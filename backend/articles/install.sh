@@ -9,6 +9,9 @@ source ./env/bin/activate
 # Install requirements
 pip install -r requirements.txt
 
+python manage.py create_categories
+python manage.py import_data
+
 # Download NLTK data
 python -c "import nltk; \
            nltk.download('punkt'); \
