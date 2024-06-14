@@ -21,7 +21,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo.jpeg",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.wikiculturefront"
     },
     "web": {
       "favicon": "./assets/favicon.png"
